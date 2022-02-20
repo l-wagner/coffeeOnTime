@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { createEmployee } from "../actions/employees";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { createEmployee } from '../actions/employees';
+import { Input, InputGroup, Stack, InputLeftAddon, InputRightAddon } from '@chakra-ui/react';
 
 class AddEmployee extends Component {
   constructor(props) {
@@ -12,8 +13,8 @@ class AddEmployee extends Component {
 
     this.state = {
       id: null,
-      name: "",
-      blockedDays: "",
+      name: '',
+      blockedDays: '',
       active: true,
 
       submitted: false,
@@ -56,8 +57,8 @@ class AddEmployee extends Component {
   newEmployee() {
     this.setState({
       id: null,
-      name: "",
-      blockedDays: "",
+      name: '',
+      blockedDays: '',
       active: false,
 
       submitted: false,
@@ -66,43 +67,56 @@ class AddEmployee extends Component {
 
   render() {
     return (
-      <div className="submit-form">
+      <div className='submit-form'>
         {this.state.submitted ? (
           <div>
             <h4>You submitted successfully!</h4>
-            <button className="btn btn-success" onClick={this.newEmployee}>
+            <button className='btn btn-success' onClick={this.newEmployee}>
               Add
             </button>
           </div>
         ) : (
           <div>
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
+            <div className='form-group'>
+              <Stack spacing={4}>
+                <InputGroup>
+                  {/* <InputLeftAddon children='+234' /> */}
+                  <Input type='text' placeholder='name ' value={this.state.name} onChange={this.onChangeName} />
+                </InputGroup>
+
+                {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
+                <InputGroup size='sm'>
+                  {/* <InputLeftAddon children='https://' /> */}
+                  <Input placeholder='blocked Days' value={this.state.blockedDays} onChange={this.onChangeBlockedDays} />
+                  {/* <InputRightAddon children='.com' /> */}
+                </InputGroup>
+              </Stack>
+              <label htmlFor='name'>Name</label>
+              {/* <input
+                type='text'
+                className='form-control'
+                id='name'
                 required
                 value={this.state.name}
                 onChange={this.onChangeName}
-                name="name"
-              />
+                name='name'
+              /> */}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="blockedDays">BlockedDays</label>
+            {/* <div className='form-group'>
+              <label htmlFor='blockedDays'>BlockedDays</label>
               <input
-                type="text"
-                className="form-control"
-                id="blockedDays"
+                type='radio'
+                className='form-control'
+                id='blockedDays'
                 required
                 value={this.state.blockedDays}
                 onChange={this.onChangeBlockedDays}
-                name="blockedDays"
+                name='blockedDays'
               />
-            </div>
+            </div> */}
 
-            <button onClick={this.saveEmployee} className="btn btn-success">
+            <button onClick={this.saveEmployee} className='btn btn-success'>
               Submit
             </button>
           </div>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -14,45 +15,47 @@ import RoleList from './components/role-list.component';
 class App extends Component {
   render() {
     return (
-      <Router>
-        <nav className='navbar navbar-expand navbar-dark bg-dark'>
-          <Link to={'/employees'} className='navbar-brand'>
-            bezKoder
-          </Link>
-          <div className='navbar-nav mr-auto'>
-            <li className='nav-item'>
-              <Link to={'/employees'} className='nav-link'>
-                Employees
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to={'/addEmployee'} className='nav-link'>
-                Add Employee
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to={'/addRole'} className='nav-link'>
-                Add Role
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to={'/roles'} className='nav-link'>
-                Roles
-              </Link>
-            </li>
-          </div>
-        </nav>
+      <ChakraProvider>
+        <Router>
+          <nav className='navbar navbar-expand navbar-dark bg-dark'>
+            <Link to={'/employees'} className='navbar-brand'>
+              Coffee On Time
+            </Link>
+            <div className='navbar-nav mr-auto'>
+              <li className='nav-item'>
+                <Link to={'/employees'} className='nav-link'>
+                  Employees
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link to={'/addEmployee'} className='nav-link'>
+                  Add Employee
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link to={'/addRole'} className='nav-link'>
+                  Add Role
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link to={'/roles'} className='nav-link'>
+                  Roles
+                </Link>
+              </li>
+            </div>
+          </nav>
 
-        <div className='container mt-3'>
-          <Switch>
-            <Route exact path={['/', '/employees']} component={EmployeeList} />
-            <Route exact path='/addEmployee' component={AddEmployee} />
-            <Route exact path='/roles' component={RoleList} />
-            <Route exact path='/addRole' component={AddRole} />
-            <Route path='/employees/:id' component={Employee} />
-          </Switch>
-        </div>
-      </Router>
+          <div className='container mt-3'>
+            <Switch>
+              <Route exact path={['/', '/employees']} component={EmployeeList} />
+              <Route exact path='/addEmployee' component={AddEmployee} />
+              <Route exact path='/roles' component={RoleList} />
+              <Route exact path='/addRole' component={AddRole} />
+              <Route path='/employees/:id' component={Employee} />
+            </Switch>
+          </div>
+        </Router>
+      </ChakraProvider>
     );
   }
 }
