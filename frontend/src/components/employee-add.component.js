@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createEmployee } from '../actions/employees';
-import { Input, InputGroup, Stack, InputLeftAddon, InputRightAddon } from '@chakra-ui/react';
+import { retrieveRoles } from '../actions/roles';
+import { Checkbox, Input, InputGroup, Stack, InputLeftAddon, InputRightAddon } from '@chakra-ui/react';
 
 class AddEmployee extends Component {
   constructor(props) {
@@ -15,10 +16,14 @@ class AddEmployee extends Component {
       id: null,
       name: '',
       blockedDays: '',
+      roles: [],
       active: true,
 
       submitted: false,
     };
+  }
+  componentDidMount() {
+    this.props.retrieveRoles();
   }
 
   onChangeName(e) {
@@ -26,11 +31,23 @@ class AddEmployee extends Component {
       name: e.target.value,
     });
   }
+  onChangeRoles(roleName) {
+    console.log(roleName);
+    var oldRoles = this.state.roles;
+    // if oldRoles.includes(roleName) oldRoles.
+    var newRoles = this.state.roles.concat([roleName]);
+    this.setState({
+      roles: newRoles,
+    });
+    console.log(this.state.roles);
+  }
 
   onChangeBlockedDays(e) {
+    console.log(e.target);
     this.setState({
       blockedDays: e.target.value,
     });
+    console.log(this.state.blockedDays);
   }
 
   saveEmployee() {
@@ -66,6 +83,8 @@ class AddEmployee extends Component {
   }
 
   render() {
+    const { roles } = this.props;
+
     return (
       <div className='submit-form'>
         {this.state.submitted ? (
@@ -84,11 +103,31 @@ class AddEmployee extends Component {
                   <Input type='text' placeholder='name ' value={this.state.name} onChange={this.onChangeName} />
                 </InputGroup>
 
+                {/* Roles set up for this business */}
+                <InputGroup size='sm'>
+                  <Stack spacing={5} direction='row'>
+                    {roles &&
+                      roles.map((role, index) => (
+                        <Checkbox value={role.name} onChange={() => this.onChangeRoles(role.name)}>
+                          {role.name}
+                        </Checkbox>
+                      ))}
+                  </Stack>
+                </InputGroup>
+
                 {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
                 <InputGroup size='sm'>
-                  {/* <InputLeftAddon children='https://' /> */}
-                  <Input placeholder='blocked Days' value={this.state.blockedDays} onChange={this.onChangeBlockedDays} />
-                  {/* <InputRightAddon children='.com' /> */}
+                  <Stack spacing={5} direction='row'>
+                    <Checkbox value={this.state.blockedDays} onChange={this.onChangeBlockedDays} defaultChecked>
+                      Mon
+                    </Checkbox>
+                    <Checkbox defaultChecked>Tue</Checkbox>
+                    <Checkbox defaultChecked>Wed</Checkbox>
+                    <Checkbox defaultChecked>Thu</Checkbox>
+                    <Checkbox defaultChecked>Fri</Checkbox>
+                    <Checkbox defaultChecked>Sat</Checkbox>
+                    <Checkbox defaultChecked>Sun</Checkbox>
+                  </Stack>
                 </InputGroup>
               </Stack>
               <label htmlFor='name'>Name</label>
@@ -126,4 +165,9 @@ class AddEmployee extends Component {
   }
 }
 
-export default connect(null, { createEmployee })(AddEmployee);
+const mapStateToProps = (state) => {
+  return {
+    roles: state.roles,
+  };
+};
+export default connect(mapStateToProps, { createEmployee, retrieveRoles })(AddEmployee);

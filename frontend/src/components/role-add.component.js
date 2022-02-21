@@ -6,7 +6,7 @@ class AddRole extends Component {
   constructor(props) {
     super(props);
     this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeBlockedDays = this.onChangeBlockedDays.bind(this);
+    this.onChangeDescription = this.onChangeDescription.bind(this);
     this.saveRole = this.saveRole.bind(this);
     this.newRole = this.newRole.bind(this);
 
@@ -26,7 +26,7 @@ class AddRole extends Component {
     });
   }
 
-  onChangeBlockedDays(e) {
+  onChangeDescription(e) {
     this.setState({
       description: e.target.value,
     });
@@ -90,14 +90,14 @@ class AddRole extends Component {
             </div>
 
             <div className='form-group'>
-              <label htmlFor='description'>BlockedDays</label>
+              <label htmlFor='description'>Description</label>
               <input
                 type='text'
                 className='form-control'
                 id='description'
                 required
                 value={this.state.description}
-                onChange={this.onChangeBlockedDays}
+                onChange={this.onChangeDescription}
                 name='description'
               />
             </div>
