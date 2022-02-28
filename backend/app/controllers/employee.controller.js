@@ -1,30 +1,34 @@
 const Employee = require('../models/employee.model.js');
+const apiResponse = require('../util/apiResponse.js');
+const { body, query, validationResult } = require('express-validator');
 
 // Create and Save a new Employee
-exports.create = (req, res) => {
-  // Validate request
-  if (!req.body) {
-    res.status(400).send({
-      message: 'Content can not be empty!',
-    });
-  }
-  console.log(req.body);
-  // Create a Employee
-  const employee = new Employee({
-    name: req.body.name,
-    blockedDays: req.body.blockedDays,
-    active: req.body.active || true,
-  });
+exports.add = [
+  body('name').not().isEmpty().trim().escape(),
+  body('blockedDays').not().isEmpty().trim().escape(),
+  body('roles').not().isEmpty().trim().escape(),
+  function (req, res) {
+    // Finds the validation errors in this request and wraps them in an object with handy functions
 
-  // Save Employee in the database
-  Employee.create(employee, (err, data) => {
-    if (err)
-      res.status(500).send({
-        message: err.message || 'Some error occurred while creating the Employee.',
-      });
-    else res.send(data);
-  });
-};
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return apiResponse.validationError(res, { errors: errors.array() }, 400);
+    }
+
+    // Create a Employee
+    const employee = new Employee({
+      name: req.body.name,
+      blockedDays: req.body.blockedDays,
+      active: req.body.active || true,
+    });
+
+    // Save Employee in the database
+    Employee.create(employee, (err, data) => {
+      if (err) apiResponse.error(res, err.message || 'Some error occurred while creating the Employee.', 500);
+      else res.send(data);
+    });
+  },
+];
 
 // Retrieve all Employees from the database (with condition).
 exports.findAll = (req, res) => {

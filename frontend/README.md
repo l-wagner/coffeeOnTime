@@ -1,6 +1,4 @@
-- add dates to tables
-- for dynamic multi selection options, how to store state? 
-- remove from array if checkbox unselected => or is there are more performant way?
+
 
 
 order of creation:

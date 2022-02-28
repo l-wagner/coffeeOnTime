@@ -24,13 +24,20 @@ exports.successData = function (res, msg, data) {
   res.status(200).json(resData);
 };
 
-exports.error = function (res, msg) {
+exports.validationError = function (res, data, status = 0) {
   var data = {
-    status: 0,
+    ...data,
+  };
+
+  res.status(status).json(data);
+};
+exports.error = function (res, msg, status = 0) {
+  var data = {
+    status: status,
     message: 'Warning: ' + msg,
   };
 
-  res.status(500).json(data);
+  res.status(status).json(data);
 };
 
 exports.notFoundResponse = function (res, msg) {
