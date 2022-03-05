@@ -1,6 +1,6 @@
 import { CREATE_SHIFT, RETRIEVE_SHIFTS, UPDATE_SHIFT, DELETE_SHIFT, DELETE_ALL_SHIFTS } from './types';
 
-import ShiftDataService from '../services/role.service';
+import ShiftDataService from '../services/tag.service';
 
 export const createShift = (name, description) => async (dispatch) => {
   try {

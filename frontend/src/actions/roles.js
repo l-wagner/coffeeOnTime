@@ -1,6 +1,6 @@
 import { CREATE_ROLE, RETRIEVE_ROLES, UPDATE_ROLE, DELETE_ROLE, DELETE_ALL_ROLES } from './types';
 
-import RoleDataService from '../services/role.service';
+import RoleDataService from '../services/tag.service';
 
 export const createRole = (name, description) => async (dispatch) => {
   try {

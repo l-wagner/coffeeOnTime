@@ -1,4 +1,5 @@
-
+Todo:
+- sequelize setup 
 
 
 order of creation:

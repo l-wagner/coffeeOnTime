@@ -1,4 +1,5 @@
-const Employee = require('../models/employee.model.js');
+const db = require('../models/db.js');
+const Employee = db.employee;
 const apiResponse = require('../util/apiResponse.js');
 const { body, query, validationResult } = require('express-validator');
 
@@ -6,7 +7,7 @@ const { body, query, validationResult } = require('express-validator');
 exports.add = [
   body('name').not().isEmpty().trim().escape(),
   body('blockedDays').not().isEmpty().trim().escape(),
-  body('roles').not().isEmpty().trim().escape(),
+ // body('roles').not().isEmpty().trim().escape(),
   function (req, res) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
 
@@ -16,17 +17,26 @@ exports.add = [
     }
 
     // Create a Employee
-    const employee = new Employee({
-      name: req.body.name,
+    const employee = {
+      firstName: req.body.name,
       blockedDays: req.body.blockedDays,
       active: req.body.active || true,
-    });
+    };
+
+    console.log(employee);
+    
 
     // Save Employee in the database
-    Employee.create(employee, (err, data) => {
-      if (err) apiResponse.error(res, err.message || 'Some error occurred while creating the Employee.', 500);
-      else res.send(data);
-    });
+    // Save Tutorial in the database
+    Employee.create(employee)
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: err.message || 'Error occurred while creating the Employee.',
+        });
+      });
   },
 ];
 
@@ -62,7 +72,7 @@ exports.findOne = (req, res) => {
 
 // find all active Employees
 exports.findAllPublished = (req, res) => {
-  Employee.getAllPublished((err, data) => {
+  Employee.getAllActive((err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving employees.',

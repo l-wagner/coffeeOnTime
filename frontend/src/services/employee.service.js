@@ -10,7 +10,7 @@ class EmployeeDataService {
   }
 
   create(data) {
-    return http.post('/employees', data);
+    return http.post('/employees/add', data);
   }
 
   update(id, data) {

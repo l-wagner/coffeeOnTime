@@ -3,7 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const apiResponse = require('./app/util/apiResponse.js');
-const dbSetup = require('./app/models/dbSetup.js');
 const { response } = require('express');
 
 const app = express();
@@ -18,11 +17,9 @@ app.use(morgan('tiny'));
 // parse requests of content-type - application/json
 app.use(express.json()); /* bodyParser.json() is deprecated */
 
-app.get('/createdb', (req, res) => {
-  dbSetup
-    .start()
-    .then((result) => apiResponse.successMsg(res, result))
-    .catch((err) => apiResponse.error(err));
+const db = require('./app/models/db.js');
+db.sequelize.sync({ force: true }).then(() => {
+  console.log('Drop and re-sync db.');
 });
 
 // parse requests of content-type - application/x-www-form-urlencoded
@@ -34,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 require('./app/routes/employee.routes.js')(app);
-require('./app/routes/role.routes.js')(app);
+require('./app/routes/tag.routes.js')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
