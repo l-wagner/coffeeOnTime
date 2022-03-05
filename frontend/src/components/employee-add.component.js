@@ -9,7 +9,7 @@ class AddEmployee extends Component {
     super(props);
     this.onChangeName = this.onChangeName.bind(this);
     this.onChangeBlockedDays = this.onChangeBlockedDays.bind(this);
-    this.onChangeRoles = this.onChangeRoles.bind(this);
+    this.onChangeEmployeeTags = this.onChangeEmployeeTags.bind(this);
     this.saveEmployee = this.saveEmployee.bind(this);
     this.newEmployee = this.newEmployee.bind(this);
 
@@ -17,7 +17,7 @@ class AddEmployee extends Component {
       id: null,
       name: '',
       blockedDays: [],
-      roles: [],
+      employeeTags: [],
       active: true,
 
       submitted: false,
@@ -25,6 +25,7 @@ class AddEmployee extends Component {
   }
   componentDidMount() {
     this.props.retrieveRoles();
+  
   }
 
   onChangeName(e) {
@@ -32,14 +33,14 @@ class AddEmployee extends Component {
       name: e.target.value,
     });
   }
-  onChangeRoles(roleName) {
-    let { roles } = this.state;
-    let index = roles.indexOf(roleName);
-    index >= 0 ? roles.splice(index, 1) : roles.push(roleName);
+  onChangeEmployeeTags(tagName) {
+    let { employeeTags } = this.state;
+    let index = employeeTags.indexOf(tagName);
+    index >= 0 ? employeeTags.splice(index, 1) : employeeTags.push(tagName);
     this.setState({
-      roles: roles,
+      employeeTags: employeeTags,
     });
-    console.log(this.state.roles);
+    console.log(this.state.employeeTags);
   }
 
   onChangeBlockedDays(day) {
@@ -53,16 +54,16 @@ class AddEmployee extends Component {
   }
 
   saveEmployee() {
-    const { name, blockedDays, roles } = this.state;
+    const { name, blockedDays, employeeTags } = this.state;
 
     this.props
-    .createEmployee(name, blockedDays.join(','), roles.join(','))
+      .createEmployee(name, blockedDays.join(','), employeeTags.join(','))
       .then((data) => {
         this.setState({
           id: data.id,
           name: data.name,
           blockedDays: data.blockedDays,
-          roles: data.roles,
+          employeeTags: data.employeeTags,
           active: data.active,
 
           submitted: true,
@@ -86,7 +87,7 @@ class AddEmployee extends Component {
   }
 
   render() {
-    const { roles } = this.props;
+    const { availableTags } = this.props;
 
     return (
       <div className='submit-form'>
@@ -109,10 +110,10 @@ class AddEmployee extends Component {
               {/* Roles set up for this business */}
               <InputGroup size='sm'>
                 <Stack spacing={5} direction='row'>
-                  {roles &&
-                    roles.map((role, index) => (
-                      <Checkbox value={role.name} key={role.name} onChange={() => this.onChangeRoles(role.name)}>
-                        {role.name}
+                  {availableTags &&
+                    availableTags.map((tag, index) => (
+                      <Checkbox value={tag.id} key={tag.id} onChange={() => this.onChangeEmployeeTags(tag.id)}>
+                        {tag.name}
                       </Checkbox>
                     ))}
                 </Stack>
@@ -180,7 +181,7 @@ class AddEmployee extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    roles: state.roles,
+    availableTags: state.roles,
   };
 };
 export default connect(mapStateToProps, { createEmployee, retrieveRoles })(AddEmployee);

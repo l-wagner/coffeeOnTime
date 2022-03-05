@@ -144,7 +144,7 @@ class Employee extends Component {
                 <label>
                   <strong>Status:</strong>
                 </label>
-                {currentEmployee.acive ? 'Published' : 'Pending'}
+                {currentEmployee.acive ? 'Active' : 'Out'}
               </div>
             </form>
 

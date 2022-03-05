@@ -1,5 +1,6 @@
 const db = require('../models/db.js');
 const Tag = db.tag;
+const apiResponse = require('../util/apiResponse.js');
 
 // Create and Save a new Tag
 exports.create = (req, res) => {
@@ -21,7 +22,7 @@ exports.create = (req, res) => {
 
   Tag.create(tag)
     .then((data) => {
-      res.send(data);
+      apiResponse.successData(res, '', data.data);
     })
     .catch((err) => {
       res.status(500).send({
@@ -34,13 +35,17 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   const name = req.query.name;
 
-  Tag.getAll(name, (err, data) => {
-    if (err)
+  Tag.findAll({raw : true})
+    .then((data) => {
+      console.log(data);
+      
+      apiResponse.successData(res, '', data);
+    })
+    .catch((err) => {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving tags.',
       });
-    else res.send(data);
-  });
+    });
 };
 
 // Find a single Tag by Id

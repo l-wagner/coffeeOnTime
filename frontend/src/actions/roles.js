@@ -20,10 +20,11 @@ export const createRole = (name, description) => async (dispatch) => {
 export const retrieveRoles = () => async (dispatch) => {
   try {
     const res = await RoleDataService.getAll();
+    console.log(res.data);
 
     dispatch({
       type: RETRIEVE_ROLES,
-      payload: res.data,
+      payload: res.data.data,
     });
   } catch (err) {
     console.log(err);

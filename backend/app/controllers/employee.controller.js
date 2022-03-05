@@ -1,5 +1,8 @@
+const util = require('util');
+
 const db = require('../models/db.js');
 const Employee = db.employee;
+const Tag = db.tag;
 const apiResponse = require('../util/apiResponse.js');
 const { body, query, validationResult } = require('express-validator');
 
@@ -7,7 +10,7 @@ const { body, query, validationResult } = require('express-validator');
 exports.add = [
   body('name').not().isEmpty().trim().escape(),
   body('blockedDays').not().isEmpty().trim().escape(),
- // body('roles').not().isEmpty().trim().escape(),
+  body('roles').trim().escape(),
   function (req, res) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
 
@@ -16,40 +19,45 @@ exports.add = [
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
 
-    // Create a Employee
-    const employee = {
-      firstName: req.body.name,
-      blockedDays: req.body.blockedDays,
-      active: req.body.active || true,
-    };
+    let tagIds = req.body.roles.split(',');
 
-    console.log(employee);
-    
-
-    // Save Employee in the database
-    // Save Tutorial in the database
-    Employee.create(employee)
-      .then((data) => {
-        res.send(data);
-      })
-      .catch((err) => {
+    Tag.findAll({ where: { id: tagIds } }).then((tagsToAdd) => {
+      if (!tagsToAdd) {
         res.status(500).send({
           message: err.message || 'Error occurred while creating the Employee.',
         });
-      });
+      }
+
+      Employee.create({
+        firstName: req.body.name,
+        blockedDays: req.body.blockedDays,
+        active: req.body.active || true,
+      })
+        .then((employee) => {
+          tagsToAdd.forEach((tag) => employee.addTag(tag));
+
+          Employee.findAll({ where: { id: employee.id }, include: Tag }).then((employee) => {
+            // console.log(util.inspect(employee, { showHidden: false, depth: null, colors: true }));
+            res.send(employee);
+          });
+          // res.send(employee);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).send({
+            message: err.message || 'Error occurred while creating the Employee.',
+          });
+        });
+      // Save Employee in the database
+    });
   },
 ];
 
-// Retrieve all Employees from the database (with condition).
+// Retrieve all Employees from the database
 exports.findAll = (req, res) => {
-  const name = req.query.name;
-
-  Employee.getAll(name, (err, data) => {
-    if (err)
-      res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving employees.',
-      });
-    else res.send(data);
+  Employee.findAll({ where: { id: 10 }, include: Tag }).then((employee) => {
+    // console.log(util.inspect(employee, { showHidden: false, depth: null, colors: true }));
+    res.send(employee);
   });
 };
 

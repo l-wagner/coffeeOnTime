@@ -18,7 +18,7 @@ app.use(morgan('tiny'));
 app.use(express.json()); /* bodyParser.json() is deprecated */
 
 const db = require('./app/models/db.js');
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync({ force: false }).then(() => {
   console.log('Drop and re-sync db.');
 });
 

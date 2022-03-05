@@ -16,10 +16,7 @@ exports.successData = function (res, msg, data) {
   var resData = {
     status: 1,
     message: msg,
-    data: {
-      ...data,
-      user: user,
-    },
+    data,
   };
   res.status(200).json(resData);
 };
