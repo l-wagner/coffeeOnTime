@@ -1,9 +1,8 @@
 Todo:
-- show roles in employee list
 - fix role list
 - show employees in role list
-- replace findEmployeeByName with inventory app inplace search
-
+- replace findEmployeeByName with debounced inplace search
+- let users rename tags/skills/roles
 
 order of creation:
 - business

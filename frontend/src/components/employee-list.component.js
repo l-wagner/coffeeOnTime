@@ -95,7 +95,7 @@ class EmployeesList extends Component {
                   className={'list-group-item ' + (index === currentIndex ? 'active' : '')}
                   onClick={() => this.setActiveEmployee(employee, index)}
                   key={index}>
-                  {employee.firstName}
+                  {employee.firstName} – {employee.tags.map(tag => <span key={tag.id}>{tag.name} </span>)}
                 </li>
               ))}
           </ul>
@@ -113,6 +113,7 @@ class EmployeesList extends Component {
                   <strong>First name:</strong>
                 </label>{' '}
                 {currentEmployee.firstName}
+                
               </div>
               <div>
                 <label>
@@ -122,9 +123,9 @@ class EmployeesList extends Component {
               </div>
               <div>
                 <label>
-                  <strong>Status:</strong>
+                  <strong>Tags</strong>
                 </label>{' '}
-                {currentEmployee.published ? 'Published' : 'Pending'}
+                {currentEmployee.tags.map(tag => <p key={tag.id}>{tag.name}</p>)}
               </div>
 
               <Link to={'/employees/' + currentEmployee.id} className='badge badge-warning'>
