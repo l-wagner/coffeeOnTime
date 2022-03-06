@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createRole } from '../actions/roles';
+import { createTag } from '../actions/tags';
 
-class AddRole extends Component {
+class AddTag extends Component {
   constructor(props) {
     super(props);
     this.onChangeName = this.onChangeName.bind(this);
     this.onChangeDescription = this.onChangeDescription.bind(this);
-    this.saveRole = this.saveRole.bind(this);
-    this.newRole = this.newRole.bind(this);
+    this.saveTag = this.saveTag.bind(this);
+    this.newTag = this.newTag.bind(this);
 
     this.state = {
       id: null,
@@ -32,11 +32,11 @@ class AddRole extends Component {
     });
   }
 
-  saveRole() {
+  saveTag() {
     const { name, description } = this.state;
 
     this.props
-      .createRole(name, description)
+      .createTag(name, description)
       .then((data) => {
         this.setState({
           id: data.id,
@@ -53,7 +53,7 @@ class AddRole extends Component {
       });
   }
 
-  newRole() {
+  newTag() {
     this.setState({
       id: null,
       name: '',
@@ -70,7 +70,7 @@ class AddRole extends Component {
         {this.state.submitted ? (
           <div>
             <h4>You submitted successfully!</h4>
-            <button className='btn btn-success' onClick={this.newRole}>
+            <button className='btn btn-success' onClick={this.newTag}>
               Add
             </button>
           </div>
@@ -102,7 +102,7 @@ class AddRole extends Component {
               />
             </div>
 
-            <button onClick={this.saveRole} className='btn btn-success'>
+            <button onClick={this.saveTag} className='btn btn-success'>
               Submit
             </button>
           </div>
@@ -112,4 +112,4 @@ class AddRole extends Component {
   }
 }
 
-export default connect(null, { createRole })(AddRole);
+export default connect(null, { createTag })(AddTag);

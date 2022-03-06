@@ -10,10 +10,10 @@ import AddEmployee from './components/employee-add.component';
 import Employee from './components/employee.component';
 import EmployeeList from './components/employee-list.component';
 
-import AddRole from './components/role-add.component';
+import AddTag from './components/tag-add.component';
 import AddShift from './components/shift-add.component';
 
-import RoleList from './components/role-list.component';
+import TagList from './components/tag-list.component';
 
 class App extends Component {
   render() {
@@ -35,7 +35,7 @@ class App extends Component {
                     <Link to={'/add-employee'}>Add Employee</Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link to={'/add-role'}>Add Role</Link>
+                    <Link to={'/add-tag'}>Add Tag</Link>
                   </MenuItem>
                   <MenuItem>
                     <Link to={'/add-shift'}>Add Shift</Link>
@@ -53,8 +53,8 @@ class App extends Component {
             <Switch>
               <Route exact path={['/', '/employees']} component={EmployeeList} />
               <Route exact path='/add-employee' component={AddEmployee} />
-              <Route exact path='/roles' component={RoleList} />
-              <Route exact path='/add-role' component={AddRole} />
+              <Route exact path='/tags' component={TagList} />
+              <Route exact path='/add-tag' component={AddTag} />
               <Route exact path='/add-shift' component={AddShift} />
               <Route path='/employees/:id' component={Employee} />
             </Switch>

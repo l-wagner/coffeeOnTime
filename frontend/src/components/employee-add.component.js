@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createEmployee } from '../actions/employees';
-import { retrieveRoles } from '../actions/roles';
+import { createEmployee } from '../actions/employees.js';
+import { retrieveTags } from '../actions/tags.js';
 import { Checkbox, Input, InputGroup, Stack } from '@chakra-ui/react';
 
 class AddEmployee extends Component {
@@ -24,7 +24,7 @@ class AddEmployee extends Component {
     };
   }
   componentDidMount() {
-    this.props.retrieveRoles();
+    this.props.retrieveTags();
   
   }
 
@@ -107,7 +107,7 @@ class AddEmployee extends Component {
                 <Input type='text' placeholder='name ' value={this.state.name} onChange={this.onChangeName} />
               </InputGroup>
 
-              {/* Roles set up for this business */}
+              {/* Tags set up for this business */}
               <InputGroup size='sm'>
                 <Stack spacing={5} direction='row'>
                   {availableTags &&
@@ -184,4 +184,4 @@ const mapStateToProps = (state) => {
     availableTags: state.roles,
   };
 };
-export default connect(mapStateToProps, { createEmployee, retrieveRoles })(AddEmployee);
+export default connect(mapStateToProps, { createEmployee, retrieveTags })(AddEmployee);

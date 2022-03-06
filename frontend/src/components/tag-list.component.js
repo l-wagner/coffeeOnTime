@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { retrieveRoles, findRolesByName, deleteAllRoles } from '../actions/roles';
+import { retrieveTags, findTagsByName, deleteAllTags } from '../actions/tags';
 import { Link } from 'react-router-dom';
 
-class RolesList extends Component {
+class TagsList extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchName = this.onChangeSearchName.bind(this);
     this.refreshData = this.refreshData.bind(this);
-    this.setActiveRole = this.setActiveRole.bind(this);
+    this.setActiveTag = this.setActiveTag.bind(this);
     this.findByName = this.findByName.bind(this);
-    this.removeAllRoles = this.removeAllRoles.bind(this);
+    this.removeAllTags = this.removeAllTags.bind(this);
 
     this.state = {
-      currentRole: null,
+      currentTag: null,
       currentIndex: -1,
       searchName: '',
     };
   }
 
   componentDidMount() {
-    this.props.retrieveRoles();
+    this.props.retrieveTags();
   }
 
   onChangeSearchName(e) {
@@ -33,21 +33,21 @@ class RolesList extends Component {
 
   refreshData() {
     this.setState({
-      currentRole: null,
+      currentTag: null,
       currentIndex: -1,
     });
   }
 
-  setActiveRole(role, index) {
+  setActiveTag(tag, index) {
     this.setState({
-      currentRole: role,
+      currentTag: tag,
       currentIndex: index,
     });
   }
 
-  removeAllRoles() {
+  removeAllTags() {
     this.props
-      .deleteAllRoles()
+      .deleteAllTags()
       .then((response) => {
         console.log(response);
         this.refreshData();
@@ -60,12 +60,12 @@ class RolesList extends Component {
   findByName() {
     this.refreshData();
 
-    this.props.findRolesByName(this.state.searchName);
+    this.props.findTagsByName(this.state.searchName);
   }
 
   render() {
-    const { searchName, currentRole, currentIndex } = this.state;
-    const { roles } = this.props;
+    const { searchName, currentTag, currentIndex } = this.state;
+    const { tags } = this.props;
 
     return (
       <div className='list row'>
@@ -86,55 +86,55 @@ class RolesList extends Component {
           </div>
         </div>
         <div className='col-md-6'>
-          <h4>Roles List</h4>
+          <h4>Tags List</h4>
 
           <ul className='list-group'>
-            {roles &&
-              roles.map((role, index) => (
+            {tags &&
+              tags.map((tag, index) => (
                 <li
                   className={'list-group-item ' + (index === currentIndex ? 'active' : '')}
-                  onClick={() => this.setActiveRole(role, index)}
+                  onClick={() => this.setActiveTag(tag, index)}
                   key={index}>
-                  {role.name}
+                  {tag.name}
                 </li>
               ))}
           </ul>
 
-          <button className='m-3 btn btn-sm btn-danger' onClick={this.removeAllRoles}>
+          <button className='m-3 btn btn-sm btn-danger' onClick={this.removeAllTags}>
             Remove All
           </button>
         </div>
         <div className='col-md-6'>
-          {currentRole ? (
+          {currentTag ? (
             <div>
-              <h4>Role</h4>
+              <h4>Tag</h4>
               <div>
                 <label>
                   <strong>Name:</strong>
                 </label>{' '}
-                {currentRole.name}
+                {currentTag.name}
               </div>
               <div>
                 <label>
                   <strong>Description:</strong>
                 </label>{' '}
-                {currentRole.description}
+                {currentTag.description}
               </div>
               <div>
                 <label>
                   <strong>Icon:</strong>
                 </label>{' '}
-                {currentRole.icon}
+                {currentTag.icon}
               </div>
 
-              <Link to={'/roles/' + currentRole.id} className='badge badge-warning'>
+              <Link to={'/tags/' + currentTag.id} className='badge badge-warning'>
                 Edit
               </Link>
             </div>
           ) : (
             <div>
               <br />
-              <p>Please click on a Role...</p>
+              <p>Please click on a Tag...</p>
             </div>
           )}
         </div>
@@ -145,12 +145,12 @@ class RolesList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    roles: state.roles,
+    tags: state.tags,
   };
 };
 
 export default connect(mapStateToProps, {
-  retrieveRoles,
-  findRolesByName,
-  deleteAllRoles,
-})(RolesList);
+  retrieveTags,
+  findTagsByName,
+  deleteAllTags,
+})(TagsList);

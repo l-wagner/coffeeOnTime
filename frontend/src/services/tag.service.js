@@ -1,6 +1,6 @@
 import http from '../http-common';
 
-class RoleDataService {
+class TagDataService {
   getAll() {
     return http.get('/tags');
   }
@@ -30,4 +30,4 @@ class RoleDataService {
   }
 }
 
-export default new RoleDataService();
+export default new TagDataService();

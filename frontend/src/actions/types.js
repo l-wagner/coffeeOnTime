@@ -4,11 +4,11 @@ export const UPDATE_EMPLOYEE = 'UPDATE_EMPLOYEE';
 export const DELETE_EMPLOYEE = 'DELETE_EMPLOYEE';
 export const DELETE_ALL_EMPLOYEES = 'DELETE_ALL_EMPLOYEES';
 
-export const CREATE_ROLE = 'CREATE_ROLE';
-export const RETRIEVE_ROLES = 'RETRIEVE_ROLES';
-export const UPDATE_ROLE = 'UPDATE_ROLE';
-export const DELETE_ROLE = 'DELETE_ROLE';
-export const DELETE_ALL_ROLES = 'DELETE_ALL_ROLES';
+export const CREATE_TAG = 'CREATE_TAG';
+export const RETRIEVE_TAGS = 'RETRIEVE_TAGS';
+export const UPDATE_TAG = 'UPDATE_TAG';
+export const DELETE_TAG = 'DELETE_TAG';
+export const DELETE_ALL_TAGS = 'DELETE_ALL_TAGS';
 
 export const CREATE_SHIFT = 'CREATE_SHIFT';
 export const RETRIEVE_SHIFTS = 'RETRIEVE_SHIFTS';

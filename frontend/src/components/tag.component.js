@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateRole, deleteRole } from '../actions/roles';
-import RoleDataService from '../services/employee.service';
+import { updateTag, deleteTag } from '../actions/tags';
+import TagDataService from '../services/employee.service';
 
-class Role extends Component {
+class Tag extends Component {
   constructor(props) {
     super(props);
     this.onChangeName = this.onChangeName.bind(this);
     this.onChangeDescription = this.onChangeDescription.bind(this);
-    this.getRole = this.getRole.bind(this);
+    this.getTag = this.getTag.bind(this);
     this.updateStatus = this.updateStatus.bind(this);
     this.updateContent = this.updateContent.bind(this);
-    this.removeRole = this.removeRole.bind(this);
+    this.removeTag = this.removeTag.bind(this);
 
     this.state = {
-      currentRole: {
+      currentTag: {
         id: null,
         name: '',
         description: '',
@@ -25,7 +25,7 @@ class Role extends Component {
   }
 
   componentDidMount() {
-    this.getRole(this.props.match.params.id);
+    this.getTag(this.props.match.params.id);
   }
 
   onChangeName(e) {
@@ -33,8 +33,8 @@ class Role extends Component {
 
     this.setState(function (prevState) {
       return {
-        currentRole: {
-          ...prevState.currentRole,
+        currentTag: {
+          ...prevState.currentTag,
           name: name,
         },
       };
@@ -45,18 +45,18 @@ class Role extends Component {
     const description = e.target.value;
 
     this.setState((prevState) => ({
-      currentRole: {
-        ...prevState.currentRole,
+      currentTag: {
+        ...prevState.currentTag,
         description: description,
       },
     }));
   }
 
-  getRole(id) {
-    RoleDataService.get(id)
+  getTag(id) {
+    TagDataService.get(id)
       .then((response) => {
         this.setState({
-          currentRole: response.data,
+          currentTag: response.data,
         });
         console.log(response.data);
       })
@@ -67,20 +67,20 @@ class Role extends Component {
 
   updateStatus(status) {
     var data = {
-      id: this.state.currentRole.id,
-      name: this.state.currentRole.name,
-      description: this.state.currentRole.description,
+      id: this.state.currentTag.id,
+      name: this.state.currentTag.name,
+      description: this.state.currentTag.description,
       acive: status,
     };
 
     this.props
-      .updateRole(this.state.currentRole.id, data)
+      .updateTag(this.state.currentTag.id, data)
       .then((reponse) => {
         console.log(reponse);
 
         this.setState((prevState) => ({
-          currentRole: {
-            ...prevState.currentRole,
+          currentTag: {
+            ...prevState.currentTag,
             acive: status,
           },
         }));
@@ -94,7 +94,7 @@ class Role extends Component {
 
   updateContent() {
     this.props
-      .updateRole(this.state.currentRole.id, this.state.currentRole)
+      .updateTag(this.state.currentTag.id, this.state.currentTag)
       .then((reponse) => {
         console.log(reponse);
 
@@ -105,11 +105,11 @@ class Role extends Component {
       });
   }
 
-  removeRole() {
+  removeTag() {
     this.props
-      .deleteRole(this.state.currentRole.id)
+      .deleteTag(this.state.currentTag.id)
       .then(() => {
-        this.props.history.push('/roles');
+        this.props.history.push('/tags');
       })
       .catch((e) => {
         console.log(e);
@@ -117,17 +117,17 @@ class Role extends Component {
   }
 
   render() {
-    const { currentRole } = this.state;
+    const { currentTag } = this.state;
 
     return (
       <div>
-        {currentRole ? (
+        {currentTag ? (
           <div className='edit-form'>
-            <h4>Role</h4>
+            <h4>Tag</h4>
             <form>
               <div className='form-group'>
                 <label htmlFor='name'>Title</label>
-                <input type='text' className='form-control' id='name' value={currentRole.name} onChange={this.onChangeName} />
+                <input type='text' className='form-control' id='name' value={currentTag.name} onChange={this.onChangeName} />
               </div>
               <div className='form-group'>
                 <label htmlFor='description'>Description</label>
@@ -135,7 +135,7 @@ class Role extends Component {
                   type='text'
                   className='form-control'
                   id='description'
-                  value={currentRole.description}
+                  value={currentTag.description}
                   onChange={this.onChangeDescription}
                 />
               </div>
@@ -144,11 +144,11 @@ class Role extends Component {
                 <label>
                   <strong>Status:</strong>
                 </label>
-                {currentRole.acive ? 'Published' : 'Pending'}
+                {currentTag.acive ? 'Published' : 'Pending'}
               </div>
             </form>
 
-            {currentRole.acive ? (
+            {currentTag.acive ? (
               <button className='badge badge-primary mr-2' onClick={() => this.updateStatus(false)}>
                 UnPublish
               </button>
@@ -158,7 +158,7 @@ class Role extends Component {
               </button>
             )}
 
-            <button className='badge badge-danger mr-2' onClick={this.removeRole}>
+            <button className='badge badge-danger mr-2' onClick={this.removeTag}>
               Delete
             </button>
 
@@ -170,7 +170,7 @@ class Role extends Component {
         ) : (
           <div>
             <br />
-            <p>Please click on a Role...</p>
+            <p>Please click on a Tag...</p>
           </div>
         )}
       </div>
@@ -178,4 +178,4 @@ class Role extends Component {
   }
 }
 
-export default connect(null, { updateRole, deleteRole })(Role);
+export default connect(null, { updateTag, deleteTag })(Tag);
