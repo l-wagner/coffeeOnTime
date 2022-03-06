@@ -11,7 +11,7 @@ exports.successMsg = function (res, msg) {
   res.status(200).json(data);
 };
 
-exports.successData = function (res, msg, data) {
+exports.successData = function (res, msg = '', data = {}) {
   let user = res.user || {};
   var resData = {
     status: 1,
@@ -37,7 +37,7 @@ exports.error = function (res, msg, status = 0) {
   res.status(status).json(data);
 };
 
-exports.notFoundResponse = function (res, msg) {
+exports.notFoundResponse = function (res, msg = 'Not found.') {
   var data = {
     status: 0,
     message: msg,

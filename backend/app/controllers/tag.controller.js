@@ -1,6 +1,9 @@
 const db = require('../models/db.js');
 const Tag = db.tag;
+const Employee = db.employee;
 const apiResponse = require('../util/apiResponse.js');
+const { body, query, validationResult } = require('express-validator');
+const { application } = require('express');
 
 // Create and Save a new Tag
 exports.create = (req, res) => {
@@ -35,10 +38,10 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   const name = req.query.name;
 
-  Tag.findAll({raw : true})
+  Tag.findAll({ include: Employee })
     .then((data) => {
       console.log(data);
-      
+
       apiResponse.successData(res, '', data);
     })
     .catch((err) => {
@@ -49,21 +52,23 @@ exports.findAll = (req, res) => {
 };
 
 // Find a single Tag by Id
-exports.findOne = (req, res) => {
-  Tag.findById(req.params.id, (err, data) => {
-    if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: `Not found Tag with id ${req.params.id}.`,
-        });
-      } else {
+exports.findById = [
+  query('id').not().isEmpty().trim().escape(),
+  (req, res) => {
+    let id = req.params.id;
+    Tag.findByPk(id)
+      .then((data) => {
+        console.log(data);
+        if (data) apiResponse.successData(res, '', data);
+        else apiResponse.notFoundResponse(res, 'Tag not found.')
+      })
+      .catch((err) => {
         res.status(500).send({
-          message: 'Error retrieving Tag with id ' + req.params.id,
+          message: err.message || `Could not find tag with id ${id}.`,
         });
-      }
-    } else res.send(data);
-  });
-};
+      });
+  },
+];
 
 // find all active Tags
 exports.findAllPublished = (req, res) => {

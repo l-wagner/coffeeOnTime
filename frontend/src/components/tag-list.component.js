@@ -126,6 +126,12 @@ class TagsList extends Component {
                 </label>{' '}
                 {currentTag.icon}
               </div>
+              <div>
+                <label>
+                  <strong>Employees:</strong>
+                </label>{' '}
+                {currentTag.employees.map(employee => <p key={employee.id}>{employee.firstName}</p>)}
+              </div>
 
               <Link to={'/tags/' + currentTag.id} className='badge badge-warning'>
                 Edit

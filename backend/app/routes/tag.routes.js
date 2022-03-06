@@ -3,25 +3,25 @@ module.exports = app => {
 
   var router = require("express").Router();
 
-  // Create a new Employee
+  // Create a new Tag
   router.post("/", tags.create);
 
-  // Retrieve all Employees
+  // Retrieve all Tags
   router.get("/", tags.findAll);
 
-  // Retrieve all published Employees
+  // Retrieve all published Tags
   router.get("/published", tags.findAllPublished);
 
-  // Retrieve a single Employee with id
-  router.get("/:id", tags.findOne);
+  // Retrieve a single Tag with id
+  router.get("/:id", tags.findById);
 
-  // Update a Employee with id
+  // Update a Tag with id
   router.put("/:id", tags.update);
 
-  // Delete a Employee with id
+  // Delete a Tag with id
   router.delete("/:id", tags.delete);
 
-  // Delete all Employees
+  // Delete all Tags
   router.delete("/", tags.deleteAll);
 
   app.use('/api/tags', router);

@@ -55,9 +55,9 @@ exports.add = [
 
 // Retrieve all Employees from the database
 exports.findAll = (req, res) => {
-  Employee.findAll({ include: Tag }).then((employee) => {
-    // console.log(util.inspect(employee, { showHidden: false, depth: null, colors: true }));
-    res.send(employee);
+  Employee.findAll({ include: Tag }).then((employees) => {
+    // console.log(util.inspect(employees, { showHidden: false, depth: null, colors: true }));
+    apiResponse.successData(res,`${Object.keys(employees).length} employees found.`, employees);
   });
 };
 

@@ -8,10 +8,10 @@ export const createEmployee = (name, blockedDays, roles) => async (dispatch) => 
 
     dispatch({
       type: CREATE_EMPLOYEE,
-      payload: res.data,
+      payload: res.payload,
     });
 
-    return Promise.resolve(res.data);
+    return Promise.resolve(res.payload);
   } catch (err) {
     return Promise.reject(err);
   }
@@ -23,7 +23,7 @@ export const retrieveEmployees = () => async (dispatch) => {
 
     dispatch({
       type: RETRIEVE_EMPLOYEES,
-      payload: res.data,
+      payload: res.payload,
     });
   } catch (err) {
     console.log(err);
@@ -39,7 +39,7 @@ export const updateEmployee = (id, data) => async (dispatch) => {
       payload: data,
     });
 
-    return Promise.resolve(res.data);
+    return Promise.resolve(res.payload);
   } catch (err) {
     return Promise.reject(err);
   }
@@ -64,10 +64,10 @@ export const deleteAllEmployees = () => async (dispatch) => {
 
     dispatch({
       type: DELETE_ALL_EMPLOYEES,
-      payload: res.data,
+      payload: res.payload,
     });
 
-    return Promise.resolve(res.data);
+    return Promise.resolve(res.payload);
   } catch (err) {
     return Promise.reject(err);
   }
@@ -79,7 +79,7 @@ export const findEmployeesByName = (name) => async (dispatch) => {
 
     dispatch({
       type: RETRIEVE_EMPLOYEES,
-      payload: res.data,
+      payload: res.payload,
     });
   } catch (err) {
     console.log(err);
