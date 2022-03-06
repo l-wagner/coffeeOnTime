@@ -55,7 +55,7 @@ exports.add = [
 
 // Retrieve all Employees from the database
 exports.findAll = (req, res) => {
-  Employee.findAll({ where: { id: 10 }, include: Tag }).then((employee) => {
+  Employee.findAll({ include: Tag }).then((employee) => {
     // console.log(util.inspect(employee, { showHidden: false, depth: null, colors: true }));
     res.send(employee);
   });

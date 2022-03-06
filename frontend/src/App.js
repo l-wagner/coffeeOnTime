@@ -8,7 +8,7 @@ import './App.css';
 
 import AddEmployee from './components/employee-add.component';
 import Employee from './components/employee.component';
-import EmployeeList from './components/shift-list.component';
+import EmployeeList from './components/employee-list.component';
 
 import AddRole from './components/role-add.component';
 import AddShift from './components/shift-add.component';

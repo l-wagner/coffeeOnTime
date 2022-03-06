@@ -86,7 +86,7 @@ class EmployeesList extends Component {
           </div>
         </div>
         <div className='col-md-6'>
-          <h4>Employees List</h4>
+          <h4>All employees</h4>
 
           <ul className='list-group'>
             {employees &&
@@ -95,7 +95,7 @@ class EmployeesList extends Component {
                   className={'list-group-item ' + (index === currentIndex ? 'active' : '')}
                   onClick={() => this.setActiveEmployee(employee, index)}
                   key={index}>
-                  {employee.name}
+                  {employee.firstName}
                 </li>
               ))}
           </ul>
@@ -110,9 +110,9 @@ class EmployeesList extends Component {
               <h4>Employee</h4>
               <div>
                 <label>
-                  <strong>Name:</strong>
+                  <strong>First name:</strong>
                 </label>{' '}
-                {currentEmployee.name}
+                {currentEmployee.firstName}
               </div>
               <div>
                 <label>

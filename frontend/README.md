@@ -1,5 +1,8 @@
 Todo:
-- sequelize setup 
+- show roles in employee list
+- fix role list
+- show employees in role list
+- replace findEmployeeByName with inventory app inplace search
 
 
 order of creation:
