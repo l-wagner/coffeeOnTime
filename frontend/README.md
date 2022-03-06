@@ -1,8 +1,7 @@
 Todo:
-- fix role list
-- show employees in role list
 - replace findEmployeeByName with debounced inplace search
 - let users rename tags/skills/roles
+- figure out how to create owners - is it a default tag? should employees who own the business simply get an owner tag?
 
 order of creation:
 - business

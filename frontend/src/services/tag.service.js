@@ -1,32 +1,32 @@
-import http from '../axiosInstance';
+import axios from '../axiosInstance.js';
 
 class TagDataService {
   getAll() {
-    return http.get('/tags');
+    return axios.get('/tags');
   }
 
   get(id) {
-    return http.get(`/tags/${id}`);
+    return axios.get(`/tags/${id}`);
   }
 
   create(data) {
-    return http.post('/tags', data);
+    return axios.post('/tags', data);
   }
 
   update(id, data) {
-    return http.put(`/tags/${id}`, data);
+    return axios.put(`/tags/${id}`, data);
   }
 
   delete(id) {
-    return http.delete(`/tags/${id}`);
+    return axios.delete(`/tags/${id}`);
   }
 
   deleteAll() {
-    return http.delete(`/tags`);
+    return axios.delete(`/tags`);
   }
 
   findByName(name) {
-    return http.get(`/tags?name=${name}`);
+    return axios.get(`/tags?name=${name}`);
   }
 }
 

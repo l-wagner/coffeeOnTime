@@ -1,32 +1,32 @@
-import http from '../http-common';
+import axios from '../axiosInstance.js';
 
 class ShiftDataService {
   getAll() {
-    return http.get('/shifts');
+    return axios.get('/shifts');
   }
 
   get(id) {
-    return http.get(`/shifts/${id}`);
+    return axios.get(`/shifts/${id}`);
   }
 
   create(data) {
-    return http.post('/shifts', data);
+    return axios.post('/shifts', data);
   }
 
   update(id, data) {
-    return http.put(`/shifts/${id}`, data);
+    return axios.put(`/shifts/${id}`, data);
   }
 
   delete(id) {
-    return http.delete(`/shifts/${id}`);
+    return axios.delete(`/shifts/${id}`);
   }
 
   deleteAll() {
-    return http.delete(`/shifts`);
+    return axios.delete(`/shifts`);
   }
 
   findByName(name) {
-    return http.get(`/shifts?name=${name}`);
+    return axios.get(`/shifts?name=${name}`);
   }
 }
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createEmployee } from '../actions/employees.js';
 import { retrieveTags } from '../actions/tags.js';
-import { Checkbox, Input, InputGroup, Stack } from '@chakra-ui/react';
+import { Checkbox, Input, InputGroup, Stack, HStack } from '@chakra-ui/react';
 
 class AddEmployee extends Component {
   constructor(props) {
@@ -121,7 +121,7 @@ class AddEmployee extends Component {
 
               {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
               <InputGroup size='sm'>
-                <Stack align='stretch' direction='row'>
+                <HStack align='stretch' direction='row'>
                   <Checkbox value='Mon' onChange={() => this.onChangeBlockedDays('Mon')}>
                     Mon
                   </Checkbox>
@@ -143,7 +143,7 @@ class AddEmployee extends Component {
                   <Checkbox value='Sun' onChange={() => this.onChangeBlockedDays('Sun')}>
                     Sun
                   </Checkbox>
-                </Stack>
+                </HStack>
               </InputGroup>
             </Stack>
             {/* <input

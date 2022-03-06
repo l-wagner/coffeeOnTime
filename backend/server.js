@@ -18,7 +18,7 @@ app.use(morgan('tiny'));
 app.use(express.json()); /* bodyParser.json() is deprecated */
 
 const db = require('./app/models/db.js');
-db.sequelize.sync({ force: false }).then(() => {
+db.sequelize.sync({ force: true }).then(() => {
   console.log('Drop and re-sync db.');
 });
 
@@ -32,6 +32,7 @@ app.get('/', (req, res) => {
 
 require('./app/routes/employee.routes.js')(app);
 require('./app/routes/tag.routes.js')(app);
+require('./app/routes/business.routes.js')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

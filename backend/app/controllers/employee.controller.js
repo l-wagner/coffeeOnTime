@@ -24,7 +24,7 @@ exports.add = [
     Tag.findAll({ where: { id: tagIds } }).then((tagsToAdd) => {
       if (!tagsToAdd) {
         res.status(500).send({
-          message: err.message || 'Error occurred while creating the Employee.',
+          message: err.message || 'The selected tags are unavailable.',
         });
       }
 

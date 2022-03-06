@@ -3,6 +3,9 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
     },
+    nameForTags: {
+      type: DataTypes.STRING,
+    },
   });
   return Business;
 };

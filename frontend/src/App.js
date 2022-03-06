@@ -15,6 +15,8 @@ import AddShift from './components/shift-add.component';
 
 import TagList from './components/tag-list.component';
 
+import Business from './components/business-create';
+
 class App extends Component {
   render() {
     return (
@@ -28,23 +30,28 @@ class App extends Component {
             <div className='navbar-nav mr-auto'>
               <Menu>
                 <MenuButton colorScheme='blue' as={Button} rightIcon={<ChevronDownIcon />}>
-                  Add Stuff
+                  Add stuff
                 </MenuButton>
                 <MenuList>
                   <MenuItem>
-                    <Link to={'/add-employee'}>Add Employee</Link>
+                    <Link to={'/add-employee'}>Add employee</Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link to={'/add-tag'}>Add Tag</Link>
+                    <Link to={'/add-tag'}>Add tag</Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link to={'/add-shift'}>Add Shift</Link>
+                    <Link to={'/add-shift'}>Add shift</Link>
                   </MenuItem>
                 </MenuList>
               </Menu>
               <li className='nav-item'>
                 <Link to={'/employees'} className='nav-link'>
                   Employees
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link to={'/setup'} className='nav-link'>
+                  Set up your business
                 </Link>
               </li>
             </div>
@@ -57,6 +64,7 @@ class App extends Component {
               <Route exact path='/add-tag' component={AddTag} />
               <Route exact path='/add-shift' component={AddShift} />
               <Route path='/employees/:id' component={Employee} />
+              <Route path='/setup' component={Business} />
             </Switch>
           </div>
         </Router>
