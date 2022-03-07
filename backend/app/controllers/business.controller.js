@@ -53,13 +53,13 @@ exports.create = [
           // owner.addTag(ownerTag);
 
           Tag.create({
-            
             name: 'Owner',
             description: 'Owner of business',
           }).then((tag) => {
             console.log(tag);
             let counter = 0;
             business.employees[0].addTag(tag);
+            business.addTag(tag);
             // console.log(counter);
             // console.log(owner);
 

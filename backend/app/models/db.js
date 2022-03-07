@@ -29,6 +29,7 @@ dbTag.belongsToMany(dbShift, { through: 'shiftTags' });
 
 dbBusiness.hasMany(dbEmployee);
 dbBusiness.hasMany(dbSchedule);
+dbBusiness.hasMany(dbTag);
 
 dbSchedule.hasMany(dbScheduledShift);
 
