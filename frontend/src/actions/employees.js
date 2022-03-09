@@ -2,9 +2,10 @@ import { CREATE_EMPLOYEE, RETRIEVE_EMPLOYEES, UPDATE_EMPLOYEE, DELETE_EMPLOYEE, 
 
 import EmployeeDataService from '../services/employee.service';
 
-export const createEmployee = (name, blockedDays, roles) => async (dispatch) => {
+export const createEmployee = (values) => async (dispatch) => {
   try {
-    const res = await EmployeeDataService.create({ name, blockedDays, roles });
+    values.tags = values.tags.join(',')
+    const res = await EmployeeDataService.create(values);
 
     dispatch({
       type: CREATE_EMPLOYEE,

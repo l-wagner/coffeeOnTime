@@ -1,4 +1,5 @@
 const util = require('util');
+var Sequelize = require('sequelize');
 
 const db = require('../models/db.js');
 const Employee = db.employee;
@@ -6,11 +7,12 @@ const Tag = db.tag;
 const apiResponse = require('../util/apiResponse.js');
 const { body, query, validationResult } = require('express-validator');
 
+
 // Create and Save a new Employee
 exports.add = [
   body('name').not().isEmpty().trim().escape(),
-  body('blockedDays').not().isEmpty().trim().escape(),
-  body('roles').trim().escape(),
+  body('blockedDays').trim().escape(),
+  body('tags').trim().escape(),
   function (req, res) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
 
@@ -18,19 +20,26 @@ exports.add = [
     if (!errors.isEmpty()) {
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
+    
 
-    let tagIds = req.body.roles.split(',');
-
-    Tag.findAll({ where: { id: tagIds } }).then((tagsToAdd) => {
+    let tags = req.body.tags.split(',');
+    Tag.findAll({
+      where: {
+        id: {
+          [Sequelize.Op.in]: tags,
+        },
+      },
+    }).then((tagsToAdd) => {
       if (!tagsToAdd) {
         res.status(500).send({
           message: err.message || 'The selected tags are unavailable.',
         });
       }
+      console.log(req.body);
 
       Employee.create({
         firstName: req.body.name,
-        blockedDays: req.body.blockedDays,
+        blockedDays: req.body.blockedDays || null,
         active: req.body.active || true,
       })
         .then((employee) => {
@@ -48,7 +57,6 @@ exports.add = [
             message: err.message || 'Error occurred while creating the Employee.',
           });
         });
-      // Save Employee in the database
     });
   },
 ];
@@ -57,7 +65,7 @@ exports.add = [
 exports.findAll = (req, res) => {
   Employee.findAll({ include: Tag }).then((employees) => {
     // console.log(util.inspect(employees, { showHidden: false, depth: null, colors: true }));
-    apiResponse.successData(res,`${Object.keys(employees).length} employees found.`, employees);
+    apiResponse.successData(res, `${Object.keys(employees).length} employees found.`, employees);
   });
 };
 

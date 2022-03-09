@@ -25,6 +25,7 @@ exports.validationError = function (res, data, status = 0) {
   var data = {
     ...data,
   };
+  console.log(data);
 
   res.status(status).json(data);
 };

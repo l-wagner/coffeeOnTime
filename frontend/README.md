@@ -3,6 +3,8 @@ Todo:
 - let users rename tags/skills/roles
 - figure out how to create owners - is it a default tag? should employees who own the business simply get an owner tag?
 - switch to redux hooks
+- change form validation design
+- pull tags for business only
 
 order of creation:
 - business

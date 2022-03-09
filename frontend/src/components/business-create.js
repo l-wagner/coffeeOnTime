@@ -20,16 +20,18 @@ export default function Business() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={errors.nameForTags}>
+      <FormControl isInvalid={errors.name}>
         <FormLabel htmlFor='name'>What's the name of your business?</FormLabel>
         <Input id='name' placeholder='Awesome Corp.' {...register('name', { required: 'Please name your business.' })} />
-        <FormErrorMessage>{errors.nameForTags?.message}</FormErrorMessage>
-
+        {/* {errors.name && errors.name?.message} */}
+        <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+      </FormControl>
+      <FormControl isInvalid={errors.owner}>
         <FormLabel htmlFor='name'>Who are the owners?</FormLabel>
         <Input id='owner' placeholder='Lisa' {...register('owner', { required: 'Please name at least one owner.' })} />
         <FormErrorMessage>{errors.owner?.message}</FormErrorMessage>
-
-
+      </FormControl>
+      <FormControl isInvalid={errors.nameForTags}>
         <FormLabel htmlFor='name'>What do you call your tags?</FormLabel>
         <Input id='nameForTags' placeholder='Skills, roles, tags?' {...register('nameForTags')} />
         <FormErrorMessage>{errors.nameForTags?.message}</FormErrorMessage>

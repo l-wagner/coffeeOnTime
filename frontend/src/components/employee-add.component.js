@@ -1,39 +1,32 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import { createEmployee } from '../actions/employees.js';
 import { retrieveTags } from '../actions/tags.js';
-import { Checkbox, Input, InputGroup, Stack, HStack } from '@chakra-ui/react';
+import { Checkbox, Input, InputGroup, Stack, HStack, FormErrorMessage, Button, FormControl } from '@chakra-ui/react';
 
-class AddEmployee extends Component {
-  constructor(props) {
-    super(props);
-    this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeBlockedDays = this.onChangeBlockedDays.bind(this);
-    this.onChangeEmployeeTags = this.onChangeEmployeeTags.bind(this);
-    this.saveEmployee = this.saveEmployee.bind(this);
-    this.newEmployee = this.newEmployee.bind(this);
+export default function Employee() {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm();
+  // constructor(props) {
+  //   super(props);
+  //   this.onChangeName = this.onChangeName.bind(this);
+  //   this.onChangeBlockedDays = this.onChangeBlockedDays.bind(this);
+  //   this.onChangeEmployeeTags = this.onChangeEmployeeTags.bind(this);
+  //   this.saveEmployee = this.saveEmployee.bind(this);
+  //   this.newEmployee = this.newEmployee.bind(this);
 
-    this.state = {
-      id: null,
-      name: '',
-      blockedDays: [],
-      employeeTags: [],
-      active: true,
+  const availableTags = useSelector((state) => state.tags);
+  const dispatch = useDispatch();
 
-      submitted: false,
-    };
-  }
-  componentDidMount() {
-    this.props.retrieveTags();
-  
-  }
+  useEffect(() => {
+    dispatch(retrieveTags());
+  }, []);
 
-  onChangeName(e) {
-    this.setState({
-      name: e.target.value,
-    });
-  }
-  onChangeEmployeeTags(tagName) {
+  function onChangeEmployeeTags(tagName) {
     let { employeeTags } = this.state;
     let index = employeeTags.indexOf(tagName);
     index >= 0 ? employeeTags.splice(index, 1) : employeeTags.push(tagName);
@@ -43,7 +36,7 @@ class AddEmployee extends Component {
     console.log(this.state.employeeTags);
   }
 
-  onChangeBlockedDays(day) {
+  function onChangeBlockedDays(day) {
     let { blockedDays } = this.state;
     let index = blockedDays.indexOf(day);
     index >= 0 ? blockedDays.splice(index, 1) : blockedDays.push(day);
@@ -53,7 +46,7 @@ class AddEmployee extends Component {
     console.log(this.state.blockedDays);
   }
 
-  saveEmployee() {
+  function saveEmployee() {
     const { name, blockedDays, employeeTags } = this.state;
 
     this.props
@@ -75,78 +68,85 @@ class AddEmployee extends Component {
       });
   }
 
-  newEmployee() {
-    this.setState({
-      id: null,
-      name: '',
-      blockedDays: '',
-      active: false,
-
-      submitted: false,
-    });
+  function onSubmit(values) {
+    dispatch(createEmployee(values));
+    console.log(values);
   }
 
-  render() {
-    const { availableTags } = this.props;
-
-    return (
-      <div className='submit-form'>
-        {this.state.submitted && (
-          <div>
-            <h4>You submitted successfully!</h4>
-            <button className='btn btn-success' onClick={this.newEmployee}>
-              Add
-            </button>
-          </div>
-        )}
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      {/* {this.state.submitted && (
         <div>
-          <div className='form-group'>
-            <Stack spacing={4}>
-              <InputGroup>
-                {/* <InputLeftAddon children='+234' /> */}
-                <Input type='text' placeholder='name ' value={this.state.name} onChange={this.onChangeName} />
-              </InputGroup>
+          <h4>You submitted successfully!</h4>
+          <button className='btn btn-success' onClick={this.newEmployee}>
+            Add
+          </button>
+        </div>
+      )} */}
 
-              {/* Tags set up for this business */}
-              <InputGroup size='sm'>
-                <Stack spacing={5} direction='row'>
-                  {availableTags &&
-                    availableTags.map((tag, index) => (
-                      <Checkbox value={tag.id} key={tag.id} onChange={() => this.onChangeEmployeeTags(tag.id)}>
-                        {tag.name}
-                      </Checkbox>
-                    ))}
-                </Stack>
-              </InputGroup>
+      <div className='form-group'>
+        <Stack spacing={4}>
+          <FormControl isInvalid={errors.name}>
+            <Input id='name' placeholder='Leslie Coffee' {...register('name', { required: 'Please enter the employees name.' })} />
+            <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+          </FormControl>
 
-              {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
-              <InputGroup size='sm'>
-                <HStack align='stretch' direction='row'>
-                  <Checkbox value='Mon' onChange={() => this.onChangeBlockedDays('Mon')}>
-                    Mon
+          {/* optional blocked days */}
+          <Input id='blockedDays' placeholder='Leslie Coffee' {...register('blockedDays')} />
+
+          <FormControl isInvalid={errors.tags}>
+            <Stack spacing={5} direction='row'>
+              {availableTags &&
+                availableTags.map((tag) => (
+                  <Checkbox value={tag.id} key={tag.id} {...register('tags')}>
+                    {tag.name}
                   </Checkbox>
-                  <Checkbox value='Tue' onChange={() => this.onChangeBlockedDays('Tue')}>
-                    Tue
-                  </Checkbox>
-                  <Checkbox value='Wed' onChange={() => this.onChangeBlockedDays('Wed')}>
-                    Wed
-                  </Checkbox>
-                  <Checkbox value='Thu' onChange={() => this.onChangeBlockedDays('Thu')}>
-                    Thu
-                  </Checkbox>
-                  <Checkbox value='Fri' onChange={() => this.onChangeBlockedDays('Fri')}>
-                    Fri
-                  </Checkbox>
-                  <Checkbox value='Sat' onChange={() => this.onChangeBlockedDays('Sat')}>
-                    Sat
-                  </Checkbox>
-                  <Checkbox value='Sun' onChange={() => this.onChangeBlockedDays('Sun')}>
-                    Sun
-                  </Checkbox>
-                </HStack>
-              </InputGroup>
+                ))}
             </Stack>
-            {/* <input
+            <FormErrorMessage>{errors.tags?.message}</FormErrorMessage>
+          </FormControl>
+
+          {/* Tags set up for this business */}
+          {/* <InputGroup size='sm'>
+              <Stack spacing={5} direction='row'>
+                {availableTags &&
+                  availableTags.map((tag, index) => (
+                    <Checkbox value={tag.id} key={tag.id} onChange={() => this.onChangeEmployeeTags(tag.id)}>
+                      {tag.name}
+                    </Checkbox>
+                  ))}
+              </Stack>
+            </InputGroup>
+
+            {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
+          {/* <InputGroup size='sm'>
+              <HStack align='stretch' direction='row'>
+                <Checkbox value='Mon' onChange={() => this.onChangeBlockedDays('Mon')}>
+                  Mon
+                </Checkbox>
+                <Checkbox value='Tue' onChange={() => this.onChangeBlockedDays('Tue')}>
+                  Tue
+                </Checkbox>
+                <Checkbox value='Wed' onChange={() => this.onChangeBlockedDays('Wed')}>
+                  Wed
+                </Checkbox>
+                <Checkbox value='Thu' onChange={() => this.onChangeBlockedDays('Thu')}>
+                  Thu
+                </Checkbox>
+                <Checkbox value='Fri' onChange={() => this.onChangeBlockedDays('Fri')}>
+                  Fri
+                </Checkbox>
+                <Checkbox value='Sat' onChange={() => this.onChangeBlockedDays('Sat')}>
+                  Sat
+                </Checkbox>
+                <Checkbox value='Sun' onChange={() => this.onChangeBlockedDays('Sun')}>
+                  Sun
+                </Checkbox>
+              </HStack>
+            </InputGroup>{' '}
+             */}
+        </Stack>
+        {/* <input
                 type='text'
                 className='form-control'
                 id='name'
@@ -155,9 +155,8 @@ class AddEmployee extends Component {
                 onChange={this.onChangeName}
                 name='name'
               /> */}
-          </div>
 
-          {/* <div className='form-group'>
+        {/* <div className='form-group'>
               <label htmlFor='blockedDays'>BlockedDays</label>
               <input
                 type='radio'
@@ -170,18 +169,10 @@ class AddEmployee extends Component {
               />
             </div> */}
 
-          <button onClick={this.saveEmployee} className='btn btn-success'>
-            Submit
-          </button>
-        </div>
+        <Button mt={4} colorScheme='teal' isLoading={isSubmitting} type='submit'>
+          Submit
+        </Button>
       </div>
-    );
-  }
+    </form>
+  );
 }
-
-const mapStateToProps = (state) => {
-  return {
-    availableTags: state.roles,
-  };
-};
-export default connect(mapStateToProps, { createEmployee, retrieveTags })(AddEmployee);
