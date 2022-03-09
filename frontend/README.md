@@ -6,7 +6,7 @@ Todo:
     - shift add
 - show lists on add screens
 - change form validation design
-- pull tags for business only
+- add business id to tag creation
 
 order of creation:
 - business

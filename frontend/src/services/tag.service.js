@@ -4,6 +4,9 @@ class TagDataService {
   getAll() {
     return axios.get('/tags');
   }
+  getAllByBusiness(businessId) {
+    return axios.get(`/tags/business/${businessId}`);
+  }
 
   get(id) {
     return axios.get(`/tags/${id}`);

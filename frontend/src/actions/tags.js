@@ -17,9 +17,9 @@ export const createTag = (values) => async (dispatch) => {
   }
 };
 
-export const retrieveTags = () => async (dispatch) => {
+export const retrieveTags = (businessId) => async (dispatch) => {
   try {
-    const res = await TagDataService.getAll();
+    const res = await TagDataService.getAllByBusiness(businessId);
     console.log(res.data);
 
     dispatch({

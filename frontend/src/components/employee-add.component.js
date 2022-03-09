@@ -14,11 +14,13 @@ export default function Employee() {
 
   const availableTags = useSelector((state) => state.tags);
   const displayName = useSelector((state) => state.business.nameForTags);
+  const businessId = useSelector((state) => state.business.id);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(retrieveTags());
-  }, []);
+    // only run if business id avail
+    businessId && dispatch(retrieveTags(businessId));
+  }, [businessId]);
 
   function onSubmit(values) {
     dispatch(createEmployee(values));
@@ -47,7 +49,10 @@ export default function Employee() {
             <Stack spacing={5} direction='row'>
               {availableTags &&
                 availableTags.map((tag) => (
-                  <Checkbox value={tag.id} key={tag.id} {...register('tags', { required: `Please select this employee's ${displayName}.` })}>
+                  <Checkbox
+                    value={tag.id}
+                    key={tag.id}
+                    {...register('tags', { required: `Please select this employee's ${displayName}.` })}>
                     {tag.name}
                   </Checkbox>
                 ))}

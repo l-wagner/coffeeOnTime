@@ -9,11 +9,14 @@ module.exports = app => {
   // Retrieve all Tags
   router.get("/", tags.findAll);
 
+  // Retrieve all Tags for Business
+  router.get("/business/:business", tags.findAllByBusiness);
+
   // Retrieve all published Tags
   router.get("/published", tags.findAllPublished);
 
-  // Retrieve a single Tag with id
-  router.get("/:id", tags.findById);
+  // // Retrieve a single Tag with id
+  // router.get("/:id", tags.findById);
 
   // Update a Tag with id
   router.put("/:id", tags.update);

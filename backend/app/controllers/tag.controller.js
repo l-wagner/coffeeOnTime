@@ -1,6 +1,7 @@
 const db = require('../models/db.js');
 const Tag = db.tag;
 const Employee = db.employee;
+const Business = db.business;
 const apiResponse = require('../util/apiResponse.js');
 const { body, query, validationResult } = require('express-validator');
 const { application } = require('express');
@@ -34,7 +35,7 @@ exports.create = (req, res) => {
     });
 };
 
-// Retrieve all Tags from the database (with condition).
+// Retrieve all Tags from the database.
 exports.findAll = (req, res) => {
   const name = req.query.name;
 
@@ -50,6 +51,25 @@ exports.findAll = (req, res) => {
       });
     });
 };
+// Retrieve all Tags from the database (with condition).
+exports.findAllByBusiness = [
+  query('business').not().isEmpty().trim().escape(),
+  (req, res) => {
+    const businessId = req.params.business;
+    Business.findByPk(businessId)
+      .then((business) => {
+        business.getTags().then((tags) => {
+          if (tags) apiResponse.successData(res, '', tags);
+          else apiResponse.notFoundResponse(res, 'Business tags not found.');
+        });
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: err.message || `Could not find business with id ${id}.`,
+        });
+      });
+  },
+];
 
 // Find a single Tag by Id
 exports.findById = [
@@ -60,7 +80,7 @@ exports.findById = [
       .then((data) => {
         console.log(data);
         if (data) apiResponse.successData(res, '', data);
-        else apiResponse.notFoundResponse(res, 'Tag not found.')
+        else apiResponse.notFoundResponse(res, 'Tag not found.');
       })
       .catch((err) => {
         res.status(500).send({
