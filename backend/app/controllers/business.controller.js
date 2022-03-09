@@ -78,37 +78,40 @@ exports.create = [
   },
 ];
 
-// Retrieve all Businesss from the database
+// Retrieve all Business from the database
 exports.findAll = (req, res) => {
-  Business.findAll({ include: Employee }).then((businesss) => {
-    // console.log(util.inspect(businesss, { showHidden: false, depth: null, colors: true }));
-    apiResponse.successData(res, `${Object.keys(businesss).length} businesss found.`, businesss);
+  Business.findAll({ include: Employee }).then((business) => {
+    // console.log(util.inspect(business, { showHidden: false, depth: null, colors: true }));
+    apiResponse.successData(res, `${Object.keys(business).length} business found.`, business);
   });
 };
 
 // Find a single Business by Id
-exports.findOne = (req, res) => {
-  Business.findById(req.params.id, (err, data) => {
-    if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: `Not found Business with id ${req.params.id}.`,
-        });
-      } else {
+exports.findById = [
+  query('id').not().isEmpty().trim().escape(),
+  (req, res) => {
+    const id = req.params.id;
+    console.log(id);
+    Business.findByPk(id)
+      .then((data) => {
+        console.log(data);
+        if (data) apiResponse.successData(res, '', data);
+        else apiResponse.notFoundResponse(res, 'Business not found.')
+      })
+      .catch((err) => {
         res.status(500).send({
-          message: 'Error retrieving Business with id ' + req.params.id,
+          message: err.message || `Could not find business with id ${id}.`,
         });
-      }
-    } else res.send(data);
-  });
-};
+      });
+  },
+];
 
-// find all active Businesss
+// find all active Business
 exports.findAllPublished = (req, res) => {
   Business.getAllActive((err, data) => {
     if (err)
       res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving businesss.',
+        message: err.message || 'Some error occurred while retrieving business.',
       });
     else res.send(data);
   });
@@ -157,13 +160,13 @@ exports.delete = (req, res) => {
   });
 };
 
-// Delete all Businesss from the database.
+// Delete all Business from the database.
 exports.deleteAll = (req, res) => {
   Business.removeAll((err, data) => {
     if (err)
       res.status(500).send({
-        message: err.message || 'Some error occurred while removing all businesss.',
+        message: err.message || 'Some error occurred while removing all business.',
       });
-    else res.send({ message: `All Businesss were deleted successfully!` });
+    else res.send({ message: `All Business were deleted successfully!` });
   });
 };

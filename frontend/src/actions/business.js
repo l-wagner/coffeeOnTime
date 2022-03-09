@@ -1,12 +1,10 @@
-import { CREATE_BUSINESS, RETRIEVE_BUSINESSS, UPDATE_BUSINESS, DELETE_BUSINESS, DELETE_ALL_BUSINESSS } from './types';
+import { CREATE_BUSINESS, RETRIEVE_BUSINESS, UPDATE_BUSINESS, DELETE_BUSINESS, DELETE_ALL_BUSINESS } from './types';
 
 import BusinessDataService from '../services/business.service';
 
 export const createBusiness = (values) => async (dispatch) => {
   try {
-    console.log(values);
-    const res = await BusinessDataService.create({...values });
-
+    const res = await BusinessDataService.create({ ...values });
     dispatch({
       type: CREATE_BUSINESS,
       payload: res.data,
@@ -20,12 +18,10 @@ export const createBusiness = (values) => async (dispatch) => {
 
 export const retrieveBusiness = () => async (dispatch) => {
   try {
-    const res = await BusinessDataService.getAll();
-    console.log(res.data);
-
+    const res = await BusinessDataService.get(1);
     dispatch({
-      type: RETRIEVE_BUSINESSS,
-      payload: res.data.data,
+      type: RETRIEVE_BUSINESS,
+      payload: res.payload,
     });
   } catch (err) {
     console.log(err);
@@ -60,12 +56,12 @@ export const deleteBusiness = (id) => async (dispatch) => {
   }
 };
 
-export const deleteAllBusinesss = () => async (dispatch) => {
+export const deleteAllBusiness = () => async (dispatch) => {
   try {
     const res = await BusinessDataService.deleteAll();
 
     dispatch({
-      type: DELETE_ALL_BUSINESSS,
+      type: DELETE_ALL_BUSINESS,
       payload: res.data,
     });
 
@@ -75,12 +71,12 @@ export const deleteAllBusinesss = () => async (dispatch) => {
   }
 };
 
-export const findBusinesssByName = (name) => async (dispatch) => {
+export const findBusinessByName = (name) => async (dispatch) => {
   try {
     const res = await BusinessDataService.findByName(name);
 
     dispatch({
-      type: RETRIEVE_BUSINESSS,
+      type: RETRIEVE_BUSINESS,
       payload: res.data,
     });
   } catch (err) {

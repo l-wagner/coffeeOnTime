@@ -12,8 +12,8 @@ module.exports = app => {
   // // Retrieve all published Businesses
   // router.get("/published", business.findAllPublished);
 
-  // // Retrieve a single Business with id
-  // router.get("/:id", business.findById);
+  // Retrieve a single Business with id
+  router.get("/:id", business.findById);
 
   // // Update a Business with id
   // router.put("/:id", business.update);
