@@ -40,7 +40,7 @@ exports.findAll = (req, res) => {
 
   Tag.findAll({ include: Employee })
     .then((data) => {
-      console.log(data);
+      // console.log(data);
 
       apiResponse.successData(res, '', data);
     })
@@ -55,7 +55,7 @@ exports.findAll = (req, res) => {
 exports.findById = [
   query('id').not().isEmpty().trim().escape(),
   (req, res) => {
-    let id = req.params.id;
+    const id = req.params.id;
     Tag.findByPk(id)
       .then((data) => {
         console.log(data);

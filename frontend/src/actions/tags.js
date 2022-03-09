@@ -2,9 +2,9 @@ import { CREATE_TAG, RETRIEVE_TAGS, UPDATE_TAG, DELETE_TAG, DELETE_ALL_TAGS } fr
 
 import TagDataService from '../services/tag.service';
 
-export const createTag = (name, description) => async (dispatch) => {
+export const createTag = (values) => async (dispatch) => {
   try {
-    const res = await TagDataService.create({ name, description });
+    const res = await TagDataService.create(values);
 
     dispatch({
       type: CREATE_TAG,

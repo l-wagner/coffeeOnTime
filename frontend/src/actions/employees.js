@@ -5,6 +5,7 @@ import EmployeeDataService from '../services/employee.service';
 export const createEmployee = (values) => async (dispatch) => {
   try {
     values.tags = values.tags.join(',')
+    values.blockedDays = values.blockedDays.join(',')
     const res = await EmployeeDataService.create(values);
 
     dispatch({
