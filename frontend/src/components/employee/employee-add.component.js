@@ -1,9 +1,9 @@
-import { Button, Checkbox, FormControl, FormErrorMessage, HStack, Input, Stack } from '@chakra-ui/react';
+import { Button, Checkbox, FormControl, FormErrorMessage, Input, Stack } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { createEmployee } from '../actions/employees.js';
-import { retrieveTags } from '../actions/tags.js';
+import { createEmployee } from '../../actions/employees.js';
+import { retrieveTags } from '../../actions/tags.js';
 
 export default function Employee() {
   const {

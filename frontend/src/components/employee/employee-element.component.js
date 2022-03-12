@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateEmployee, deleteEmployee } from '../actions/employees';
-import EmployeeDataService from '../services/employee.service';
+import { updateEmployee, deleteEmployee } from '../../actions/employees';
+import EmployeeDataService from '../../services/employee.service';
 
 class Employee extends Component {
   constructor(props) {

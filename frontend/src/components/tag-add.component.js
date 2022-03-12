@@ -1,9 +1,9 @@
-import { Button, Checkbox, FormControl, FormErrorMessage, HStack, Input, Stack } from '@chakra-ui/react';
+import { Button, FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { createTag } from '../actions/tags';
+
 
 export default function AddTag() {
   const {

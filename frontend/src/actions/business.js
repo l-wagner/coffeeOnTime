@@ -1,4 +1,4 @@
-import { CREATE_BUSINESS, RETRIEVE_BUSINESS, UPDATE_BUSINESS, DELETE_BUSINESS, DELETE_ALL_BUSINESS } from './types';
+import { ERROR, CREATE_BUSINESS, RETRIEVE_BUSINESS, UPDATE_BUSINESS, DELETE_BUSINESS, DELETE_ALL_BUSINESS } from './types';
 
 import BusinessDataService from '../services/business.service';
 
@@ -12,6 +12,8 @@ export const createBusiness = (values) => async (dispatch) => {
 
     return Promise.resolve('res.data');
   } catch (err) {
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    console.log(err);
     return Promise.reject(err);
   }
 };
@@ -24,7 +26,8 @@ export const retrieveBusiness = () => async (dispatch) => {
       payload: res.payload,
     });
   } catch (err) {
-    console.log(err);
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    return Promise.reject(err);
   }
 };
 
@@ -39,6 +42,8 @@ export const updateBusiness = (id, data) => async (dispatch) => {
 
     return Promise.resolve(res.data);
   } catch (err) {
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+
     return Promise.reject(err);
   }
 };
@@ -52,7 +57,8 @@ export const deleteBusiness = (id) => async (dispatch) => {
       payload: { id },
     });
   } catch (err) {
-    console.log(err);
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    return Promise.reject(err);
   }
 };
 
@@ -67,6 +73,8 @@ export const deleteAllBusiness = () => async (dispatch) => {
 
     return Promise.resolve(res.data);
   } catch (err) {
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+
     return Promise.reject(err);
   }
 };
@@ -80,6 +88,7 @@ export const findBusinessByName = (name) => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
-    console.log(err);
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    return Promise.reject(err);
   }
 };

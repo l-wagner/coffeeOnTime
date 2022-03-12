@@ -1,11 +1,11 @@
-import { CREATE_EMPLOYEE, RETRIEVE_EMPLOYEES, UPDATE_EMPLOYEE, DELETE_EMPLOYEE, DELETE_ALL_EMPLOYEES } from './types';
+import { CREATE_EMPLOYEE, RETRIEVE_EMPLOYEES, UPDATE_EMPLOYEE, DELETE_EMPLOYEE, DELETE_ALL_EMPLOYEES, ERROR } from './types';
 
-import EmployeeDataService from '../services/employee.service';
+import EmployeeDataService from '../services/employee.service.js';
 
 export const createEmployee = (values) => async (dispatch) => {
   try {
-    values.tags = values.tags.join(',')
-    values.blockedDays = values.blockedDays.join(',')
+    values.tags = values.tags.join(',');
+    values.blockedDays = values.blockedDays.join(',');
     const res = await EmployeeDataService.create(values);
 
     dispatch({
@@ -15,6 +15,7 @@ export const createEmployee = (values) => async (dispatch) => {
 
     return Promise.resolve(res.payload);
   } catch (err) {
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
     return Promise.reject(err);
   }
 };
@@ -43,6 +44,7 @@ export const updateEmployee = (id, data) => async (dispatch) => {
 
     return Promise.resolve(res.payload);
   } catch (err) {
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
     return Promise.reject(err);
   }
 };
@@ -56,7 +58,8 @@ export const deleteEmployee = (id) => async (dispatch) => {
       payload: { id },
     });
   } catch (err) {
-    console.log(err);
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    return Promise.reject(err);
   }
 };
 
@@ -71,6 +74,7 @@ export const deleteAllEmployees = () => async (dispatch) => {
 
     return Promise.resolve(res.payload);
   } catch (err) {
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
     return Promise.reject(err);
   }
 };
@@ -84,6 +88,7 @@ export const findEmployeesByName = (name) => async (dispatch) => {
       payload: res.payload,
     });
   } catch (err) {
-    console.log(err);
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    return Promise.reject(err);
   }
 };

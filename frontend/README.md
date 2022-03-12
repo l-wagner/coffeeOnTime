@@ -6,7 +6,7 @@ Todo:
     - shift add
 - show lists on add screens
 - change form validation design
-- add business id to tag creation
+- add loader gifs
 
 order of creation:
 - business

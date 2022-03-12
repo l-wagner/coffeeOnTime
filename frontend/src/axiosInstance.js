@@ -22,18 +22,19 @@ axiosInstance.interceptors.response.use(
       return response;
     }
     return response;
+  },
+
+  function (error) {
+    // console.log(error);
+    if (error.response) {
+      error.payload = error.response.data;
+      if (error.response.status === 401) {
+        // Automatically redirect client to the login page
+        // window.location.href = `${Config.AUTH_URL}/${Config.HOME_PAGE_PATH}`;
+      }
+    }
+    // Do something with response error
+    return Promise.reject(error);
   }
-  // function(error) {
-  //     // console.log(error);
-  //     if (error.response) {
-  //         error.payload = error.response.data;
-  //         if (error.response.status === 401) {
-  //             // Automatically redirect client to the login page
-  //             window.location.href = `${Config.AUTH_URL}/${Config.HOME_PAGE_PATH}`;
-  //         }
-  //     }
-  //     // Do something with response error
-  //     return Promise.reject(error);
-  // }
 );
 export default axiosInstance;

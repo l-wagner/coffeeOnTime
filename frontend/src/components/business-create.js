@@ -11,7 +11,7 @@ export default function Business() {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const business = useSelector((state) => state.business);
+  // const business = useSelector((state) => state.business);
   const dispatch = useDispatch();
 
   function onSubmit(values) {
@@ -19,6 +19,7 @@ export default function Business() {
   }
 
   return (
+    
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl isInvalid={errors.name}>
         <FormLabel htmlFor='name'>What's the name of your business?</FormLabel>
