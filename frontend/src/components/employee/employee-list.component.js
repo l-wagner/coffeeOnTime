@@ -1,11 +1,26 @@
 import { SmallCloseIcon } from '@chakra-ui/icons';
 import {
-  Button, HStack, Table, Tbody, Td, Tfoot, Th, Thead, Tr, useDisclosure
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
+  HStack,
+  IconButton,
+  Table,
+  Tag,
+  Tbody,
+  Td,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { retrieveEmployees } from '../../actions/employees.js';
+import { deleteEmployee, retrieveEmployees } from '../../actions/employees.js';
 
 export default function Employee() {
   // const {
@@ -15,6 +30,13 @@ export default function Employee() {
   // } = useForm();
 
   // const { isOpen, onToggle } = useDisclosure();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [selectedEmployee, setSelectedEmployee] = React.useState(false);
+  const onClose = () => {
+    setIsOpen(false);
+    setSelectedEmployee(null);
+  };
+  const cancelRef = React.useRef();
 
   const employees = useSelector((state) => state.employees);
   const business = useSelector((state) => state.business);
@@ -25,6 +47,14 @@ export default function Employee() {
   }, [business.id]);
 
   const dispatch = useDispatch();
+  const areYouSure = (employee) => {
+    setIsOpen(true);
+    setSelectedEmployee(employee);
+  };
+  const onDelete = () => {
+    dispatch(deleteEmployee(selectedEmployee.id));
+    setIsOpen(false);
+  };
 
   // onChangeSearchName(e) {
   //   const searchName = e.target.value;
@@ -60,51 +90,75 @@ export default function Employee() {
   //     });
   // }
 
-  // findByName() {
-  //   this.refreshData();
-
-  //   this.props.findEmployeesByName(this.state.searchName);
-  // }
-
-  //   const { searchName, currentEmployee, currentIndex } = this.state;
-  //   const { employees } = this.props;
-
   return (
-    <Table>
-      <Thead>
-        <Tr>
-          <Th>Name</Th>
-          <Th>{business.nameForTags}</Th>
-          <Th isNumeric>Blocked days</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {employees &&
-          employees.map((employee) => (
-            <Tr key={employee.id}>
-              <Td>{employee.firstName}</Td>
-              <Td>
-                <HStack>
-                  {employee.tags.map((tag) => (
-                    <HStack>
-                      <Button size='xs' rightIcon={<SmallCloseIcon />} variant='outline' _hover={{ bg: 'red.200' }}>
-                        {tag.name}
-                      </Button>
-                    </HStack>
-                  ))}
-                </HStack>
-              </Td>
-              <Td>{employee.blockedDays}</Td>
-            </Tr>
-          ))}
-      </Tbody>
-      <Tfoot>
-        <Tr>
-          <Th>Name</Th>
-          <Th>{business.nameForTags}</Th>
-          <Th isNumeric>Blocked days</Th>
-        </Tr>
-      </Tfoot>
-    </Table>
+    <>
+      <Table>
+        <Thead>
+          <Tr>
+            <Th>Name</Th>
+            <Th>{business.nameForTags}</Th>
+            <Th>Blocked days</Th>
+            <Th></Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {employees &&
+            employees.map((employee) => (
+              <Tr key={employee?.id}>
+                <Td>{employee?.firstName}</Td>
+                <Td>
+                  <HStack>
+                    {employee?.tags.map((tag) => (
+                      <HStack>
+                        <Tag size='sm' key={tag.id} variant='solid' colorScheme='teal'>
+                          {tag.name}
+                        </Tag>
+                      </HStack>
+                    ))}
+                  </HStack>
+                </Td>
+                <Td>{employee?.blockedDays}</Td>
+                <Td>
+                  <IconButton
+                    isRound
+                    size='sm'
+                    aria-label='delete employee'
+                    icon={<SmallCloseIcon />}
+                    _hover={{ bg: 'red.200' }}
+                    onClick={() => areYouSure(employee)}
+                  />
+                </Td>
+              </Tr>
+            ))}
+        </Tbody>
+        <Tfoot>
+          <Tr>
+            <Th>Name</Th>
+            <Th>{business.nameForTags}</Th>
+            <Th>Blocked days</Th>
+          </Tr>
+        </Tfoot>
+      </Table>
+      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Delete {selectedEmployee.firstName}?
+            </AlertDialogHeader>
+
+            <AlertDialogBody>Are you sure? You can't undo this action afterwards.</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme='red' onClick={onDelete} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
   );
 }

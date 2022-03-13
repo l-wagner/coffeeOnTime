@@ -22,10 +22,10 @@ export default function Employee() {
     businessId && dispatch(retrieveTags(businessId));
   }, [businessId]);
 
-  function onSubmit(values) {
+  const onSubmit = (values) => {
     dispatch(createEmployee(values));
     console.log(values);
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

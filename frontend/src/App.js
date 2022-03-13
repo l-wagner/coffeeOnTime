@@ -1,25 +1,11 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Box,
   Button,
-  ChakraProvider,
-  CloseButton,
-  Container,
-  Heading,
-  Menu,
+  ChakraProvider, Menu,
   MenuButton,
   MenuItem,
-  MenuList,
-  Stack,
-  Text,
+  MenuList
 } from '@chakra-ui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMugHot } from '@fortawesome/free-solid-svg-icons';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,10 +14,11 @@ import { retrieveBusiness } from './actions/business';
 import './App.css';
 import CreateBusiness from './components/business-create';
 import Employee from './components/employee/employee.component';
+import Error from './components/error.component';
 import AddShift from './components/shift-add.component';
 import AddTag from './components/tag-add.component';
 import TagList from './components/tag-list.component';
-import Error from './components/error.component';
+
 
 export default function App() {
   const dispatch = useDispatch();

@@ -1,12 +1,11 @@
 Todo:
 - replace findEmployeeByName with debounced inplace search
-- let users rename tags/skills/roles
-- figure out how to create owners - is it a default tag? should employees who own the business simply get an owner tag?
-- switch to redux hooks
-    - shift add
 - show lists on add screens
 - change form validation design
 - add loader gifs
+- add skills in place in employee table
+- edit in place in employee table
+- add new in table (switch to react table?)
 
 order of creation:
 - business

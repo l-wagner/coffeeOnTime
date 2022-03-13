@@ -7,7 +7,6 @@ const Tag = db.tag;
 const apiResponse = require('../util/apiResponse.js');
 const { body, query, validationResult } = require('express-validator');
 
-
 // Create and Save a new Employee
 exports.add = [
   body('name').not().isEmpty().trim().escape(),
@@ -20,7 +19,6 @@ exports.add = [
     if (!errors.isEmpty()) {
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
-    
 
     let tags = req.body.tags.split(',');
     Tag.findAll({
@@ -124,21 +122,27 @@ exports.update = (req, res) => {
 };
 
 // Delete a Employee with the specified id in the request
-exports.delete = (req, res) => {
-  Employee.remove(req.params.id, (err, data) => {
-    if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: `Not found Employee with id ${req.params.id}.`,
-        });
-      } else {
-        res.status(500).send({
-          message: 'Could not delete Employee with id ' + req.params.id,
-        });
-      }
-    } else res.send({ message: `Employee was deleted successfully!` });
-  });
-};
+
+exports.delete = [
+  query('id').not().isEmpty().trim().escape(),
+  (req, res) => {
+    Employee.destroy({ where: { id: req.params.id } })
+      .then((data) => {
+        res.send({ message: `Employee was deleted successfully!` });
+      })
+      .catch((err) => {
+        if (err.kind === 'not_found') {
+          res.status(404).send({
+            message: `Not found Employee with id ${req.params.id}.`,
+          });
+        } else {
+          res.status(500).send({
+            message: 'Could not delete Employee with id ' + req.params.id,
+          });
+        }
+      });
+  },
+];
 
 // Delete all Employees from the database.
 exports.deleteAll = (req, res) => {
