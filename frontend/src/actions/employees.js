@@ -29,8 +29,8 @@ export const retrieveEmployees = () => async (dispatch) => {
       payload: res.payload,
     });
   } catch (err) {
-    console.log(err);
-  }
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    return Promise.reject(err);  }
 };
 
 export const updateEmployee = (id, data) => async (dispatch) => {

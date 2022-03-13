@@ -7,7 +7,7 @@ export default function Employee() {
   return (
     <div className='form-group'>
       <EmployeeList />
-      <AddEmployee />
+      {/* <AddEmployee /> */}
     </div>
   );
 }

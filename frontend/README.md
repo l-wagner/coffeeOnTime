@@ -5,6 +5,7 @@ Todo:
 - add loader gifs
 - add skills in place in employee table
 - edit in place in employee table
+- polish menu item behavior on close
 - add new in table (switch to react table?)
 
 order of creation:

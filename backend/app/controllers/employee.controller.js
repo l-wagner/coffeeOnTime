@@ -6,6 +6,7 @@ const Employee = db.employee;
 const Tag = db.tag;
 const apiResponse = require('../util/apiResponse.js');
 const { body, query, validationResult } = require('express-validator');
+const { employee } = require('../models/db.js');
 
 // Create and Save a new Employee
 exports.add = [
@@ -33,8 +34,6 @@ exports.add = [
           message: err.message || 'The selected tags are unavailable.',
         });
       }
-      console.log(req.body);
-
       Employee.create({
         firstName: req.body.name,
         blockedDays: req.body.blockedDays || null,
@@ -44,10 +43,8 @@ exports.add = [
           tagsToAdd.forEach((tag) => employee.addTag(tag));
 
           Employee.findAll({ where: { id: employee.id }, include: Tag }).then((employee) => {
-            // console.log(util.inspect(employee, { showHidden: false, depth: null, colors: true }));
             res.send(employee);
           });
-          // res.send(employee);
         })
         .catch((err) => {
           console.log(err);
@@ -62,7 +59,9 @@ exports.add = [
 // Retrieve all Employees from the database
 exports.findAll = (req, res) => {
   Employee.findAll({ include: Tag }).then((employees) => {
-    // console.log(util.inspect(employees, { showHidden: false, depth: null, colors: true }));
+    // change blocked days to array
+    employees.map((employee) => (employee.blockedDays = employee.blockedDays?.split(',')));
+
     apiResponse.successData(res, `${Object.keys(employees).length} employees found.`, employees);
   });
 };
@@ -96,30 +95,29 @@ exports.findAllPublished = (req, res) => {
 };
 
 // Update a Employee identified by the id in the request
-exports.update = (req, res) => {
-  // Validate Request
-  if (!req.body) {
-    res.status(400).send({
-      message: 'Content can not be empty!',
-    });
-  }
-
-  console.log(req.body);
-
-  Employee.updateById(req.params.id, new Employee(req.body), (err, data) => {
-    if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: `Not found Employee with id ${req.params.id}.`,
-        });
-      } else {
-        res.status(500).send({
-          message: 'Error updating Employee with id ' + req.params.id,
-        });
-      }
-    } else res.send(data);
-  });
-};
+exports.update = [
+  body('id').not().isEmpty().trim().escape(),
+  body('blockedDays').trim().escape(),
+  body('tags').trim().escape(),
+  (req, res) => {
+    // Validate Request
+    if (!req.body) {
+      res.status(400).send({
+        message: 'Content can not be empty!',
+      });
+    }
+    Employee.findByPk(req.body.id)
+      .then((employee) => {
+        req.body.blockedDays && (employee.blockedDays = req.body.blockedDays.join(','));
+        // req.body.tags && (employee.tags = req.body.tags.join(','));
+        employee
+          .save()
+          .then((result) => apiResponse.successData(res, ''))
+          .catch(() => apiResponse.notFoundResponse(res, 'Employee could not be updated.'));
+      })
+      .catch(() => apiResponse.notFoundResponse(res, 'Employee not found.'));
+  },
+];
 
 // Delete a Employee with the specified id in the request
 

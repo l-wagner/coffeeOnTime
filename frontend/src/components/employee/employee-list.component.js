@@ -1,4 +1,4 @@
-import { SmallCloseIcon } from '@chakra-ui/icons';
+import { AddIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -7,20 +7,26 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  HStack,
+  Flex,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
   Table,
   Tag,
   Tbody,
   Td,
-  Tfoot,
+  Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
 } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteEmployee, retrieveEmployees } from '../../actions/employees.js';
+import { deleteEmployee, retrieveEmployees, updateEmployee } from '../../actions/employees.js';
 
 export default function Employee() {
   // const {
@@ -31,19 +37,21 @@ export default function Employee() {
 
   // const { isOpen, onToggle } = useDisclosure();
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpenDays, setIsOpenDays] = React.useState(false);
+
   const [selectedEmployee, setSelectedEmployee] = React.useState(false);
-  const onClose = () => {
-    setIsOpen(false);
-    setSelectedEmployee(null);
-  };
+
   const cancelRef = React.useRef();
 
   const employees = useSelector((state) => state.employees);
   const business = useSelector((state) => state.business);
+  const tags = useSelector((state) => state.tags);
 
   useEffect(() => {
     // only run if business id avail
     business.id && dispatch(retrieveEmployees(business.id));
+    console.log(business);
+    console.log(employees[1]?.tags);
   }, [business.id]);
 
   const dispatch = useDispatch();
@@ -56,39 +64,20 @@ export default function Employee() {
     setIsOpen(false);
   };
 
-  // onChangeSearchName(e) {
-  //   const searchName = e.target.value;
+  const onClose = () => {
+    setIsOpen(false);
+    setSelectedEmployee(null);
+  };
 
-  //   this.setState({
-  //     searchName: searchName,
-  //   });
-  // }
+  const onChangeDays = (values, id) => {
+    let employee = employees.find((employee) => employee.id === id);
+    employee.blockedDays = values;
+  };
 
-  // refreshData() {
-  //   this.setState({
-  //     currentEmployee: null,
-  //     currentIndex: -1,
-  //   });
-  // }
-
-  // setActiveEmployee(employee, index) {
-  //   this.setState({
-  //     currentEmployee: employee,
-  //     currentIndex: index,
-  //   });
-  // }
-
-  // removeAllEmployees() {
-  //   this.props
-  //     .deleteAllEmployees()
-  //     .then((response) => {
-  //       console.log(response);
-  //       this.refreshData();
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-  // }
+  const saveDays = (id) => {
+    let employee = employees.find((employee) => employee.id === id);
+    dispatch(updateEmployee(employee.id, employee));
+  };
 
   return (
     <>
@@ -107,17 +96,78 @@ export default function Employee() {
               <Tr key={employee?.id}>
                 <Td>{employee?.firstName}</Td>
                 <Td>
-                  <HStack>
+                  <Flex direction='row'>
                     {employee?.tags.map((tag) => (
-                      <HStack>
-                        <Tag size='sm' key={tag.id} variant='solid' colorScheme='teal'>
-                          {tag.name}
+                      <Tooltip label={tag.description} aria-label='A tooltip'>
+                        <Tag mr={1} size='sm' key={tag.id} variant='solid' colorScheme='teal'>
+                          {tag.name.toLowerCase()}
                         </Tag>
-                      </HStack>
+                      </Tooltip>
                     ))}
-                  </HStack>
+                    {tags && (
+                      <Menu closeOnSelect={false}>
+                        <MenuButton
+                          ml={2}
+                          as={IconButton}
+                          icon={<AddIcon />}
+                          aria-label='edit tags'
+                          isRound
+                          size='xs'
+                          _hover={{ bg: 'teal.200' }}
+                        />
+                        <MenuList>
+                          <MenuOptionGroup title='Tags' type='checkbox' value={employee.tags.map((tag) => tag.name)}>
+                            {tags.map((tag) => (
+                              <MenuItemOption value={tag.name} key={tag.id}>
+                                {tag.name.toLowerCase()}
+                              </MenuItemOption>
+                            ))}
+                          </MenuOptionGroup>
+                        </MenuList>
+                      </Menu>
+                    )}
+                  </Flex>
                 </Td>
-                <Td>{employee?.blockedDays}</Td>
+                <Td>
+                  <Flex direction='row'>
+                    {employee?.blockedDays ? (
+                      employee?.blockedDays?.map((day) => (
+                        <Tag mr={1} size='sm' key={day} variant='solid' colorScheme='green'>
+                          {day}
+                        </Tag>
+                      ))
+                    ) : (
+                      <Text mr={-1} fontSize='xs'>
+                        click to add
+                      </Text>
+                    )}
+
+                    <Menu closeOnSelect={false} onClose={() => saveDays(employee.id)}>
+                      <MenuButton
+                        ml={2}
+                        as={IconButton}
+                        icon={<AddIcon />}
+                        aria-label='edit tags'
+                        isRound
+                        size='xs'
+                        _hover={{ bg: 'green.200' }}
+                      />
+                      <MenuList>
+                        <MenuOptionGroup
+                          onChange={(values) => onChangeDays(values, employee.id)}
+                          title='Tags'
+                          type='checkbox'
+                          value={employee?.blockedDays}>
+                          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
+                            <MenuItemOption value={day} key={day}>
+                              {day}
+                            </MenuItemOption>
+                          ))}
+                        </MenuOptionGroup>
+                      </MenuList>
+                    </Menu>
+                  </Flex>
+                </Td>
                 <Td>
                   <IconButton
                     isRound
@@ -131,19 +181,12 @@ export default function Employee() {
               </Tr>
             ))}
         </Tbody>
-        <Tfoot>
-          <Tr>
-            <Th>Name</Th>
-            <Th>{business.nameForTags}</Th>
-            <Th>Blocked days</Th>
-          </Tr>
-        </Tfoot>
       </Table>
       <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              Delete {selectedEmployee.firstName}?
+              Delete {selectedEmployee?.firstName}?
             </AlertDialogHeader>
 
             <AlertDialogBody>Are you sure? You can't undo this action afterwards.</AlertDialogBody>
