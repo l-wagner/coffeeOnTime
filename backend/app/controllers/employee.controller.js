@@ -47,7 +47,6 @@ exports.add = [
           });
         })
         .catch((err) => {
-          console.log(err);
           res.status(500).send({
             message: err.message || 'Error occurred while creating the Employee.',
           });
@@ -68,19 +67,12 @@ exports.findAll = (req, res) => {
 
 // Find a single Employee by Id
 exports.findOne = (req, res) => {
-  Employee.findById(req.params.id, (err, data) => {
-    if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: `Not found Employee with id ${req.params.id}.`,
-        });
-      } else {
-        res.status(500).send({
-          message: 'Error retrieving Employee with id ' + req.params.id,
-        });
-      }
-    } else res.send(data);
-  });
+  Employee.findByPk(req.params.id)
+    .then((employee) => {
+      // req.body.tags && (employee.tags = req.body.tags.join(','));
+      apiResponse.successData(res, employee);
+    })
+    .catch(() => apiResponse.notFoundResponse(res, 'Employee not found.'));
 };
 
 // find all active Employees
@@ -94,10 +86,35 @@ exports.findAllPublished = (req, res) => {
   });
 };
 
-// Update a Employee identified by the id in the request
-exports.update = [
-  body('id').not().isEmpty().trim().escape(),
-  body('blockedDays').trim().escape(),
+// Update an Employee's blocked days identified by the id in the request
+exports.updateDays = [
+  query('id').not().isEmpty().trim().escape(),
+  body('data').trim().escape(),
+  (req, res) => {
+    // Validate Request
+    if (!req.body) {
+      res.status(400).send({
+        message: 'Content can not be empty!',
+      });
+    }
+
+    Employee.findByPk(req.params.id)
+      .then((employee) => {
+        req.body.blockedDays && (employee.blockedDays = req.body.blockedDays.join(','));
+        employee
+          .save()
+          .then((result) => apiResponse.successData(res, result))
+          .catch(() => apiResponse.notFoundResponse(res, 'Employee could not be updated.'));
+      })
+      .catch((err) => {
+        console.log(err);
+        apiResponse.notFoundResponse(res, 'Employee not found.');
+      });
+  },
+];
+
+exports.updateTags = [
+  query('id').not().isEmpty().trim().escape(),
   body('tags').trim().escape(),
   (req, res) => {
     // Validate Request
@@ -106,16 +123,22 @@ exports.update = [
         message: 'Content can not be empty!',
       });
     }
-    Employee.findByPk(req.body.id)
-      .then((employee) => {
-        req.body.blockedDays && (employee.blockedDays = req.body.blockedDays.join(','));
-        // req.body.tags && (employee.tags = req.body.tags.join(','));
-        employee
-          .save()
-          .then((result) => apiResponse.successData(res, ''))
-          .catch(() => apiResponse.notFoundResponse(res, 'Employee could not be updated.'));
-      })
-      .catch(() => apiResponse.notFoundResponse(res, 'Employee not found.'));
+    const tags = req.body.tags.split(',');
+    Employee.findByPk(req.params.id).then((employee) => {
+      //remove all tags from employee TODO actually compare tags
+      Tag.findAll({ where: { id: { [Sequelize.Op.notIn]: tags } } })
+        .then((tagsToRemove) => {
+          employee.removeTags(tagsToRemove);
+
+          Tag.findAll({ where: { id: { [Sequelize.Op.in]: tags } } })
+            .then((tagsToAdd) => {
+              employee.addTags(tagsToAdd);
+              apiResponse.successData(res, `${tags.length} tags updated.`, employee);
+            })
+            .catch(() => apiResponse.error(res, 'Tags could not be added.'));
+        })
+        .catch(() => apiResponse.error(res, 'Tags could not be removed.'));
+    });
   },
 ];
 

@@ -1,4 +1,6 @@
 export const ERROR = 'ERROR';
+export const UPDATE_ERROR = 'UPDATE_ERROR';
+
 export const CREATE_EMPLOYEE = 'CREATE_EMPLOYEE';
 export const RETRIEVE_EMPLOYEES = 'RETRIEVE_EMPLOYEES';
 export const UPDATE_EMPLOYEE = 'UPDATE_EMPLOYEE';

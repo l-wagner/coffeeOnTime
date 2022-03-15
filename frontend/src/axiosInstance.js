@@ -10,7 +10,6 @@ const axiosInstance = axios.create({
 // Add a response interceptor
 axiosInstance.interceptors.response.use(
   function (response) {
-    console.log(response);
     // Do something with response data
     if (response.data.data) {
       response.payload = response.data.data;
@@ -25,7 +24,7 @@ axiosInstance.interceptors.response.use(
   },
 
   function (error) {
-    // console.log(error);
+  
     if (error.response) {
       error.payload = error.response.data;
       if (error.response.status === 401) {

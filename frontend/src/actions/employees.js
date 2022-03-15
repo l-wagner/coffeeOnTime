@@ -1,23 +1,23 @@
-import { CREATE_EMPLOYEE, RETRIEVE_EMPLOYEES, UPDATE_EMPLOYEE, DELETE_EMPLOYEE, DELETE_ALL_EMPLOYEES, ERROR } from './types';
+import { UPDATE_ERROR, CREATE_EMPLOYEE, RETRIEVE_EMPLOYEES, UPDATE_EMPLOYEE, DELETE_EMPLOYEE, DELETE_ALL_EMPLOYEES, ERROR } from './types';
 
 import EmployeeDataService from '../services/employee.service.js';
 
 export const createEmployee = (values) => async (dispatch) => {
-  try {
-    values.tags = values.tags.join(',');
-    values.blockedDays = values.blockedDays.join(',');
-    const res = await EmployeeDataService.create(values);
+  values.tags = values.tags.join(',');
+  values.blockedDays = values.blockedDays.join(',');
 
-    dispatch({
-      type: CREATE_EMPLOYEE,
-      payload: res.payload,
+  const res = EmployeeDataService.create(values)
+    .then((result) => {
+      dispatch({
+        type: CREATE_EMPLOYEE,
+        payload: result.payload,
+      });
+      return Promise.resolve(res.payload);
+    })
+    .catch((err) => {
+      dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+      return Promise.reject(err);
     });
-
-    return Promise.resolve(res.payload);
-  } catch (err) {
-    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
-    return Promise.reject(err);
-  }
 };
 
 export const retrieveEmployees = () => async (dispatch) => {
@@ -30,12 +30,13 @@ export const retrieveEmployees = () => async (dispatch) => {
     });
   } catch (err) {
     dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
-    return Promise.reject(err);  }
+    return Promise.reject(err);
+  }
 };
 
 export const updateEmployee = (id, data) => async (dispatch) => {
   try {
-    const res = await EmployeeDataService.update(id, data);
+    const res = await EmployeeDataService.updateDays(id, data);
 
     dispatch({
       type: UPDATE_EMPLOYEE,
@@ -44,7 +45,39 @@ export const updateEmployee = (id, data) => async (dispatch) => {
 
     return Promise.resolve(res.payload);
   } catch (err) {
-    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
+    return Promise.reject(err);
+  }
+};
+export const updateEmployeeDays = (id, data) => async (dispatch) => {
+  try {
+    const res = await EmployeeDataService.updateDays(id, data);
+
+    dispatch({
+      type: UPDATE_EMPLOYEE,
+      payload: data,
+    });
+
+    return Promise.resolve(res.payload);
+  } catch (err) {
+    dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
+    return Promise.reject(err);
+  }
+};
+export const updateEmployeeTags = (id, data) => async (dispatch) => {
+  try {
+    console.log(data);
+    
+    const res = await EmployeeDataService.updateTags(id, data);
+
+    dispatch({
+      type: UPDATE_EMPLOYEE,
+      payload: data,
+    });
+
+    return Promise.resolve(res.payload);
+  } catch (err) {
+    dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
     return Promise.reject(err);
   }
 };

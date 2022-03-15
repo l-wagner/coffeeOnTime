@@ -13,8 +13,13 @@ class EmployeeDataService {
     return http.post('/employees/add', data);
   }
 
-  update(id, data) {
-    return http.put(`/employees/${id}`, data);
+  updateDays(id, data) {
+    return http.put(`/employees/days/${id}`, data);
+  }
+
+
+  updateTags(id, data) {
+    return http.put(`/employees/tags/${id}`, data);
   }
 
   delete(id) {

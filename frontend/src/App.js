@@ -1,11 +1,17 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Button,
-  ChakraProvider, Menu,
+  ChakraProvider,
+  CloseButton,
+  Menu,
   MenuButton,
   MenuItem,
-  MenuList
+  MenuList,
 } from '@chakra-ui/react';
+import { Alert } from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,11 +20,11 @@ import { retrieveBusiness } from './actions/business';
 import './App.css';
 import CreateBusiness from './components/business-create';
 import Employee from './components/employee/employee.component';
-import Error from './components/error.component';
+import Error from './components/errors/error.component';
+import UpdateError from './components/errors/updateError.component';
 import AddShift from './components/shift-add.component';
 import AddTag from './components/tag-add.component';
 import TagList from './components/tag-list.component';
-
 
 export default function App() {
   const dispatch = useDispatch();
@@ -32,8 +38,9 @@ export default function App() {
 
   return (
     <ChakraProvider>
-      {error && <Error />}
-      {!error && business?.id ? (
+      {error?.serverError && <Error />}
+      {error?.updateError && <UpdateError />}
+      {!error?.serverError && business?.id ? (
         <Router>
           <nav className='navbar navbar-expand navbar-dark bg-dark'>
             <Link to={'/'} className='navbar-brand'>
@@ -80,7 +87,7 @@ export default function App() {
           </div>
         </Router>
       ) : (
-         !error && <CreateBusiness />
+        !error && <CreateBusiness />
       )}
     </ChakraProvider>
   );

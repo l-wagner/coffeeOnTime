@@ -17,7 +17,6 @@ exports.create = [
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log(req.body);
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
 
@@ -29,7 +28,7 @@ exports.create = [
       //   },
       //   { transaction: t }
       // );
-      console.log(req.body);
+
       Business.create(
         {
           name: req.body.name,
@@ -48,7 +47,6 @@ exports.create = [
         // });
 
         .then((business) => {
-          // console.log(responses);
           // business.addEmployee(owner);
           // owner.addTag(ownerTag);
 
@@ -56,20 +54,15 @@ exports.create = [
             name: 'Owner',
             description: 'Owner of business',
           }).then((tag) => {
-            console.log(tag);
             let counter = 0;
             business.employees[0].addTag(tag);
             business.addTag(tag);
-            // console.log(counter);
-            // console.log(owner);
 
             res.send(business);
           });
         })
 
         .catch((err) => {
-          console.log(err);
-
           res.status(500).send({
             message: err.message || 'Error occurred while creating the Business.',
           });
@@ -81,7 +74,6 @@ exports.create = [
 // Retrieve all Business from the database
 exports.findAll = (req, res) => {
   Business.findAll({ include: Employee }).then((business) => {
-    // console.log(util.inspect(business, { showHidden: false, depth: null, colors: true }));
     apiResponse.successData(res, `${Object.keys(business).length} business found.`, business);
   });
 };
@@ -91,12 +83,10 @@ exports.findById = [
   query('id').not().isEmpty().trim().escape(),
   (req, res) => {
     const id = req.params.id;
-    console.log(id);
-    Business.findByPk(id)
+    Business.findByPk(id, { include: Tag })
       .then((data) => {
-        console.log(data);
         if (data) apiResponse.successData(res, '', data);
-        else apiResponse.notFoundResponse(res, 'Business not found.')
+        else apiResponse.notFoundResponse(res, 'Business not found.');
       })
       .catch((err) => {
         res.status(500).send({
@@ -125,8 +115,6 @@ exports.update = (req, res) => {
       message: 'Content can not be empty!',
     });
   }
-
-  console.log(req.body);
 
   Business.updateById(req.params.id, new Business(req.body), (err, data) => {
     if (err) {

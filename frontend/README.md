@@ -1,10 +1,8 @@
 Todo:
 - replace findEmployeeByName with debounced inplace search
-- show lists on add screens
 - change form validation design
 - add loader gifs
-- add skills in place in employee table
-- edit in place in employee table
+- edit name in place in employee table
 - polish menu item behavior on close
 - add new in table (switch to react table?)
 

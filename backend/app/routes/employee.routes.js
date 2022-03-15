@@ -16,7 +16,9 @@ module.exports = app => {
   router.get("/:id", employees.findOne);
 
   // Update a Employee with id
-  router.put("/:id", employees.update);
+  router.put("/days/:id", employees.updateDays);
+
+  router.put("/tags/:id", employees.updateTags);
 
   // Delete a Employee with id
   router.delete("/:id", employees.delete);
