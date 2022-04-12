@@ -1,10 +1,4 @@
-import {
-  CREATE_EMPLOYEE,
-  RETRIEVE_EMPLOYEES,
-  UPDATE_EMPLOYEE,
-  DELETE_EMPLOYEE,
-  DELETE_ALL_EMPLOYEES,
-} from "../actions/types";
+import { CREATE_EMPLOYEE, RETRIEVE_EMPLOYEES, UPDATE_EMPLOYEE, DELETE_EMPLOYEE, DELETE_ALL_EMPLOYEES } from '../actions/types';
 
 const initialState = [];
 
@@ -12,8 +6,10 @@ function employeeReducer(employees = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case CREATE_EMPLOYEE:
+    case CREATE_EMPLOYEE: {
+      console.log(payload);
       return [...employees, payload];
+    }
 
     case RETRIEVE_EMPLOYEES:
       return payload;
@@ -39,6 +35,6 @@ function employeeReducer(employees = initialState, action) {
     default:
       return employees;
   }
-};
+}
 
 export default employeeReducer;

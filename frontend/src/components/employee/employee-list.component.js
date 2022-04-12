@@ -1,4 +1,4 @@
-import { AddIcon, SmallCloseIcon } from '@chakra-ui/icons';
+import { SmallCloseIcon, PlusSquareIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -7,25 +7,20 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  Flex,
+  Editable,
+  EditableInput,
+  EditablePreview,
   IconButton,
-  Menu,
-  MenuButton,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
   Table,
-  Tag,
   Tbody,
   Td,
   Th,
   Thead,
-  Tooltip,
   Tr,
 } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteEmployee, retrieveEmployees } from '../../actions/employees.js';
+import { deleteEmployee, retrieveEmployees, updateEmployee, createEmployee } from '../../actions/employees.js';
 import DayDropdown from './day-dropdown.component.js';
 import TagDropdown from './tag-dropdown.component.js';
 
@@ -39,6 +34,10 @@ export default function Employee() {
   // const { isOpen, onToggle } = useDisclosure();
   const [isOpen, setIsOpen] = React.useState(false);
 
+  const [newEmployeeName, setNewEmployeeName] = React.useState(false);
+  const [newEmployeeTags, setNewEmployeeTags] = React.useState(false);
+  const [newEmployeeBlockedDays, setNewEmployeeBlockedDays] = React.useState(false);
+
   const [selectedEmployee, setSelectedEmployee] = React.useState(false);
 
   const cancelRef = React.useRef();
@@ -47,12 +46,27 @@ export default function Employee() {
   const business = useSelector((state) => state.business);
   const tags = useSelector((state) => state.business.tags);
 
+  const newEmployee = { employee: { id: 0, firstName: '', lastName: '', tags: [], blockedDays: [] } };
+
   useEffect(() => {
     // only run if business id avail
     business.id && dispatch(retrieveEmployees(business.id));
   }, [business.id]);
 
   const dispatch = useDispatch();
+
+  const hireEmployee = () => {
+    dispatch(
+      createEmployee({
+        business: business.id,
+        firstName: newEmployeeName,
+        blockedDays: newEmployeeBlockedDays || [],
+        tags: newEmployeeTags || [],
+      })
+    );
+    window.location.reload(false);
+  };
+
   const areYouSure = (employee) => {
     setIsOpen(true);
     setSelectedEmployee(employee);
@@ -82,7 +96,14 @@ export default function Employee() {
           {employees &&
             employees.map((employee) => (
               <Tr key={employee?.id}>
-                <Td>{employee?.firstName}</Td>
+                <Td>
+                  <Editable
+                    onSubmit={(name) => dispatch(updateEmployee(employee.id, { firstName: name }))}
+                    defaultValue={employee.firstName}>
+                    <EditablePreview />
+                    <EditableInput />
+                  </Editable>
+                </Td>
                 <Td>
                   <TagDropdown employee={employee} tags={tags} />
                 </Td>
@@ -101,6 +122,32 @@ export default function Employee() {
                 </Td>
               </Tr>
             ))}
+
+          <Tr bg='green.100' border='10px' borderColor='gray.200'>
+            <Td>
+              {/* new employee row */}
+              <Editable onSubmit={(name) => setNewEmployeeName(name)} defaultValue='Add new hire'>
+                <EditablePreview />
+                <EditableInput />
+              </Editable>
+            </Td>
+            <Td>
+              <TagDropdown employee={newEmployee} tags={tags} submitMethod={(value) => setNewEmployeeTags(value)} />
+            </Td>
+            <Td>
+              <DayDropdown employee={newEmployee} submitMethod={(value) => setNewEmployeeBlockedDays(value)} />
+            </Td>
+            <Td>
+              <IconButton
+                isRound
+                size='sm'
+                aria-label='add employee'
+                icon={<CheckCircleIcon />}
+                _hover={{ bg: 'green.300' }}
+                onClick={hireEmployee}
+              />
+            </Td>
+          </Tr>
         </Tbody>
       </Table>
       <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>

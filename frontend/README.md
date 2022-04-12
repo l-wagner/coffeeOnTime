@@ -2,9 +2,10 @@ Todo:
 - replace findEmployeeByName with debounced inplace search
 - change form validation design
 - add loader gifs
-- edit name in place in employee table
-- polish menu item behavior on close
 - add new in table (switch to react table?)
+- checkout Gatsby.js
+- add new employee line
+- use react form in new employee table row
 
 order of creation:
 - business

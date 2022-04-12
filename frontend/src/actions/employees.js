@@ -3,7 +3,9 @@ import { UPDATE_ERROR, CREATE_EMPLOYEE, RETRIEVE_EMPLOYEES, UPDATE_EMPLOYEE, DEL
 import EmployeeDataService from '../services/employee.service.js';
 
 export const createEmployee = (values) => async (dispatch) => {
-  values.tags = values.tags.join(',');
+  console.log(values);
+  
+  
   values.blockedDays = values.blockedDays.join(',');
 
   const res = EmployeeDataService.create(values)
@@ -15,7 +17,7 @@ export const createEmployee = (values) => async (dispatch) => {
       return Promise.resolve(res.payload);
     })
     .catch((err) => {
-      dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+      dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true ' } });
       return Promise.reject(err);
     });
 };
@@ -36,7 +38,7 @@ export const retrieveEmployees = () => async (dispatch) => {
 
 export const updateEmployee = (id, data) => async (dispatch) => {
   try {
-    const res = await EmployeeDataService.updateDays(id, data);
+    const res = await EmployeeDataService.update(id, data);
 
     dispatch({
       type: UPDATE_EMPLOYEE,
@@ -81,6 +83,8 @@ export const updateEmployeeTags = (id, data) => async (dispatch) => {
     return Promise.reject(err);
   }
 };
+
+
 
 export const deleteEmployee = (id) => async (dispatch) => {
   try {

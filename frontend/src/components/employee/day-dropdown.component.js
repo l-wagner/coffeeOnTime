@@ -9,11 +9,13 @@ export default function DayDropdown(props) {
   // init selected options in menu
   useEffect(() => {
     setOptions(props.employee.blockedDays);
+    console.log(props.employee.blockedDays);
   }, [props.employee.blockedDays]);
   const dispatch = useDispatch();
 
   const onSave = () => {
-    dispatch(updateEmployeeDays(props.employee.id, { blockedDays: options }));
+    if (props.submitMethod) props.submitMethod(options);
+    else dispatch(updateEmployeeDays(props.employee.id, { blockedDays: options }));
   };
 
   return (

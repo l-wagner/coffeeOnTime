@@ -3,6 +3,7 @@ var Sequelize = require('sequelize');
 
 const db = require('../models/db.js');
 const Employee = db.employee;
+const Business = db.business;
 const Tag = db.tag;
 const apiResponse = require('../util/apiResponse.js');
 const { body, query, validationResult } = require('express-validator');
@@ -10,7 +11,8 @@ const { employee } = require('../models/db.js');
 
 // Create and Save a new Employee
 exports.add = [
-  body('name').not().isEmpty().trim().escape(),
+  body('firstName').not().isEmpty().trim().escape(),
+  body('business').isInt().not().isEmpty().trim().escape(),
   body('blockedDays').trim().escape(),
   body('tags').trim().escape(),
   function (req, res) {
@@ -20,38 +22,23 @@ exports.add = [
     if (!errors.isEmpty()) {
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
+    console.log(req.body);
 
-    let tags = req.body.tags.split(',');
-    Tag.findAll({
-      where: {
-        id: {
-          [Sequelize.Op.in]: tags,
-        },
-      },
-    }).then((tagsToAdd) => {
-      if (!tagsToAdd) {
-        res.status(500).send({
-          message: err.message || 'The selected tags are unavailable.',
-        });
-      }
-      Employee.create({
-        firstName: req.body.name,
-        blockedDays: req.body.blockedDays || null,
-        active: req.body.active || true,
-      })
-        .then((employee) => {
+    // Pull and add tags
+    const tags = req.body.tags.split(',');
+    Tag.findAll({ where: { id: { [Sequelize.Op.in]: tags } } })
+      .then((tagsToAdd) => {
+        Employee.create({
+          firstName: req.body.firstName,
+          blockedDays: req.body.blockedDays || null,
+          businessId: req.body.business,
+        }).then((employee) => {
           tagsToAdd.forEach((tag) => employee.addTag(tag));
-
-          Employee.findAll({ where: { id: employee.id }, include: Tag }).then((employee) => {
-            res.send(employee);
-          });
-        })
-        .catch((err) => {
-          res.status(500).send({
-            message: err.message || 'Error occurred while creating the Employee.',
-          });
+          employee.blockedDays = employee.blockedDays?.split(',');
+          apiResponse.successData(res, `${employee.firstName} was added.`, employee);
         });
-    });
+      })
+      .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
   },
 ];
 
@@ -85,6 +72,35 @@ exports.findAllPublished = (req, res) => {
     else res.send(data);
   });
 };
+
+// Update an Employee
+exports.update = [
+  query('id').not().isEmpty().trim().escape(),
+  body('data').trim().escape(),
+  (req, res) => {
+    // Validate Request
+    if (!req.body) {
+      res.status(400).send({
+        message: 'Content can not be empty!',
+      });
+    }
+    console.log(req.body);
+
+    Employee.findByPk(req.params.id)
+      .then((employee) => {
+        req.body.firstName && (employee.firstName = req.body.firstName);
+        req.body.lastName && (employee.lastName = req.body.lastName);
+        employee
+          .save()
+          .then((result) => apiResponse.successData(res, result))
+          .catch(() => apiResponse.notFoundResponse(res, 'Employee could not be updated.'));
+      })
+      .catch((err) => {
+        console.log(err);
+        apiResponse.notFoundResponse(res, 'Employee not found.');
+      });
+  },
+];
 
 // Update an Employee's blocked days identified by the id in the request
 exports.updateDays = [

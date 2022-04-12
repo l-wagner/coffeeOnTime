@@ -29,7 +29,7 @@ exports.validationError = function (res, data, status = 0) {
 
   res.status(status).json(data);
 };
-exports.error = function (res, msg, status = 0) {
+exports.error = function (res, msg, status = 500) {
   var data = {
     status: status,
     message: 'Warning: ' + msg,
