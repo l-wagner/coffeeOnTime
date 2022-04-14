@@ -3,11 +3,11 @@ var Sequelize = require('sequelize');
 
 const db = require('../models/db.js');
 const Employee = db.employee;
-const Business = db.business;
+
 const Tag = db.tag;
 const apiResponse = require('../util/apiResponse.js');
-const { body, query, validationResult } = require('express-validator');
-const { employee } = require('../models/db.js');
+const { body, param, validationResult } = require('express-validator');
+
 
 // Create and Save a new Employee
 exports.add = [
@@ -17,7 +17,6 @@ exports.add = [
   body('tags').trim().escape(),
   function (req, res) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
@@ -47,7 +46,6 @@ exports.findAll = (req, res) => {
   Employee.findAll({ include: Tag }).then((employees) => {
     // change blocked days to array
     employees.map((employee) => (employee.blockedDays = employee.blockedDays?.split(',')));
-
     apiResponse.successData(res, `${Object.keys(employees).length} employees found.`, employees);
   });
 };
@@ -64,14 +62,13 @@ exports.findOne = (req, res) => {
 
 // Update an Employee
 exports.update = [
-  query('id').not().isEmpty().trim().escape(),
+  param('id').not().isEmpty().trim().escape(),
   body('data').trim().escape(),
   (req, res) => {
     // Validate Request
-    if (!req.body) {
-      res.status(400).send({
-        message: 'Content can not be empty!',
-      });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
 
     Employee.findByPk(req.params.id)
@@ -83,23 +80,19 @@ exports.update = [
           .then((result) => apiResponse.successData(res, result))
           .catch(() => apiResponse.notFoundResponse(res, 'Employee could not be updated.'));
       })
-      .catch((err) => {
-        console.log(err);
-        apiResponse.notFoundResponse(res, 'Employee not found.');
-      });
+      .catch((e) => apiResponse.error(res, `Employee not found. Error: ${e}`));
   },
 ];
 
 // Update an Employee's blocked days identified by the id in the request
 exports.updateDays = [
-  query('id').not().isEmpty().trim().escape(),
+  param('id').not().isEmpty().trim().escape(),
   body('data').trim().escape(),
   (req, res) => {
     // Validate Request
-    if (!req.body) {
-      res.status(400).send({
-        message: 'Content can not be empty!',
-      });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
 
     Employee.findByPk(req.params.id)
@@ -110,22 +103,18 @@ exports.updateDays = [
           .then((result) => apiResponse.successData(res, result))
           .catch(() => apiResponse.notFoundResponse(res, 'Employee could not be updated.'));
       })
-      .catch((err) => {
-        console.log(err);
-        apiResponse.notFoundResponse(res, 'Employee not found.');
-      });
+      .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
   },
 ];
 
 exports.updateTags = [
-  query('id').not().isEmpty().trim().escape(),
+  param('id').not().isEmpty().trim().escape(),
   body('tags').trim().escape(),
   (req, res) => {
     // Validate Request
-    if (!req.body) {
-      res.status(400).send({
-        message: 'Content can not be empty!',
-      });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
     const tags = req.body.tags.split(',');
     Employee.findByPk(req.params.id).then((employee) => {
@@ -149,33 +138,17 @@ exports.updateTags = [
 // Delete a Employee with the specified id in the request
 
 exports.delete = [
-  query('id').not().isEmpty().trim().escape(),
+  param('id').not().isEmpty().trim().escape(),
   (req, res) => {
     Employee.destroy({ where: { id: req.params.id } })
-      .then(() => {
-        res.send({ message: `Employee was deleted successfully!` });
-      })
-      .catch((err) => {
-        if (err.kind === 'not_found') {
-          res.status(404).send({
-            message: `Not found Employee with id ${req.params.id}.`,
-          });
-        } else {
-          res.status(500).send({
-            message: 'Could not delete Employee with id ' + req.params.id,
-          });
-        }
-      });
+      .then(() => apiResponse.successMsg(res, 'Employee fired successfully.'))
+      .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
   },
 ];
 
 // Delete all Employees from the database.
 exports.deleteAll = (req, res) => {
-  Employee.removeAll((err, data) => {
-    if (err)
-      res.status(500).send({
-        message: err.message || 'Some error occurred while removing all employees.',
-      });
-    else res.send({ message: `All Employees were deleted successfully!` });
-  });
+  Employee.destroy({ where: { id: { $gte: 0 } } })
+    .then(() => apiResponse.successMsg(res, 'Employee fired successfully.'))
+    .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
 };

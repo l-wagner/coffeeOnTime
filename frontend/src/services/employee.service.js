@@ -6,7 +6,7 @@ class EmployeeDataService {
   }
 
   get(id) {
-    return http.get(`/employees/${id}`);
+    return http.get(`/employees/id=${id}`);
   }
 
   create(data) {
