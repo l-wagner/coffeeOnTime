@@ -70,17 +70,23 @@ export default function App() {
                 </Link>
               </li>
               <li className='nav-item'>
-                <Link to={'/setup'} className='nav-link'>
-                  Set up your business
+                <Link to={'/tags'} className='nav-link'>
+                  {business.nameForTags.charAt(0).toUpperCase() + business.nameForTags.slice(1)}
                 </Link>
               </li>
+              {!business?.id && (
+                <li className='nav-item'>
+                  <Link to={'/setup'} className='nav-link'>
+                    Set up your business
+                  </Link>
+                </li>
+              )}
             </div>
           </nav>
           <div className='container mt-3'>
             <Switch>
               <Route exact path={['/', '/employees']} component={Employee} />
               <Route exact path='/tags' component={TagList} />
-              <Route exact path='/add-tag' component={AddTag} />
               <Route exact path='/add-shift' component={AddShift} />
               <Route path='/setup' component={CreateBusiness} />
             </Switch>

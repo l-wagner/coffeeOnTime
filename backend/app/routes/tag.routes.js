@@ -19,7 +19,7 @@ module.exports = app => {
   // router.get("/:id", tags.findById);
 
   // Update a Tag with id
-  router.put("/:id", tags.update);
+  router.put("/", tags.update);
 
   // Delete a Tag with id
   router.delete("/:id", tags.delete);

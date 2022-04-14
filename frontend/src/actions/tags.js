@@ -31,9 +31,11 @@ export const retrieveTags = (businessId) => async (dispatch) => {
   }
 };
 
-export const updateTag = (id, data) => async (dispatch) => {
+export const updateTag = (data) => async (dispatch) => {
   try {
-    const res = await TagDataService.update(id, data);
+    const res = await TagDataService.update(data);
+    console.log(data);
+    
 
     dispatch({
       type: UPDATE_TAG,

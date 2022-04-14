@@ -1,162 +1,171 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { retrieveTags, findTagsByName, deleteAllTags } from '../actions/tags';
-import { Link } from 'react-router-dom';
+import { SmallCloseIcon, PlusSquareIcon, CheckCircleIcon } from '@chakra-ui/icons';
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  IconButton,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
+import React, { useEffect } from 'react';
+import pluralize from 'pluralize';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteTag, retrieveTags, updateTag, createTag } from '../actions/tags';
 
-class TagsList extends Component {
-  constructor(props) {
-    super(props);
-    this.onChangeSearchName = this.onChangeSearchName.bind(this);
-    this.refreshData = this.refreshData.bind(this);
-    this.setActiveTag = this.setActiveTag.bind(this);
-    this.findByName = this.findByName.bind(this);
-    this.removeAllTags = this.removeAllTags.bind(this);
+export default function Employee() {
+  // const { isOpen, onToggle } = useDisclosure();
+  const [isOpen, setIsOpen] = React.useState(false);
 
-    this.state = {
-      currentTag: null,
-      currentIndex: -1,
-      searchName: '',
-    };
-  }
+  const [newTagName, setNewTagName] = React.useState(false);
+  const [newTagDescription, setNewTagDescription] = React.useState(false);
 
-  componentDidMount() {
-    this.props.retrieveTags();
-  }
+  const [selectedTag, setSelectedEmployee] = React.useState(false);
 
-  onChangeSearchName(e) {
-    const searchName = e.target.value;
+  const cancelRef = React.useRef();
 
-    this.setState({
-      searchName: searchName,
-    });
-  }
+  const business = useSelector((state) => state.business);
+  const tags = useSelector((state) => state.business.tags);
 
-  refreshData() {
-    this.setState({
-      currentTag: null,
-      currentIndex: -1,
-    });
-  }
+  // const newEmployee = { tag: { id: 0, name: '', lastName: '', tags: [], blockedDays: [] } };
 
-  setActiveTag(tag, index) {
-    this.setState({
-      currentTag: tag,
-      currentIndex: index,
-    });
-  }
+  useEffect(() => {
+    // only run if business id avail
+    business.id && dispatch(retrieveTags(business.id));
+  }, [business.id]);
 
-  removeAllTags() {
-    this.props
-      .deleteAllTags()
-      .then((response) => {
-        console.log(response);
-        this.refreshData();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
+  const dispatch = useDispatch();
 
-  findByName() {
-    this.refreshData();
-
-    this.props.findTagsByName(this.state.searchName);
-  }
-
-  render() {
-    const { searchName, currentTag, currentIndex } = this.state;
-    const { tags } = this.props;
-
-    return (
-      <div className='list row'>
-        <div className='col-md-8'>
-          <div className='input-group mb-3'>
-            <input
-              type='text'
-              className='form-control'
-              placeholder='Search by name'
-              value={searchName}
-              onChange={this.onChangeSearchName}
-            />
-            <div className='input-group-append'>
-              <button className='btn btn-outline-secondary' type='button' onClick={this.findByName}>
-                Search
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className='col-md-6'>
-          <h4>Tags List</h4>
-
-          <ul className='list-group'>
-            {tags &&
-              tags.map((tag, index) => (
-                <li
-                  className={'list-group-item ' + (index === currentIndex ? 'active' : '')}
-                  onClick={() => this.setActiveTag(tag, index)}
-                  key={index}>
-                  {tag.name}
-                </li>
-              ))}
-          </ul>
-
-          <button className='m-3 btn btn-sm btn-danger' onClick={this.removeAllTags}>
-            Remove All
-          </button>
-        </div>
-        <div className='col-md-6'>
-          {currentTag ? (
-            <div>
-              <h4>Tag</h4>
-              <div>
-                <label>
-                  <strong>Name:</strong>
-                </label>{' '}
-                {currentTag.name}
-              </div>
-              <div>
-                <label>
-                  <strong>Description:</strong>
-                </label>{' '}
-                {currentTag.description}
-              </div>
-              <div>
-                <label>
-                  <strong>Icon:</strong>
-                </label>{' '}
-                {currentTag.icon}
-              </div>
-              <div>
-                <label>
-                  <strong>Employees:</strong>
-                </label>{' '}
-                {currentTag.employees.map(employee => <p key={employee.id}>{employee.firstName}</p>)}
-              </div>
-
-              <Link to={'/tags/' + currentTag.id} className='badge badge-warning'>
-                Edit
-              </Link>
-            </div>
-          ) : (
-            <div>
-              <br />
-              <p>Please click on a Tag...</p>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
-    tags: state.tags,
+  const hireEmployee = () => {
+    // dispatch(
+    //   createTag({
+    //     business: business.id,
+    //     name: newEmployeeName,
+    //     blockedDays: newEmployeeBlockedDays || [],
+    //     tags: newEmployeeTags || [],
+    //   })
+    // );
+    window.location.reload(false);
   };
-};
 
-export default connect(mapStateToProps, {
-  retrieveTags,
-  findTagsByName,
-  deleteAllTags,
-})(TagsList);
+  const areYouSure = (tag) => {
+    setIsOpen(true);
+    setSelectedEmployee(tag);
+  };
+  const onDelete = () => {
+    dispatch(deleteTag(selectedTag.id));
+    setIsOpen(false);
+  };
+
+  const onClose = () => {
+    setIsOpen(false);
+    setSelectedEmployee(null);
+  };
+
+  return (
+    <>
+      <Table size='sm'>
+        <Thead>
+          <Tr>
+            <Th>Name</Th>
+            <Th>Description</Th>
+            <Th></Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <Tr background='green.100' borderWidth='2px' borderColor='green.200'>
+            <Td>
+              {/* new employee row */}
+              <Editable onSubmit={(name) => setNewTagName(name)} defaultValue={`Add new ${pluralize.singular(business.nameForTags)}`}>
+                <EditablePreview />
+                <EditableInput />
+              </Editable>
+            </Td>
+            <Td>
+              <Editable
+                onSubmit={(description) => setNewTagDescription(description)}
+                defaultValue={`Describe this ${pluralize.singular(business.nameForTags)}.`}>
+                <EditablePreview />
+                <EditableInput />
+              </Editable>
+            </Td>
+
+            <Td>
+              <IconButton
+                isRound
+                size='sm'
+                aria-label='add employee'
+                icon={<CheckCircleIcon />}
+                _hover={{ bg: 'green.300' }}
+                onClick={hireEmployee}
+              />
+            </Td>
+          </Tr>
+          {tags &&
+            tags.map((tag) => (
+              <Tr key={tag?.name}>
+                <Td>
+                  <Editable onSubmit={(name) => dispatch(updateTag({ id: tag.id, name: name }))} defaultValue={tag.name}>
+                    <EditablePreview />
+                    <EditableInput />
+                  </Editable>
+                </Td>
+                <Td>
+                  <Editable
+                    onSubmit={(description) => dispatch(updateTag({ id: tag.id, description: description }))}
+                    defaultValue={tag.description}>
+                    <EditablePreview />
+                    <EditableInput />
+                  </Editable>
+                </Td>
+
+                <Td>
+                  <IconButton
+                    isRound
+                    size='sm'
+                    aria-label='delete tag'
+                    icon={<SmallCloseIcon />}
+                    _hover={{ bg: 'red.200' }}
+                    onClick={() => areYouSure(tag)}
+                  />
+                </Td>
+              </Tr>
+            ))}
+        </Tbody>
+      </Table>
+      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Delete {selectedTag?.name}?
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? This will also remove this {pluralize.singular(business.nameForTags)} from all tagged employees. You can't undo
+              this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme='red' onClick={onDelete} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
+  );
+}

@@ -112,36 +112,20 @@ exports.update = (req, res) => {
 
   console.log(req.body);
 
-  Tag.updateById(req.params.id, new Tag(req.body), (err, data) => {
-    if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: `Not found Tag with id ${req.params.id}.`,
-        });
-      } else {
-        res.status(500).send({
-          message: 'Error updating Tag with id ' + req.params.id,
-        });
-      }
-    } else res.send(data);
-  });
+  Tag.update({ name: req.body.name, description: req.body.description }, { where: { id: req.body.id } })
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((e) => console.log(e));
 };
 
 // Delete a Tag with the specified id in the request
 exports.delete = (req, res) => {
-  Tag.remove(req.params.id, (err, data) => {
-    if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: `Not found Tag with id ${req.params.id}.`,
-        });
-      } else {
-        res.status(500).send({
-          message: 'Could not delete Tag with id ' + req.params.id,
-        });
-      }
-    } else res.send({ message: `Role was deleted successfully!` });
-  });
+  Tag.destroy({ where: { id: req.params.id } })
+    .then((data) => {
+      apiResponse.successData(res, '', data.data);
+    })
+    .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
 };
 
 // Delete all Tags from the database.

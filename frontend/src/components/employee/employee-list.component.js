@@ -6,6 +6,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  Box,
   Button,
   Editable,
   EditableInput,
@@ -83,7 +84,7 @@ export default function Employee() {
 
   return (
     <>
-      <Table>
+      <Table size='sm'>
         <Thead>
           <Tr>
             <Th>Name</Th>
@@ -93,6 +94,32 @@ export default function Employee() {
           </Tr>
         </Thead>
         <Tbody>
+          <Tr background='green.100' borderWidth='2px' borderColor='green.200'>
+            <Td>
+              {/* new employee row */}
+              <Editable onSubmit={(name) => setNewEmployeeName(name)} defaultValue='Add new hire'>
+                <EditablePreview />
+                <EditableInput />
+              </Editable>
+            </Td>
+            <Td>
+              <TagDropdown employee={newEmployee} tags={tags} submitMethod={(value) => setNewEmployeeTags(value)} />
+            </Td>
+            <Td>
+              <DayDropdown employee={newEmployee} submitMethod={(value) => setNewEmployeeBlockedDays(value)} />
+            </Td>
+            <Td>
+              <IconButton
+                isRound
+                size='sm'
+                aria-label='add employee'
+                icon={<CheckCircleIcon />}
+                _hover={{ bg: 'green.300' }}
+                onClick={hireEmployee}
+              />
+            </Td>
+          </Tr>
+
           {employees &&
             employees.map((employee) => (
               <Tr key={employee?.id}>
@@ -122,32 +149,6 @@ export default function Employee() {
                 </Td>
               </Tr>
             ))}
-
-          <Tr bg='green.100' border='10px' borderColor='gray.200'>
-            <Td>
-              {/* new employee row */}
-              <Editable onSubmit={(name) => setNewEmployeeName(name)} defaultValue='Add new hire'>
-                <EditablePreview />
-                <EditableInput />
-              </Editable>
-            </Td>
-            <Td>
-              <TagDropdown employee={newEmployee} tags={tags} submitMethod={(value) => setNewEmployeeTags(value)} />
-            </Td>
-            <Td>
-              <DayDropdown employee={newEmployee} submitMethod={(value) => setNewEmployeeBlockedDays(value)} />
-            </Td>
-            <Td>
-              <IconButton
-                isRound
-                size='sm'
-                aria-label='add employee'
-                icon={<CheckCircleIcon />}
-                _hover={{ bg: 'green.300' }}
-                onClick={hireEmployee}
-              />
-            </Td>
-          </Tr>
         </Tbody>
       </Table>
       <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>

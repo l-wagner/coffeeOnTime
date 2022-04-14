@@ -62,17 +62,6 @@ exports.findOne = (req, res) => {
     .catch(() => apiResponse.notFoundResponse(res, 'Employee not found.'));
 };
 
-// find all active Employees
-exports.findAllPublished = (req, res) => {
-  Employee.getAllActive((err, data) => {
-    if (err)
-      res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving employees.',
-      });
-    else res.send(data);
-  });
-};
-
 // Update an Employee
 exports.update = [
   query('id').not().isEmpty().trim().escape(),
@@ -84,7 +73,6 @@ exports.update = [
         message: 'Content can not be empty!',
       });
     }
-    console.log(req.body);
 
     Employee.findByPk(req.params.id)
       .then((employee) => {
@@ -164,7 +152,7 @@ exports.delete = [
   query('id').not().isEmpty().trim().escape(),
   (req, res) => {
     Employee.destroy({ where: { id: req.params.id } })
-      .then((data) => {
+      .then(() => {
         res.send({ message: `Employee was deleted successfully!` });
       })
       .catch((err) => {

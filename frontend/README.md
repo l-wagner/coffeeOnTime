@@ -4,8 +4,8 @@ Todo:
 - add loader gifs
 - add new in table (switch to react table?)
 - checkout Gatsby.js
-- add new employee line
 - use react form in new employee table row
+- table sorting
 
 order of creation:
 - business
@@ -13,3 +13,7 @@ order of creation:
 - shifts (need roles)
 - employees (need roles, and business)
 - schedule (needs shifts and employees)
+
+Tests:
+- Deleting tags removes them from employees
+- 

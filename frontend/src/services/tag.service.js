@@ -16,8 +16,8 @@ class TagDataService {
     return axios.post('/tags', data);
   }
 
-  update(id, data) {
-    return axios.put(`/tags/${id}`, data);
+  update(data) {
+    return axios.put(`/tags/`, data);
   }
 
   delete(id) {
