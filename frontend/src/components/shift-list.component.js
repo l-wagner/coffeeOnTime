@@ -1,30 +1,22 @@
 import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
   Editable,
   EditableInput,
-  EditablePreview,
-  IconButton,
-  Table,
+  EditablePreview, IconButton, Table,
   Tbody,
-  Td,
-  Th,
+  Td, Th,
   Thead,
-  Tr,
+  Tr
 } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
-import TimePicker from 'react-time-picker';
-
 import { useDispatch, useSelector } from 'react-redux';
+import TimePicker from 'react-time-picker';
 import { createShift, deleteShift, retrieveShifts, updateShift, updateShiftDays, updateShiftTags } from './../actions/shifts.js';
+import AreYouSure from './errors/areYouSure.component.js';
+import SlideError from './errors/slideError.component.js';
 import DayDropdown from './shared/day-dropdown.component.js';
 import TagDropdown from './shared/tag-dropdown.component.js';
+
 
 export default function Shift() {
   // const {
@@ -40,6 +32,7 @@ export default function Shift() {
   const [shiftDescription, setShiftDesc] = React.useState(false);
   const [startTime, setStartTime] = React.useState(null);
   const [endTime, setEndTime] = React.useState(null);
+  const [error, setError] = React.useState(null);
 
   const [shiftTags, setShiftTags] = React.useState(false);
   const [shiftDays, setShiftDays] = React.useState(false);
@@ -62,17 +55,21 @@ export default function Shift() {
   const dispatch = useDispatch();
 
   const handleCreate = () => {
-    dispatch(
-      createShift({
-        business: business.id,
-        name: shiftName,
-        description: shiftDescription,
-        startTime: startTime,
-        endTime: endTime,
-        days: shiftDays || [],
-        tags: shiftTags || [],
-      })
-    );
+    if (!shiftName || !shiftDescription || !startTime || !endTime) {
+      setError(true);
+      setTimeout(() => setError(false), 3000);
+    } else
+      dispatch(
+        createShift({
+          business: business.id,
+          name: shiftName,
+          description: shiftDescription,
+          startTime: startTime,
+          endTime: endTime,
+          days: shiftDays || [],
+          tags: shiftTags || [],
+        })
+      );
     // window.location.reload(false);
   };
 
@@ -80,24 +77,20 @@ export default function Shift() {
     setIsOpen(true);
     setSelectedShift(shift);
   };
-  const onDelete = () => {
+  const handleDelete = () => {
     dispatch(deleteShift(selectedShift.id));
     setIsOpen(false);
   };
 
-  const onUpdate = (id, data) => {
-    console.log(data);
-
-    dispatch(updateShift(id, data));
-  };
-
-  const onClose = () => {
+  const handleClose = () => {
     setIsOpen(false);
     setSelectedShift(null);
   };
 
   return (
     <>
+      <SlideError error={{ isError: error, msg: 'Name, description, start, and end time are required.' }} />
+      <AreYouSure name={selectedShift?.firstName} isOpen={isOpen} onClose={handleClose} onDelete={handleDelete} />
       <Table size='sm'>
         <Thead>
           <Tr>
@@ -111,7 +104,7 @@ export default function Shift() {
           </Tr>
         </Thead>
         <Tbody>
-          <Tr background='green.100' borderWidth='2px' borderColor='green.200'>
+          <Tr background={'green.100'} borderWidth='2px' borderColor={'green.200'}>
             <Td>
               {/* new shift row */}
               <Editable onSubmit={(name) => setShiftName(name)} defaultValue='Add new shift'>
@@ -143,11 +136,17 @@ export default function Shift() {
                 size='sm'
                 aria-label='add shift'
                 icon={<CheckCircleIcon />}
-                _hover={{ bg: 'green.300' }}
+                _hover={{ bg: error ? 'red.300' : 'green.300' }}
                 onClick={handleCreate}
               />
             </Td>
           </Tr>
+
+          {/* <Fade in={error}>
+            <Tr>
+              <Td colSpan={7}> Name, description, start and end time are required.</Td>
+            </Tr>
+          </Fade> */}
 
           {shifts &&
             shifts.map((shift) => (
@@ -178,26 +177,7 @@ export default function Shift() {
             ))}
         </Tbody>
       </Table>
-      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              Delete {selectedShift?.firstName}?
-            </AlertDialogHeader>
-
-            <AlertDialogBody>Are you sure? You can't undo this action afterwards.</AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme='red' onClick={onDelete} ml={3}>
-                Delete
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+     
     </>
   );
 }

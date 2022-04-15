@@ -1,46 +1,30 @@
 import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
-import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
-  Editable,
-  EditableInput,
-  EditablePreview,
-  IconButton,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from '@chakra-ui/react';
+import { Editable, EditableInput, EditablePreview, IconButton, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createEmployee, deleteEmployee, retrieveEmployees, updateEmployee, updateEmployeeDays, updateEmployeeTags } from '../../actions/employees.js';
+import {
+  createEmployee,
+  deleteEmployee,
+  retrieveEmployees,
+  updateEmployee,
+  updateEmployeeDays,
+  updateEmployeeTags,
+} from '../../actions/employees.js';
+import { retrieveTags } from '../../actions/tags';
+import AreYouSure from '../errors/areYouSure.component.js';
+import SlideError from '../errors/slideError.component.js';
 import DayDropdown from '../shared/day-dropdown.component.js';
 import TagDropdown from '../shared/tag-dropdown.component.js';
 
 export default function Employee() {
-  // const {
-  //   handleSubmit,
-  //   register,
-  //   formState: { errors, isSubmitting },
-  // } = useForm();
-
-  // const { isOpen, onToggle } = useDisclosure();
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const [newEmployeeName, setNewEmployeeName] = React.useState(false);
-  const [newEmployeeTags, setNewEmployeeTags] = React.useState(false);
-  const [newEmployeeBlockedDays, setNewEmployeeBlockedDays] = React.useState(false);
+  const [firstName, setFirstName] = React.useState(false);
+  const [employeeTags, setEmployeeTags] = React.useState(false);
+  const [employeeBlockedDays, setEmployeeBlockedDays] = React.useState(false);
+  const [error, setError] = React.useState(null);
 
   const [selectedEmployee, setSelectedEmployee] = React.useState(false);
-
-  const cancelRef = React.useRef();
 
   const employees = useSelector((state) => state.employees);
   const business = useSelector((state) => state.business);
@@ -51,44 +35,46 @@ export default function Employee() {
   useEffect(() => {
     // only run if business id avail
     business.id && dispatch(retrieveEmployees(business.id));
+    business.id && dispatch(retrieveTags(business.id));
   }, [business.id]);
 
   const dispatch = useDispatch();
 
   const hireEmployee = () => {
-    dispatch(
-      createEmployee({
-        business: business.id,
-        firstName: newEmployeeName,
-        blockedDays: newEmployeeBlockedDays || [],
-        tags: newEmployeeTags || [],
-      })
-    );
-    window.location.reload(false);
+    if (!firstName) {
+      setError(true);
+      setTimeout(() => setError(false), 3000);
+    } else {
+      dispatch(
+        createEmployee({
+          business: business.id,
+          firstName: firstName,
+          blockedDays: employeeBlockedDays || [],
+          tags: employeeTags || [],
+        })
+      );
+      window.location.reload(false);
+    }
   };
 
   const areYouSure = (employee) => {
     setIsOpen(true);
     setSelectedEmployee(employee);
   };
-  const onDelete = () => {
+  const handleDelete = () => {
     dispatch(deleteEmployee(selectedEmployee.id));
     setIsOpen(false);
   };
 
-  const onUpdate = (id,data) => {
-    console.log(data);
-
-    dispatch(updateEmployee(id, data));
-  };
-
-  const onClose = () => {
+  const handleClose = () => {
     setIsOpen(false);
     setSelectedEmployee(null);
   };
 
   return (
     <>
+      <SlideError error={{ isError: error, msg: 'Name is required.' }} />
+      <AreYouSure name={selectedEmployee?.firstName} isOpen={isOpen} onClose={handleClose} onDelete={handleDelete} />
       <Table size='sm'>
         <Thead>
           <Tr>
@@ -99,19 +85,19 @@ export default function Employee() {
           </Tr>
         </Thead>
         <Tbody>
+          {/* new employee row */}
           <Tr background='green.100' borderWidth='2px' borderColor='green.200'>
             <Td>
-              {/* new employee row */}
-              <Editable onSubmit={(name) => setNewEmployeeName(name)} defaultValue='Add new hire'>
+              <Editable onSubmit={(name) => setFirstName(name)} defaultValue='Add new hire'>
                 <EditablePreview />
                 <EditableInput />
               </Editable>
             </Td>
             <Td>
-              <TagDropdown  item={newEmployee} tags={tags} submitMethod={(value) => setNewEmployeeTags(value)} />
+              <TagDropdown item={newEmployee} tags={tags} submitMethod={(value) => setEmployeeTags(value)} />
             </Td>
             <Td>
-              <DayDropdown  item={newEmployee} submitMethod={(value) => setNewEmployeeBlockedDays(value)} />
+              <DayDropdown item={newEmployee} submitMethod={(value) => setEmployeeBlockedDays(value)} />
             </Td>
             <Td>
               <IconButton
@@ -119,7 +105,7 @@ export default function Employee() {
                 size='sm'
                 aria-label='add employee'
                 icon={<CheckCircleIcon />}
-                _hover={{ bg: 'green.300' }}
+                _hover={{ bg: error ? 'red.300' : 'green.300' }}
                 onClick={hireEmployee}
               />
             </Td>
@@ -156,26 +142,6 @@ export default function Employee() {
             ))}
         </Tbody>
       </Table>
-      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              Delete {selectedEmployee?.firstName}?
-            </AlertDialogHeader>
-
-            <AlertDialogBody>Are you sure? You can't undo this action afterwards.</AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme='red' onClick={onDelete} ml={3}>
-                Delete
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
     </>
   );
 }

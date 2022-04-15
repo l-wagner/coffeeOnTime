@@ -4,8 +4,6 @@ const Employee = db.employee;
 const Business = db.business;
 const apiResponse = require('../util/apiResponse.js');
 const { body, param, validationResult } = require('express-validator');
-const { application } = require('express');
-const { tag } = require('../models/db.js');
 
 // Create and Save a new Tag
 exports.create = (req, res) => {
@@ -19,13 +17,14 @@ exports.create = (req, res) => {
     name: req.body.name,
     description: req.body.description,
     icon: req.body.icon,
+    businessId: req.body.business,
   };
 
   // Save Tag in the database
 
   Tag.create(tag)
     .then((data) => {
-      apiResponse.successData(res, '', data.data);
+      apiResponse.successData(res, '', data);
     })
     .catch((e) => apiResponse.error(res, `Tag could not be created due to: ${e}`));
 };

@@ -11,6 +11,7 @@ export const createTag = (values) => async (dispatch) => {
       payload: res.data,
     });
 
+    console.log(res);
     return Promise.resolve(res.data);
   } catch (err) {
     return Promise.reject(err);
@@ -35,7 +36,6 @@ export const updateTag = (data) => async (dispatch) => {
   try {
     const res = await TagDataService.update(data);
     console.log(data);
-    
 
     dispatch({
       type: UPDATE_TAG,

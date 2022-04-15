@@ -1,12 +1,5 @@
 import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
   Editable,
   EditableInput,
   EditablePreview,
@@ -16,23 +9,24 @@ import {
   Td,
   Th,
   Thead,
-  Tr,
+  Tr
 } from '@chakra-ui/react';
 import pluralize from 'pluralize';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTag, retrieveTags, updateTag } from '../actions/tags';
+import { createTag, deleteTag, retrieveTags, updateTag } from '../actions/tags';
+import AreYouSure from './errors/areYouSure.component';
+import SlideError from './errors/slideError.component';
 
 export default function Employee() {
   // const { isOpen, onToggle } = useDisclosure();
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const [newTagName, setNewTagName] = React.useState(false);
-  const [newTagDescription, setNewTagDescription] = React.useState(false);
+  const [tagName, setTagName] = React.useState(false);
+  const [tagDescription, setTagDescription] = React.useState(false);
+  const [error, setError] = React.useState(null);
 
-  const [selectedTag, setSelectedEmployee] = React.useState(false);
-
-  const cancelRef = React.useRef();
+  const [selectedTag, setSelectedTag] = React.useState(false);
 
   const business = useSelector((state) => state.business);
   const tags = useSelector((state) => state.tags);
@@ -46,34 +40,40 @@ export default function Employee() {
 
   const dispatch = useDispatch();
 
-  const hireEmployee = () => {
-    // dispatch(
-    //   createTag({
-    //     business: business.id,
-    //     name: newEmployeeName,
-    //     blockedDays: newEmployeeBlockedDays || [],
-    //     tags: newEmployeeTags || [],
-    //   })
-    // );
-    window.location.reload(false);
+  const handleCreate = () => {
+    if (!tagName || !tagDescription) {
+      setError(true);
+      setTimeout(() => setError(false), 3000);
+    } else
+      dispatch(
+        createTag({
+          business: business.id,
+          name: tagName,
+          description: tagDescription,
+        })
+      );
+    // window.location.reload(false);
   };
 
   const areYouSure = (tag) => {
     setIsOpen(true);
-    setSelectedEmployee(tag);
+    setSelectedTag(tag);
   };
-  const onDelete = () => {
+
+  const handleDelete = () => {
     dispatch(deleteTag(selectedTag.id));
     setIsOpen(false);
   };
 
-  const onClose = () => {
+  const handleClose = () => {
     setIsOpen(false);
-    setSelectedEmployee(null);
+    setSelectedTag(null);
   };
 
   return (
     <>
+      <SlideError error={{ isError: error, msg: 'Name and description are required.' }} />
+      <AreYouSure name={selectedTag?.name} isOpen={isOpen} onClose={handleClose} onDelete={handleDelete} />
       <Table size='sm'>
         <Thead>
           <Tr>
@@ -83,17 +83,17 @@ export default function Employee() {
           </Tr>
         </Thead>
         <Tbody>
+          {/* new tag row */}
           <Tr background='green.100' borderWidth='2px' borderColor='green.200'>
             <Td>
-              {/* new employee row */}
-              <Editable onSubmit={(name) => setNewTagName(name)} defaultValue={`Add new ${pluralize.singular(business.nameForTags)}`}>
+              <Editable onSubmit={(name) => setTagName(name)} defaultValue={`Add new ${pluralize.singular(business.nameForTags)}`}>
                 <EditablePreview />
                 <EditableInput />
               </Editable>
             </Td>
             <Td>
               <Editable
-                onSubmit={(description) => setNewTagDescription(description)}
+                onSubmit={(description) => setTagDescription(description)}
                 defaultValue={`Describe this ${pluralize.singular(business.nameForTags)}.`}>
                 <EditablePreview />
                 <EditableInput />
@@ -104,10 +104,10 @@ export default function Employee() {
               <IconButton
                 isRound
                 size='sm'
-                aria-label='add employee'
+                aria-label='add tag'
                 icon={<CheckCircleIcon />}
-                _hover={{ bg: 'green.300' }}
-                onClick={hireEmployee}
+                _hover={{ bg: error ? 'red.300' : 'green.300' }}
+                onClick={handleCreate}
               />
             </Td>
           </Tr>
@@ -143,29 +143,6 @@ export default function Employee() {
             ))}
         </Tbody>
       </Table>
-      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              Delete {selectedTag?.name}?
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              Are you sure? This will also remove this {pluralize.singular(business.nameForTags)} from all tagged employees. You can't undo
-              this action afterwards.
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme='red' onClick={onDelete} ml={3}>
-                Delete
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
     </>
   );
 }
