@@ -8,11 +8,11 @@ export const createTag = (values) => async (dispatch) => {
 
     dispatch({
       type: CREATE_TAG,
-      payload: res.data,
+      payload: res.payload,
     });
 
     console.log(res);
-    return Promise.resolve(res.data);
+    return Promise.resolve(res.payload);
   } catch (err) {
     return Promise.reject(err);
   }

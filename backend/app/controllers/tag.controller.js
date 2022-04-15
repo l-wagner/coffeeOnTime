@@ -31,8 +31,6 @@ exports.create = (req, res) => {
 
 // Retrieve all Tags from the database.
 exports.findAll = (req, res) => {
-  const name = req.param.name;
-
   Tag.findAll({ include: Employee })
     .then((data) => {
       // console.log(data);

@@ -6,7 +6,6 @@ Todo:
 - checkout Gatsby.js
 - use react form in new employee table row
 - table sorting
-- fix skill add and update
 - finish shifts
 
 order of creation:

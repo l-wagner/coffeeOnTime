@@ -1,16 +1,5 @@
 import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
-import {
-  Editable,
-  EditableInput,
-  EditablePreview,
-  IconButton,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr
-} from '@chakra-ui/react';
+import { Editable, EditableInput, EditablePreview, IconButton, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import pluralize from 'pluralize';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,7 +8,6 @@ import AreYouSure from './errors/areYouSure.component';
 import SlideError from './errors/slideError.component';
 
 export default function Employee() {
-  // const { isOpen, onToggle } = useDisclosure();
   const [isOpen, setIsOpen] = React.useState(false);
 
   const [tagName, setTagName] = React.useState(false);
@@ -52,7 +40,8 @@ export default function Employee() {
           description: tagDescription,
         })
       );
-    // window.location.reload(false);
+
+    window.location.reload(false);
   };
 
   const areYouSure = (tag) => {
@@ -115,14 +104,16 @@ export default function Employee() {
             tags.map((tag) => (
               <Tr key={tag?.name}>
                 <Td>
-                  <Editable onSubmit={(name) => dispatch(updateTag({ id: tag.id, name: name }))} defaultValue={tag.name}>
+                  <Editable
+                    onSubmit={(name) => dispatch(updateTag({ id: tag.id, name: name, description: tag.description }))}
+                    defaultValue={tag.name}>
                     <EditablePreview />
                     <EditableInput />
                   </Editable>
                 </Td>
                 <Td>
                   <Editable
-                    onSubmit={(description) => dispatch(updateTag({ id: tag.id, description: description }))}
+                    onSubmit={(description) => dispatch(updateTag({ id: tag.id, name: tag.name, description: description }))}
                     defaultValue={tag.description}>
                     <EditablePreview />
                     <EditableInput />
