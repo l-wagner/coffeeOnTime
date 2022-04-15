@@ -1,21 +1,17 @@
 import { AddIcon } from '@chakra-ui/icons';
 import { Flex, IconButton, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup, Tag } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { updateEmployeeDays } from '../../actions/employees';
 
 export default function DayDropdown(props) {
   const [options, setOptions] = useState([]);
   // init selected options in menu
   useEffect(() => {
-    setOptions(props.employee.blockedDays);
-    console.log(props.employee.blockedDays);
-  }, [props.employee.blockedDays]);
-  const dispatch = useDispatch();
+    setOptions(props.item.blockedDays);
+  }, [props.item.blockedDays]);
 
   const onSave = () => {
     if (props.submitMethod) props.submitMethod(options);
-    else dispatch(updateEmployeeDays(props.employee.id, { blockedDays: options }));
+    else props.updateMethod(props.item.id, { blockedDays: options });
   };
 
   return (

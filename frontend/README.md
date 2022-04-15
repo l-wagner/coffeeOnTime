@@ -2,7 +2,7 @@ Todo:
 - replace findEmployeeByName with debounced inplace search
 - change form validation design
 - add loader gifs
-- add new in table (switch to react table?)
+- add shifts
 - checkout Gatsby.js
 - use react form in new employee table row
 - table sorting

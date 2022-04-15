@@ -1,20 +1,26 @@
-import { CREATE_SHIFT, RETRIEVE_SHIFTS, UPDATE_SHIFT, DELETE_SHIFT, DELETE_ALL_SHIFTS } from './types';
+import { CREATE_ERROR, UPDATE_ERROR, CREATE_SHIFT, RETRIEVE_SHIFTS, UPDATE_SHIFT, DELETE_SHIFT, DELETE_ALL_SHIFTS, ERROR } from './types';
 
-import ShiftDataService from '../services/tag.service';
+import ShiftDataService from '../services/shift.service.js';
 
-export const createShift = (name, description) => async (dispatch) => {
-  try {
-    const res = await ShiftDataService.create({ name, description });
+export const createShift = (values) => async (dispatch) => {
+  console.log(values);
 
-    dispatch({
-      type: CREATE_SHIFT,
-      payload: res.data,
+  values.days = values.days.join(',');
+  values.tags = values.tags.join(',');
+
+  const res = ShiftDataService.create(values)
+    .then((result) => {
+      dispatch({
+        type: CREATE_SHIFT,
+        payload: result.payload,
+      });
+      return Promise.resolve(res.payload);
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+      dispatch({ type: CREATE_ERROR, payload: { msg: err.response.data.msg, error: 'true' } });
+      return Promise.reject(err);
     });
-
-    return Promise.resolve(res.data);
-  } catch (err) {
-    return Promise.reject(err);
-  }
 };
 
 export const retrieveShifts = () => async (dispatch) => {
@@ -23,10 +29,11 @@ export const retrieveShifts = () => async (dispatch) => {
 
     dispatch({
       type: RETRIEVE_SHIFTS,
-      payload: res.data,
+      payload: res.payload,
     });
   } catch (err) {
-    console.log(err);
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    return Promise.reject(err);
   }
 };
 
@@ -39,8 +46,41 @@ export const updateShift = (id, data) => async (dispatch) => {
       payload: data,
     });
 
-    return Promise.resolve(res.data);
+    return Promise.resolve(res.payload);
   } catch (err) {
+    dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
+    return Promise.reject(err);
+  }
+};
+export const updateShiftDays = (id, data) => async (dispatch) => {
+  try {
+    const res = await ShiftDataService.updateDays(id, data);
+
+    dispatch({
+      type: UPDATE_SHIFT,
+      payload: data,
+    });
+
+    return Promise.resolve(res.payload);
+  } catch (err) {
+    dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
+    return Promise.reject(err);
+  }
+};
+export const updateShiftTags = (id, data) => async (dispatch) => {
+  try {
+    console.log(data);
+
+    const res = await ShiftDataService.updateTags(id, data);
+
+    dispatch({
+      type: UPDATE_SHIFT,
+      payload: data,
+    });
+
+    return Promise.resolve(res.payload);
+  } catch (err) {
+    dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
     return Promise.reject(err);
   }
 };
@@ -54,7 +94,8 @@ export const deleteShift = (id) => async (dispatch) => {
       payload: { id },
     });
   } catch (err) {
-    console.log(err);
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    return Promise.reject(err);
   }
 };
 
@@ -64,11 +105,12 @@ export const deleteAllShifts = () => async (dispatch) => {
 
     dispatch({
       type: DELETE_ALL_SHIFTS,
-      payload: res.data,
+      payload: res.payload,
     });
 
-    return Promise.resolve(res.data);
+    return Promise.resolve(res.payload);
   } catch (err) {
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
     return Promise.reject(err);
   }
 };
@@ -79,9 +121,10 @@ export const findShiftsByName = (name) => async (dispatch) => {
 
     dispatch({
       type: RETRIEVE_SHIFTS,
-      payload: res.data,
+      payload: res.payload,
     });
   } catch (err) {
-    console.log(err);
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    return Promise.reject(err);
   }
 };

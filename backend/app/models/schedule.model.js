@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Schedule = sequelize.define('shift', {
+  const Schedule = sequelize.define('schedule', {
     startDate: {
       type: DataTypes.DATE,
     },
@@ -8,5 +8,6 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
+  
   return Schedule;
 };

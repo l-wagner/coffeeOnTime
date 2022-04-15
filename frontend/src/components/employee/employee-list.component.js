@@ -1,4 +1,4 @@
-import { SmallCloseIcon, PlusSquareIcon, CheckCircleIcon } from '@chakra-ui/icons';
+import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -6,7 +6,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Box,
   Button,
   Editable,
   EditableInput,
@@ -21,9 +20,9 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteEmployee, retrieveEmployees, updateEmployee, createEmployee } from '../../actions/employees.js';
-import DayDropdown from './day-dropdown.component.js';
-import TagDropdown from './tag-dropdown.component.js';
+import { createEmployee, deleteEmployee, retrieveEmployees, updateEmployee, updateEmployeeDays, updateEmployeeTags } from '../../actions/employees.js';
+import DayDropdown from '../shared/day-dropdown.component.js';
+import TagDropdown from '../shared/tag-dropdown.component.js';
 
 export default function Employee() {
   // const {
@@ -45,7 +44,7 @@ export default function Employee() {
 
   const employees = useSelector((state) => state.employees);
   const business = useSelector((state) => state.business);
-  const tags = useSelector((state) => state.business.tags);
+  const tags = useSelector((state) => state.tags);
 
   const newEmployee = { employee: { id: 0, firstName: '', lastName: '', tags: [], blockedDays: [] } };
 
@@ -77,6 +76,12 @@ export default function Employee() {
     setIsOpen(false);
   };
 
+  const onUpdate = (id,data) => {
+    console.log(data);
+
+    dispatch(updateEmployee(id, data));
+  };
+
   const onClose = () => {
     setIsOpen(false);
     setSelectedEmployee(null);
@@ -103,10 +108,10 @@ export default function Employee() {
               </Editable>
             </Td>
             <Td>
-              <TagDropdown employee={newEmployee} tags={tags} submitMethod={(value) => setNewEmployeeTags(value)} />
+              <TagDropdown  item={newEmployee} tags={tags} submitMethod={(value) => setNewEmployeeTags(value)} />
             </Td>
             <Td>
-              <DayDropdown employee={newEmployee} submitMethod={(value) => setNewEmployeeBlockedDays(value)} />
+              <DayDropdown  item={newEmployee} submitMethod={(value) => setNewEmployeeBlockedDays(value)} />
             </Td>
             <Td>
               <IconButton
@@ -132,10 +137,10 @@ export default function Employee() {
                   </Editable>
                 </Td>
                 <Td>
-                  <TagDropdown employee={employee} tags={tags} />
+                  <TagDropdown updateMethod={(id, data) => dispatch(updateEmployeeTags(id, data))} item={employee} tags={tags} />
                 </Td>
                 <Td>
-                  <DayDropdown employee={employee} />
+                  <DayDropdown updateMethod={(id, data) => dispatch(updateEmployeeDays(id, data))} item={employee} />
                 </Td>
                 <Td>
                   <IconButton

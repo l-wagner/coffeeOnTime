@@ -5,6 +5,7 @@ const Business = db.business;
 const apiResponse = require('../util/apiResponse.js');
 const { body, param, validationResult } = require('express-validator');
 const { application } = require('express');
+const { tag } = require('../models/db.js');
 
 // Create and Save a new Tag
 exports.create = (req, res) => {
@@ -13,7 +14,6 @@ exports.create = (req, res) => {
     return apiResponse.validationError(res, { errors: errors.array() }, 400);
   }
 
-  console.log(req.body);
   // Create a Tag
   const tag = {
     name: req.body.name,
@@ -82,7 +82,6 @@ exports.findById = [
   },
 ];
 
-
 // Update a Tag identified by the id in the request
 exports.update = (req, res) => {
   // Validate Request
@@ -90,13 +89,14 @@ exports.update = (req, res) => {
   if (!errors.isEmpty()) {
     return apiResponse.validationError(res, { errors: errors.array() }, 400);
   }
-
-  console.log(req.body);
-
-  Tag.update({ name: req.body.name, description: req.body.description }, { where: { id: req.body.id } })
-    .then((result) => {
-      console.log(result);
+  console.log(req.body.id, req.body.name);
+  Tag.findByPk(req.body.id)
+    .then((tag) => {
+      tag.name = req.body.name;
+      tag.description = req.body.description;
+      tag.save().then(() => apiResponse.successData(res, 'Tag updated.', tag));
     })
+
     .catch((e) => apiResponse.error(res, `Tag could not be updated due to: ${e}`));
 };
 

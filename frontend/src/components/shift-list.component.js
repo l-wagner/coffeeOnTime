@@ -1,156 +1,203 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { retrieveShifts, findShiftsByName, deleteAllShifts } from '../actions/shifts';
-import { Link } from 'react-router-dom';
+import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  IconButton,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
+import React, { useEffect } from 'react';
+import TimePicker from 'react-time-picker';
 
-class ShiftsList extends Component {
-  constructor(props) {
-    super(props);
-    this.onChangeSearchName = this.onChangeSearchName.bind(this);
-    this.refreshData = this.refreshData.bind(this);
-    this.setActiveShift = this.setActiveShift.bind(this);
-    this.findByName = this.findByName.bind(this);
-    this.removeAllShifts = this.removeAllShifts.bind(this);
+import { useDispatch, useSelector } from 'react-redux';
+import { createShift, deleteShift, retrieveShifts, updateShift, updateShiftDays, updateShiftTags } from './../actions/shifts.js';
+import DayDropdown from './shared/day-dropdown.component.js';
+import TagDropdown from './shared/tag-dropdown.component.js';
 
-    this.state = {
-      currentShift: null,
-      currentIndex: -1,
-      searchName: '',
-    };
-  }
+export default function Shift() {
+  // const {
+  //   handleSubmit,
+  //   register,
+  //   formState: { errors, isSubmitting },
+  // } = useForm();
 
-  componentDidMount() {
-    this.props.retrieveShifts();
-  }
+  // const { isOpen, onToggle } = useDisclosure();
+  const [isOpen, setIsOpen] = React.useState(false);
 
-  onChangeSearchName(e) {
-    const searchName = e.target.value;
+  const [shiftName, setShiftName] = React.useState(false);
+  const [shiftDescription, setShiftDesc] = React.useState(false);
+  const [startTime, setStartTime] = React.useState(null);
+  const [endTime, setEndTime] = React.useState(null);
 
-    this.setState({
-      searchName: searchName,
-    });
-  }
+  const [shiftTags, setShiftTags] = React.useState(false);
+  const [shiftDays, setShiftDays] = React.useState(false);
 
-  refreshData() {
-    this.setState({
-      currentShift: null,
-      currentIndex: -1,
-    });
-  }
+  const [selectedShift, setSelectedShift] = React.useState(false);
 
-  setActiveShift(shift, index) {
-    this.setState({
-      currentShift: shift,
-      currentIndex: index,
-    });
-  }
+  const cancelRef = React.useRef();
 
-  removeAllShifts() {
-    this.props
-      .deleteAllShifts()
-      .then((response) => {
-        console.log(response);
-        this.refreshData();
+  const shifts = useSelector((state) => state.shifts);
+  const business = useSelector((state) => state.business);
+  const tags = useSelector((state) => state.tags);
+
+  const emptyShift = { name: '', description: '', days: [], tags: [], startTime: '', endTime: '' };
+
+  useEffect(() => {
+    // only run if business id avail
+    business.id && dispatch(retrieveShifts(business.id));
+  }, [business.id]);
+
+  const dispatch = useDispatch();
+
+  const handleCreate = () => {
+    dispatch(
+      createShift({
+        business: business.id,
+        name: shiftName,
+        description: shiftDescription,
+        startTime: startTime,
+        endTime: endTime,
+        days: shiftDays || [],
+        tags: shiftTags || [],
       })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
-
-  findByName() {
-    this.refreshData();
-
-    this.props.findShiftsByName(this.state.searchName);
-  }
-
-  render() {
-    const { searchName, currentShift, currentIndex } = this.state;
-    const { shifts } = this.props;
-
-    return (
-      <div className='list row'>
-        <div className='col-md-8'>
-          <div className='input-group mb-3'>
-            <input
-              type='text'
-              className='form-control'
-              placeholder='Search by name'
-              value={searchName}
-              onChange={this.onChangeSearchName}
-            />
-            <div className='input-group-append'>
-              <button className='btn btn-outline-secondary' type='button' onClick={this.findByName}>
-                Search
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className='col-md-6'>
-          <h4>Shifts List</h4>
-
-          <ul className='list-group'>
-            {shifts &&
-              shifts.map((shift, index) => (
-                <li
-                  className={'list-group-item ' + (index === currentIndex ? 'active' : '')}
-                  onClick={() => this.setActiveShift(shift, index)}
-                  key={index}>
-                  {shift.name}
-                </li>
-              ))}
-          </ul>
-
-          <button className='m-3 btn btn-sm btn-danger' onClick={this.removeAllShifts}>
-            Remove All
-          </button>
-        </div>
-        <div className='col-md-6'>
-          {currentShift ? (
-            <div>
-              <h4>Shift</h4>
-              <div>
-                <label>
-                  <strong>Name:</strong>
-                </label>{' '}
-                {currentShift.name}
-              </div>
-              <div>
-                <label>
-                  <strong>BlockedDays:</strong>
-                </label>{' '}
-                {currentShift.blockedDays}
-              </div>
-              <div>
-                <label>
-                  <strong>Status:</strong>
-                </label>{' '}
-                {currentShift.published ? 'Published' : 'Pending'}
-              </div>
-
-              <Link to={'/shifts/' + currentShift.id} className='badge badge-warning'>
-                Edit
-              </Link>
-            </div>
-          ) : (
-            <div>
-              <br />
-              <p>Please click on a Shift...</p>
-            </div>
-          )}
-        </div>
-      </div>
     );
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
-    shifts: state.shifts,
+    // window.location.reload(false);
   };
-};
 
-export default connect(mapStateToProps, {
-  retrieveShifts,
-  findShiftsByName,
-  deleteAllShifts,
-})(ShiftsList);
+  const areYouSure = (shift) => {
+    setIsOpen(true);
+    setSelectedShift(shift);
+  };
+  const onDelete = () => {
+    dispatch(deleteShift(selectedShift.id));
+    setIsOpen(false);
+  };
+
+  const onUpdate = (id, data) => {
+    console.log(data);
+
+    dispatch(updateShift(id, data));
+  };
+
+  const onClose = () => {
+    setIsOpen(false);
+    setSelectedShift(null);
+  };
+
+  return (
+    <>
+      <Table size='sm'>
+        <Thead>
+          <Tr>
+            <Th>Shift name</Th>
+            <Th>Shift description</Th>
+            <Th>Start time</Th>
+            <Th>end time</Th>
+            <Th>{business.nameForTags}</Th>
+            <Th>Days</Th>
+            <Th></Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <Tr background='green.100' borderWidth='2px' borderColor='green.200'>
+            <Td>
+              {/* new shift row */}
+              <Editable onSubmit={(name) => setShiftName(name)} defaultValue='Add new shift'>
+                <EditablePreview />
+                <EditableInput />
+              </Editable>
+            </Td>
+            <Td>
+              <Editable onSubmit={(description) => setShiftDesc(description)} defaultValue={`Describe this shift.`}>
+                <EditablePreview />
+                <EditableInput />
+              </Editable>
+            </Td>
+            <Td>
+              <TimePicker openClockOnFocus={false} onChange={(value) => setStartTime(value)} value={startTime} />
+            </Td>
+            <Td>
+              <TimePicker openClockOnFocus={false} onChange={(value) => setEndTime(value)} value={endTime} />
+            </Td>
+            <Td>
+              <TagDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftTags(value)} />
+            </Td>
+            <Td>
+              <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} />
+            </Td>
+            <Td>
+              <IconButton
+                isRound
+                size='sm'
+                aria-label='add shift'
+                icon={<CheckCircleIcon />}
+                _hover={{ bg: 'green.300' }}
+                onClick={handleCreate}
+              />
+            </Td>
+          </Tr>
+
+          {shifts &&
+            shifts.map((shift) => (
+              <Tr key={shift?.id}>
+                <Td>
+                  <Editable onSubmit={(name) => dispatch(updateShift(shift.id, { firstName: name }))} defaultValue={shift.firstName}>
+                    <EditablePreview />
+                    <EditableInput />
+                  </Editable>
+                </Td>
+                <Td>
+                  <TagDropdown updateMethod={(id, data) => dispatch(updateShiftTags(id, data))} item={shift} tags={tags} />
+                </Td>
+                <Td>
+                  <DayDropdown updateMethod={(id, data) => dispatch(updateShiftDays(id, data))} item={shift} />
+                </Td>
+                <Td>
+                  <IconButton
+                    isRound
+                    size='sm'
+                    aria-label='delete shift'
+                    icon={<SmallCloseIcon />}
+                    _hover={{ bg: 'red.200' }}
+                    onClick={() => areYouSure(shift)}
+                  />
+                </Td>
+              </Tr>
+            ))}
+        </Tbody>
+      </Table>
+      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Delete {selectedShift?.firstName}?
+            </AlertDialogHeader>
+
+            <AlertDialogBody>Are you sure? You can't undo this action afterwards.</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme='red' onClick={onDelete} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
+  );
+}

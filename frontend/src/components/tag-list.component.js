@@ -1,4 +1,4 @@
-import { SmallCloseIcon, PlusSquareIcon, CheckCircleIcon } from '@chakra-ui/icons';
+import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -18,10 +18,10 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
 import pluralize from 'pluralize';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTag, retrieveTags, updateTag, createTag } from '../actions/tags';
+import { deleteTag, retrieveTags, updateTag } from '../actions/tags';
 
 export default function Employee() {
   // const { isOpen, onToggle } = useDisclosure();
@@ -35,7 +35,7 @@ export default function Employee() {
   const cancelRef = React.useRef();
 
   const business = useSelector((state) => state.business);
-  const tags = useSelector((state) => state.business.tags);
+  const tags = useSelector((state) => state.tags);
 
   // const newEmployee = { tag: { id: 0, name: '', lastName: '', tags: [], blockedDays: [] } };
 

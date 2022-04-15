@@ -25,12 +25,13 @@ let dbScheduledShift = require('./scheduledShift.model.js')(sequelize, Sequelize
 
 dbEmployee.belongsToMany(dbTag, { through: 'employeeTags' });
 
-dbTag.belongsToMany(dbEmployee, { through: 'employeeTags' });
+dbTag.belongsToMany(dbEmployee,  { through: 'employeeTags' });
 dbTag.belongsToMany(dbShift, { through: 'shiftTags' });
 
 dbBusiness.hasMany(dbEmployee);
 dbBusiness.hasMany(dbSchedule);
 dbBusiness.hasMany(dbTag);
+dbBusiness.hasMany(dbShift);
 
 dbSchedule.hasMany(dbScheduledShift);
 

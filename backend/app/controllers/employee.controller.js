@@ -8,7 +8,6 @@ const Tag = db.tag;
 const apiResponse = require('../util/apiResponse.js');
 const { body, param, validationResult } = require('express-validator');
 
-
 // Create and Save a new Employee
 exports.add = [
   body('firstName').not().isEmpty().trim().escape(),
@@ -116,6 +115,7 @@ exports.updateTags = [
     if (!errors.isEmpty()) {
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
+
     const tags = req.body.tags.split(',');
     Employee.findByPk(req.params.id).then((employee) => {
       //remove all tags from employee TODO actually compare tags

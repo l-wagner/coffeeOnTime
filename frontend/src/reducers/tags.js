@@ -1,10 +1,4 @@
-import {
-  CREATE_TAG,
-  RETRIEVE_TAGS,
-  UPDATE_TAG,
-  DELETE_TAG,
-  DELETE_ALL_TAGS,
-} from "../actions/types";
+import { CREATE_TAG, RETRIEVE_TAGS, UPDATE_TAG, DELETE_TAG, DELETE_ALL_TAGS } from '../actions/types';
 
 const initialState = [];
 
@@ -21,8 +15,9 @@ function tagReducer(tags = initialState, action) {
     case UPDATE_TAG:
       return tags.map((tag) => {
         if (tag.id === payload.id) {
+          console.log(tag);
           return {
-            ...tag,
+            ...tags,
             ...payload,
           };
         } else {
@@ -39,6 +34,6 @@ function tagReducer(tags = initialState, action) {
     default:
       return tags;
   }
-};
+}
 
 export default tagReducer;
