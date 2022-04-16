@@ -120,7 +120,7 @@ export default function Shift() {
               <TagDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftTags(value)} />
             </Td>
             <Td>
-              <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} />
+              <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} days={emptyShift.days}/>
             </Td>
             <Td>
               <IconButton
@@ -173,7 +173,7 @@ export default function Shift() {
                   <TagDropdown updateMethod={(id, data) => dispatch(updateShiftTags(id, data))} item={shift} tags={tags} />
                 </Td>
                 <Td>
-                  <DayDropdown updateMethod={(id, data) => dispatch(updateShiftDays(id, data))} item={shift} />
+                  <DayDropdown updateMethod={(id, data) => dispatch(updateShiftDays(id, data))} item={shift} days={shift.days} />
                 </Td>
                 <Td>
                   <IconButton

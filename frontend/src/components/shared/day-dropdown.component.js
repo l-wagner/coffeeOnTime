@@ -6,8 +6,8 @@ export default function DayDropdown(props) {
   const [options, setOptions] = useState([]);
   // init selected options in menu
   useEffect(() => {
-    setOptions(props.item.blockedDays);
-  }, [props.item.blockedDays]);
+    setOptions(props.days);
+  }, [props.days]);
 
   const onSave = () => {
     if (props.submitMethod) props.submitMethod(options);

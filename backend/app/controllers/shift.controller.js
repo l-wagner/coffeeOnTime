@@ -53,7 +53,7 @@ exports.add = [
 exports.findAll = (req, res) => {
   Shift.findAll({ include: Tag }).then((shifts) => {
     // change blocked days to array
-    shifts.map((shift) => (shift.blockedDays = shift.blockedDays?.split(',')));
+    shifts.map((shift) => (shift.days = shift.days?.split(',')));
     apiResponse.successData(res, `${Object.keys(shifts).length} shifts found.`, shifts);
   });
 };

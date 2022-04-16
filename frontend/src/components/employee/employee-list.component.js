@@ -2,6 +2,7 @@ import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { Editable, EditableInput, EditablePreview, IconButton, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
   createEmployee,
   deleteEmployee,
@@ -97,7 +98,7 @@ export default function Employee() {
               <TagDropdown item={newEmployee} tags={tags} submitMethod={(value) => setEmployeeTags(value)} />
             </Td>
             <Td>
-              <DayDropdown item={newEmployee} submitMethod={(value) => setEmployeeBlockedDays(value)} />
+              <DayDropdown item={newEmployee} submitMethod={(value) => setEmployeeBlockedDays(value)} days={newEmployee.blockedDays} />
             </Td>
             <Td>
               <IconButton
@@ -126,7 +127,11 @@ export default function Employee() {
                   <TagDropdown updateMethod={(id, data) => dispatch(updateEmployeeTags(id, data))} item={employee} tags={tags} />
                 </Td>
                 <Td>
-                  <DayDropdown updateMethod={(id, data) => dispatch(updateEmployeeDays(id, data))} item={employee} />
+                  <DayDropdown
+                    updateMethod={(id, data) => dispatch(updateEmployeeDays(id, data))}
+                    item={employee}
+                    days={employee.blockedDays}
+                  />
                 </Td>
                 <Td>
                   <IconButton
