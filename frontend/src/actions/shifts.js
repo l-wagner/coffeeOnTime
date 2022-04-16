@@ -1,12 +1,15 @@
 import { CREATE_ERROR, UPDATE_ERROR, CREATE_SHIFT, RETRIEVE_SHIFTS, UPDATE_SHIFT, DELETE_SHIFT, DELETE_ALL_SHIFTS, ERROR } from './types';
+// import { compareAsc, format } from 'date-fns';
+
+
 
 import ShiftDataService from '../services/shift.service.js';
 
 export const createShift = (values) => async (dispatch) => {
   console.log(values);
 
-  values.days = values.days.join(',');
-  values.tags = values.tags.join(',');
+  // values.days = values.days.join(',');
+  // values.tags = values.tags.join(',');
 
   const res = ShiftDataService.create(values)
     .then((result) => {
@@ -18,7 +21,7 @@ export const createShift = (values) => async (dispatch) => {
     })
     .catch((err) => {
       console.log(err.response.data);
-      dispatch({ type: CREATE_ERROR, payload: { msg: err.response.data.msg, error: 'true' } });
+      dispatch({ type: CREATE_ERROR, payload: { msg: err.response.data.msg || err.response.data.message, error: 'true' } });
       return Promise.reject(err);
     });
 };
@@ -26,7 +29,9 @@ export const createShift = (values) => async (dispatch) => {
 export const retrieveShifts = () => async (dispatch) => {
   try {
     const res = await ShiftDataService.getAll();
-
+    
+    // console.log(new Date(res.payload[0].endTime));
+    // console.log(format(new Date(res.payload[0].endTime), 'HH:MM:SS'));
     dispatch({
       type: RETRIEVE_SHIFTS,
       payload: res.payload,

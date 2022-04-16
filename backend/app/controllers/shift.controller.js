@@ -22,27 +22,28 @@ exports.add = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       let msg = '';
-      errors.array().map((error) => msg += (error.param + ' invalid. '));
-      return apiResponse.validationError(res, { errors: errors.array(), msg: msg }, 400);
+      errors.array().map((error) => (msg += error.param + ' invalid. '));
+      return apiResponse.validationError(res, { errors: errors.array(), msg: errors.array() }, 400);
     }
     console.log(req.body);
 
     // Pull and add tags
     const tags = req.body.tags?.split(',');
-    const days = req.body.days?.split(',');
     Tag.findAll({ where: { id: { [Sequelize.Op.in]: tags } } })
       .then((tagsToAdd) => {
         Shift.create({
           name: req.body.name,
           description: req.body.description || null,
-          days: days || null,
+          days: req.body.days || null,
           startTime: req.body.startTime || null,
           endTime: req.body.endTime || null,
           businessId: req.body.business,
-        }).then((shift) => {
-          tagsToAdd.forEach((tag) => shift.addTag(tag));
-          apiResponse.successData(res, `${shift.name} was added.`, shift);
-        });
+        })
+          .then((shift) => {
+            tagsToAdd.forEach((tag) => shift.addTag(tag));
+            apiResponse.successData(res, `${shift.name} was added.`, shift);
+          })
+          .catch((e) => apiResponse.error(res, `Shift could not be added due to: ${e}`));
       })
       .catch((e) => apiResponse.error(res, `Shift could not be added due to: ${e}`));
   },

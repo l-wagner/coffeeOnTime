@@ -7,6 +7,8 @@ Todo:
 - use react form in new employee table row
 - table sorting
 - finish shifts
+    - tags don't show up directly after create
+    - days aren't saved
 
 order of creation:
 - business

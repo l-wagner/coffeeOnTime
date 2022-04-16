@@ -1,17 +1,11 @@
 import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
-import {
-  Editable,
-  EditableInput,
-  EditablePreview, IconButton, Table,
-  Tbody,
-  Td, Th,
-  Thead,
-  Tr
-} from '@chakra-ui/react';
+import { Editable, EditableInput, EditablePreview, IconButton, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TimePicker from 'react-time-picker';
 import { createShift, deleteShift, retrieveShifts, updateShift, updateShiftDays, updateShiftTags } from './../actions/shifts.js';
+import { retrieveTags } from './../actions/tags.js';
 import AreYouSure from './errors/areYouSure.component.js';
 import SlideError from './errors/slideError.component.js';
 import DayDropdown from './shared/day-dropdown.component.js';
@@ -19,13 +13,6 @@ import TagDropdown from './shared/tag-dropdown.component.js';
 
 
 export default function Shift() {
-  // const {
-  //   handleSubmit,
-  //   register,
-  //   formState: { errors, isSubmitting },
-  // } = useForm();
-
-  // const { isOpen, onToggle } = useDisclosure();
   const [isOpen, setIsOpen] = React.useState(false);
 
   const [shiftName, setShiftName] = React.useState(false);
@@ -39,8 +26,6 @@ export default function Shift() {
 
   const [selectedShift, setSelectedShift] = React.useState(false);
 
-  const cancelRef = React.useRef();
-
   const shifts = useSelector((state) => state.shifts);
   const business = useSelector((state) => state.business);
   const tags = useSelector((state) => state.tags);
@@ -50,11 +35,14 @@ export default function Shift() {
   useEffect(() => {
     // only run if business id avail
     business.id && dispatch(retrieveShifts(business.id));
+    business.id && dispatch(retrieveTags(business.id));
   }, [business.id]);
 
   const dispatch = useDispatch();
 
   const handleCreate = () => {
+    console.log(startTime);
+    console.log(new Date('01/01/1970 ' + startTime));
     if (!shiftName || !shiftDescription || !startTime || !endTime) {
       setError(true);
       setTimeout(() => setError(false), 3000);
@@ -64,8 +52,8 @@ export default function Shift() {
           business: business.id,
           name: shiftName,
           description: shiftDescription,
-          startTime: startTime,
-          endTime: endTime,
+          startTime: new Date('01/01/1970 ' + startTime),
+          endTime: new Date('01/01/1970 ' + endTime),
           days: shiftDays || [],
           tags: shiftTags || [],
         })
@@ -90,14 +78,14 @@ export default function Shift() {
   return (
     <>
       <SlideError error={{ isError: error, msg: 'Name, description, start, and end time are required.' }} />
-      <AreYouSure name={selectedShift?.firstName} isOpen={isOpen} onClose={handleClose} onDelete={handleDelete} />
+      <AreYouSure name={selectedShift?.name} isOpen={isOpen} onClose={handleClose} onDelete={handleDelete} />
       <Table size='sm'>
         <Thead>
           <Tr>
             <Th>Shift name</Th>
             <Th>Shift description</Th>
             <Th>Start time</Th>
-            <Th>end time</Th>
+            <Th>End time</Th>
             <Th>{business.nameForTags}</Th>
             <Th>Days</Th>
             <Th></Th>
@@ -119,10 +107,14 @@ export default function Shift() {
               </Editable>
             </Td>
             <Td>
-              <TimePicker openClockOnFocus={false} onChange={(value) => setStartTime(value)} value={startTime} />
+              <TimePicker
+              disableClock
+              clearIcon={null} openClockOnFocus={false} onChange={(value) => setStartTime(value)} value={startTime} />
             </Td>
             <Td>
-              <TimePicker openClockOnFocus={false} onChange={(value) => setEndTime(value)} value={endTime} />
+              <TimePicker
+              disableClock
+              clearIcon={null} openClockOnFocus={false} onChange={(value) => setEndTime(value)} value={endTime} />
             </Td>
             <Td>
               <TagDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftTags(value)} />
@@ -142,20 +134,40 @@ export default function Shift() {
             </Td>
           </Tr>
 
-          {/* <Fade in={error}>
-            <Tr>
-              <Td colSpan={7}> Name, description, start and end time are required.</Td>
-            </Tr>
-          </Fade> */}
-
           {shifts &&
             shifts.map((shift) => (
               <Tr key={shift?.id}>
                 <Td>
-                  <Editable onSubmit={(name) => dispatch(updateShift(shift.id, { firstName: name }))} defaultValue={shift.firstName}>
+                  <Editable onSubmit={(name) => dispatch(updateShift(shift.id, { name: name }))} defaultValue={shift.name}>
                     <EditablePreview />
                     <EditableInput />
                   </Editable>
+                </Td>
+                <Td>
+                  <Editable
+                    onSubmit={(description) => dispatch(updateShift(shift.id, { description: description }))}
+                    defaultValue={shift.description}>
+                    <EditablePreview />
+                    <EditableInput />
+                  </Editable>
+                </Td>
+                <Td>
+                  <TimePicker
+                  disableClock
+                  clearIcon={null}
+                    openClockOnFocus={false}
+                    onChange={(value) => setStartTime(value)}
+                    value={dayjs(shift.startTime).format('HH:mm')}
+                  />
+                </Td>
+                <Td>
+                  <TimePicker
+                  disableClock
+                  clearIcon={null}
+                    openClockOnFocus={false}
+                    onChange={(value) => setEndTime(value)}
+                    value={dayjs(shift.endTime).format('HH:mm')}
+                  />
                 </Td>
                 <Td>
                   <TagDropdown updateMethod={(id, data) => dispatch(updateShiftTags(id, data))} item={shift} tags={tags} />
@@ -177,7 +189,6 @@ export default function Shift() {
             ))}
         </Tbody>
       </Table>
-     
     </>
   );
 }
