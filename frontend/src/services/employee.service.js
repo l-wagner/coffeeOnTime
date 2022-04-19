@@ -1,36 +1,36 @@
-import http from '../axiosInstance';
+import axios from '../axiosInstance';
 
 class EmployeeDataService {
   getAll() {
-    return http.get('/employees');
+    return axios.get('/employees');
   }
 
   get(id) {
-    return http.get(`/employees/id=${id}`);
+    return axios.get(`/employees/id=${id}`);
   }
 
   create(data) {
-    return http.post('/employees/add', data);
+    return axios.post('/employees/add', data);
   }
 
   update(id, data) {
-    return http.put(`/employees/${id}`, data);
+    return axios.put(`/employees/${id}`, data);
   }
 
   updateTags(id, data) {
-    return http.put(`/employees/tags/${id}`, data);
+    return axios.put(`/employees/tags/${id}`, data);
   }
 
   delete(id) {
-    return http.delete(`/employees/${id}`);
+    return axios.delete(`/employees/${id}`);
   }
 
   deleteAll() {
-    return http.delete(`/employees`);
+    return axios.delete(`/employees`);
   }
 
   findByName(name) {
-    return http.get(`/employees?name=${name}`);
+    return axios.get(`/employees?name=${name}`);
   }
 }
 

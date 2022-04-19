@@ -17,6 +17,10 @@ class ShiftDataService {
     return axios.put(`/shifts/${id}`, data);
   }
 
+  updateTags(id, data) {
+    return axios.put(`/shifts/tags/${id}`, data);
+  }
+
   delete(id) {
     return axios.delete(`/shifts/${id}`);
   }

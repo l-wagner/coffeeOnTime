@@ -7,7 +7,7 @@ import TimePicker from 'react-time-picker';
 import { createShift, deleteShift, retrieveShifts, updateShift, updateShiftDays, updateShiftTags } from './../actions/shifts.js';
 import { retrieveTags } from './../actions/tags.js';
 import AreYouSure from './alerts/areYouSure.component.js';
-import SlideError from './alerts/slideError.component.js';
+import SlideNotification from './alerts/slideNotification.component.js';
 import DayDropdown from './shared/day-dropdown.component.js';
 import TagDropdown from './shared/tag-dropdown.component.js';
 
@@ -77,7 +77,7 @@ export default function Shift() {
 
   return (
     <>
-      <SlideError error={{ isError: error, msg: 'Name, description, start, and end time are required.' }} />
+      <SlideNotification error={{ isError: error, msg: 'Name, description, start, and end time are required.' }} />
       <AreYouSure name={selectedShift?.name} isOpen={isOpen} onClose={handleClose} onDelete={handleDelete} />
       <Table size='sm'>
         <Thead>

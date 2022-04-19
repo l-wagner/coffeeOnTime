@@ -14,7 +14,6 @@ module.exports = app => {
 
   // Update a Employee with id
   router.put("/:id", employees.update);
-
   
   router.put("/tags/:id", employees.updateTags);
 

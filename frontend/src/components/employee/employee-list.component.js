@@ -13,7 +13,7 @@ import {
 } from '../../actions/employees.js';
 import { retrieveTags } from '../../actions/tags';
 import AreYouSure from '../alerts/areYouSure.component.js';
-import SlideError from '../alerts/slideError.component.js';
+import SlideNotification from '../alerts/slideNotification.component.js';
 import DayDropdown from '../shared/day-dropdown.component.js';
 import TagDropdown from '../shared/tag-dropdown.component.js';
 
@@ -75,7 +75,7 @@ export default function Employee() {
 
   return (
     <>
-      <SlideError error={{ isError: error, msg: 'Name is required.' }} />
+      <SlideNotification error={{ isError: error, msg: 'Name is required.' }} />
       <AreYouSure name={selectedEmployee?.firstName} isOpen={isOpen} onClose={handleClose} onDelete={handleDelete} />
       <Table size='sm'>
         <Thead>

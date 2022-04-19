@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createTag, deleteTag, retrieveTags, updateTag } from '../actions/tags';
 import AreYouSure from './alerts/areYouSure.component';
-import SlideError from './alerts/slideError.component';
+import SlideNotification from './alerts/slideNotification.component';
 
 export default function Employee() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -61,7 +61,7 @@ export default function Employee() {
 
   return (
     <>
-      <SlideError error={{ isError: error, msg: 'Name and description are required.' }} />
+      <SlideNotification error={{ isError: error, msg: 'Name and description are required.' }} />
       <AreYouSure name={selectedTag?.name} isOpen={isOpen} onClose={handleClose} onDelete={handleDelete} />
       <Table size='sm'>
         <Thead>

@@ -9,6 +9,8 @@ Todo:
 - finish shifts
     - tags don't show up directly after create
     - days aren't saved
+    - time updates
+    - shift create
 
 order of creation:
 - business
