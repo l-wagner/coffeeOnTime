@@ -5,8 +5,6 @@ import EmployeeDataService from '../services/employee.service.js';
 export const createEmployee = (values) => async (dispatch) => {
   console.log(values);
 
-  values.blockedDays = values.blockedDays.join(',');
-
   const res = EmployeeDataService.create(values)
     .then((result) => {
       dispatch({
@@ -50,21 +48,7 @@ export const updateEmployee = (id, data) => async (dispatch) => {
     return Promise.reject(err);
   }
 };
-export const updateEmployeeDays = (id, data) => async (dispatch) => {
-  try {
-    const res = await EmployeeDataService.updateDays(id, data);
 
-    dispatch({
-      type: UPDATE_EMPLOYEE,
-      payload: data,
-    });
-
-    return Promise.resolve(res.payload);
-  } catch (err) {
-    dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
-    return Promise.reject(err);
-  }
-};
 export const updateEmployeeTags = (id, data) => async (dispatch) => {
   try {
     console.log(data);

@@ -10,8 +10,9 @@ export default function DayDropdown(props) {
   }, [props.days]);
 
   const onSave = () => {
-    if (props.submitMethod) props.submitMethod(options);
-    else props.updateMethod(props.item.id, { blockedDays: options });
+    console.log(options);
+    if (props.submitMethod) props.submitMethod(options.join(','));
+    else props.updateMethod(props.item.id, options.join(','));
   };
 
   return (

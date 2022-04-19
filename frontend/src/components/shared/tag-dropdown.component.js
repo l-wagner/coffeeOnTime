@@ -22,7 +22,7 @@ export default function TagDropdown(props) {
     let tagIds = options.map((option) => props.tags.find((tag) => tag?.name === option).id).join(',');
     if (props.submitMethod) props.submitMethod(tagIds);
     
-    else props.updateMethod(props.item.id, { tags: tagIds });
+    else props.updateMethod(props.item.id, tagIds);
     console.log(tagIds);
   };
 

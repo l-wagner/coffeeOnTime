@@ -81,8 +81,11 @@ exports.update = [
 
     Shift.findByPk(req.params.id)
       .then((shift) => {
-        req.body.firstName && (shift.firstName = req.body.firstName);
-        req.body.lastName && (shift.lastName = req.body.lastName);
+        req.body.name && (shift.name = req.body.name);
+        req.body.description && (shift.description = req.body.description);
+        req.body.days && (shift.days = req.body.days);
+        req.body.startTime && (shift.startTime = req.body.startTime);
+        req.body.endTime && (shift.endTime = req.body.endTime);
         shift
           .save()
           .then((result) => apiResponse.successData(res, result))

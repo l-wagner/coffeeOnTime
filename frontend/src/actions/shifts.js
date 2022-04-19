@@ -1,15 +1,10 @@
 import { CREATE_ERROR, UPDATE_ERROR, CREATE_SHIFT, RETRIEVE_SHIFTS, UPDATE_SHIFT, DELETE_SHIFT, DELETE_ALL_SHIFTS, ERROR } from './types';
 // import { compareAsc, format } from 'date-fns';
 
-
-
 import ShiftDataService from '../services/shift.service.js';
 
 export const createShift = (values) => async (dispatch) => {
   console.log(values);
-
-  // values.days = values.days.join(',');
-  // values.tags = values.tags.join(',');
 
   const res = ShiftDataService.create(values)
     .then((result) => {
@@ -29,7 +24,7 @@ export const createShift = (values) => async (dispatch) => {
 export const retrieveShifts = () => async (dispatch) => {
   try {
     const res = await ShiftDataService.getAll();
-    
+
     // console.log(new Date(res.payload[0].endTime));
     // console.log(format(new Date(res.payload[0].endTime), 'HH:MM:SS'));
     dispatch({
@@ -59,8 +54,9 @@ export const updateShift = (id, data) => async (dispatch) => {
 };
 export const updateShiftDays = (id, data) => async (dispatch) => {
   try {
-    const res = await ShiftDataService.updateDays(id, data);
+    const res = await ShiftDataService.update(id, data);
 
+    console.log(data);
     dispatch({
       type: UPDATE_SHIFT,
       payload: data,

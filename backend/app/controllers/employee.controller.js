@@ -74,6 +74,7 @@ exports.update = [
       .then((employee) => {
         req.body.firstName && (employee.firstName = req.body.firstName);
         req.body.lastName && (employee.lastName = req.body.lastName);
+        req.body.blockedDays && (employee.blockedDays = req.body.blockedDays);
         employee
           .save()
           .then((result) => apiResponse.successData(res, result))
@@ -83,28 +84,6 @@ exports.update = [
   },
 ];
 
-// Update an Employee's blocked days identified by the id in the request
-exports.updateDays = [
-  param('id').not().isEmpty().trim().escape(),
-  body('data').trim().escape(),
-  (req, res) => {
-    // Validate Request
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return apiResponse.validationError(res, { errors: errors.array() }, 400);
-    }
-
-    Employee.findByPk(req.params.id)
-      .then((employee) => {
-        req.body.blockedDays && (employee.blockedDays = req.body.blockedDays.join(','));
-        employee
-          .save()
-          .then((result) => apiResponse.successData(res, result))
-          .catch(() => apiResponse.notFoundResponse(res, 'Employee could not be updated.'));
-      })
-      .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
-  },
-];
 
 exports.updateTags = [
   param('id').not().isEmpty().trim().escape(),

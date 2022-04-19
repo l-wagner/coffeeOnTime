@@ -17,11 +17,6 @@ class EmployeeDataService {
     return http.put(`/employees/${id}`, data);
   }
 
-  updateDays(id, data) {
-    return http.put(`/employees/days/${id}`, data);
-  }
-
-
   updateTags(id, data) {
     return http.put(`/employees/tags/${id}`, data);
   }

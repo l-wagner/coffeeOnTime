@@ -42,6 +42,7 @@ export default function Employee() {
   const dispatch = useDispatch();
 
   const hireEmployee = () => {
+    
     if (!firstName) {
       setError(true);
       setTimeout(() => setError(false), 3000);
@@ -54,7 +55,7 @@ export default function Employee() {
           tags: employeeTags || [],
         })
       );
-      window.location.reload(false);
+      // window.location.reload(false);
     }
   };
 
@@ -124,11 +125,11 @@ export default function Employee() {
                   </Editable>
                 </Td>
                 <Td>
-                  <TagDropdown updateMethod={(id, data) => dispatch(updateEmployeeTags(id, data))} item={employee} tags={tags} />
+                  <TagDropdown updateMethod={(id, data) => dispatch(updateEmployeeTags(id, { tags: data }))} item={employee} tags={tags} />
                 </Td>
                 <Td>
                   <DayDropdown
-                    updateMethod={(id, data) => dispatch(updateEmployeeDays(id, data))}
+                    updateMethod={(id, data) => dispatch(updateEmployee(id, { blockedDays: data }))}
                     item={employee}
                     days={employee.blockedDays}
                   />
