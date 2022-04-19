@@ -4,19 +4,17 @@ import { CREATE_ERROR, UPDATE_ERROR, CREATE_SHIFT, RETRIEVE_SHIFTS, UPDATE_SHIFT
 import ShiftDataService from '../services/shift.service.js';
 
 export const createShift = (values) => async (dispatch) => {
-  console.log(values);
-
-  const res = ShiftDataService.create(values)
+  ShiftDataService.create(values)
     .then((result) => {
+      if (result.payload.days) result.payload.days = result.payload.days.split(',');
       dispatch({
         type: CREATE_SHIFT,
         payload: result.payload,
       });
-      return Promise.resolve(res.payload);
+      return Promise.resolve(result.payload);
     })
     .catch((err) => {
-      console.log(err.response.data);
-      dispatch({ type: CREATE_ERROR, payload: { msg: err.response.data.msg || err.response.data.message, error: 'true' } });
+      dispatch({ type: CREATE_ERROR, payload: { msg: err.response?.data?.msg || err.response?.data?.message, error: 'true' } });
       return Promise.reject(err);
     });
 };
@@ -25,8 +23,6 @@ export const retrieveShifts = () => async (dispatch) => {
   try {
     const res = await ShiftDataService.getAll();
 
-    // console.log(new Date(res.payload[0].endTime));
-    // console.log(format(new Date(res.payload[0].endTime), 'HH:MM:SS'));
     dispatch({
       type: RETRIEVE_SHIFTS,
       payload: res.payload,
@@ -40,7 +36,6 @@ export const retrieveShifts = () => async (dispatch) => {
 export const updateShift = (id, data) => async (dispatch) => {
   try {
     const res = await ShiftDataService.update(id, data);
-
     dispatch({
       type: UPDATE_SHIFT,
       payload: data,
@@ -56,7 +51,6 @@ export const updateShiftDays = (id, data) => async (dispatch) => {
   try {
     const res = await ShiftDataService.update(id, data);
 
-    console.log(data);
     dispatch({
       type: UPDATE_SHIFT,
       payload: data,
@@ -70,8 +64,6 @@ export const updateShiftDays = (id, data) => async (dispatch) => {
 };
 export const updateShiftTags = (id, data) => async (dispatch) => {
   try {
-    console.log(data);
-
     const res = await ShiftDataService.updateTags(id, data);
 
     dispatch({

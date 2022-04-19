@@ -7,26 +7,26 @@ export const createBusiness = (values) => async (dispatch) => {
     const res = await BusinessDataService.create({ ...values });
     dispatch({
       type: CREATE_BUSINESS,
-      payload: res.data,
+      payload: res.payload,
     });
-
-    return Promise.resolve('res.data');
+    return Promise.resolve(res.payload);
   } catch (err) {
     dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
-    console.log(err);
     return Promise.reject(err);
   }
 };
 
-export const retrieveBusiness = () => async (dispatch) => {
+export const retrieveBusiness = (id) => async (dispatch) => {
   try {
-    const res = await BusinessDataService.get(1);
+    const res = await BusinessDataService.get(id);
     dispatch({
       type: RETRIEVE_BUSINESS,
       payload: res.payload,
     });
   } catch (err) {
-    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    dispatch({
+      type: RETRIEVE_BUSINESS,
+    });
     return Promise.reject(err);
   }
 };

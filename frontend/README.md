@@ -6,11 +6,12 @@ Todo:
 - checkout Gatsby.js
 - use react form in new employee table row
 - table sorting
-- finish shifts
-    - tags don't show up directly after create
-    - days aren't saved
-    - time updates
-    - shift create
+- show newly created row without refresh    
+- allow adding of new roles in employee row
+- validate start < endTime
+- Create schedule
+    - select dates
+    - show list of shifts and avaliable employess
 
 order of creation:
 - business

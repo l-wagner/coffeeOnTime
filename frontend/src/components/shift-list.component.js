@@ -11,18 +11,20 @@ import SlideNotification from './alerts/slideNotification.component.js';
 import DayDropdown from './shared/day-dropdown.component.js';
 import TagDropdown from './shared/tag-dropdown.component.js';
 
-
 export default function Shift() {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const [shiftName, setShiftName] = React.useState(false);
   const [shiftDescription, setShiftDesc] = React.useState(false);
-  const [startTime, setStartTime] = React.useState(null);
-  const [endTime, setEndTime] = React.useState(null);
+  const [startTime, setStartTime] = React.useState('05:00');
+  const [endTime, setEndTime] = React.useState('21:00');
+  const [startTimeUpdate, setStartTimeUpdate] = React.useState(null);
+  const [endTimeUpdate, setEndTimeUpdate] = React.useState(null);
   const [error, setError] = React.useState(null);
+  const [errorMsg, setErrorMsg] = React.useState(null);
 
   const [shiftTags, setShiftTags] = React.useState(false);
-  const [shiftDays, setShiftDays] = React.useState(false);
+  const [shiftDays, setShiftDays] = React.useState([]);
 
   const [selectedShift, setSelectedShift] = React.useState(false);
 
@@ -39,14 +41,20 @@ export default function Shift() {
   }, [business.id]);
 
   const dispatch = useDispatch();
-
+  const handleDays = (value) => {
+    console.log(value);
+  };
   const handleCreate = () => {
-    console.log(startTime);
-    console.log(new Date('01/01/1970 ' + startTime));
     if (!shiftName || !shiftDescription || !startTime || !endTime) {
       setError(true);
+      setErrorMsg('Name, description, start, and end time are required.');
       setTimeout(() => setError(false), 3000);
-    } else
+    // } else if (startTime > endTime) {
+    //   setError(true);
+    //   console.log(startTime, endTime);
+    //   setErrorMsg('Start time should be earlier than end time.');
+    //   setTimeout(() => setError(false), 3000);
+    } else {
       dispatch(
         createShift({
           business: business.id,
@@ -58,7 +66,8 @@ export default function Shift() {
           tags: shiftTags || [],
         })
       );
-    // window.location.reload(false);
+      window.location.reload(false);
+    }
   };
 
   const areYouSure = (shift) => {
@@ -77,7 +86,7 @@ export default function Shift() {
 
   return (
     <>
-      <SlideNotification error={{ isError: error, msg: 'Name, description, start, and end time are required.' }} />
+      <SlideNotification error={{ isError: error, msg: errorMsg }} />
       <AreYouSure name={selectedShift?.name} isOpen={isOpen} onClose={handleClose} onDelete={handleDelete} />
       <Table size='sm'>
         <Thead>
@@ -108,19 +117,21 @@ export default function Shift() {
             </Td>
             <Td>
               <TimePicker
-              disableClock
-              clearIcon={null} openClockOnFocus={false} onChange={(value) => setStartTime(value)} value={startTime} />
+                disableClock
+                clearIcon={null}
+                openClockOnFocus={false}
+                onChange={(value) => setStartTime(value)}
+                value={startTime}
+              />
             </Td>
             <Td>
-              <TimePicker
-              disableClock
-              clearIcon={null} openClockOnFocus={false} onChange={(value) => setEndTime(value)} value={endTime} />
+              <TimePicker disableClock clearIcon={null} openClockOnFocus={false} onChange={(value) => setEndTime(value)} value={endTime} />
             </Td>
             <Td>
               <TagDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftTags(value)} />
             </Td>
             <Td>
-              <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} days={shiftDays || emptyShift.days}/>
+              <DayDropdown item={emptyShift} submitMethod={(value) => handleDays(value)} days={shiftDays} />
             </Td>
             <Td>
               <IconButton
@@ -153,27 +164,29 @@ export default function Shift() {
                 </Td>
                 <Td>
                   <TimePicker
-                  disableClock
-                  clearIcon={null}
+                    disableClock
+                    clearIcon={null}
                     openClockOnFocus={false}
-                    onChange={(value) => setStartTime(value)}
+                    onChange={(value) => setStartTimeUpdate(value)}
+                    onBlur={() => dispatch(updateShift(shift.id, { startTime: new Date('01/01/1970 ' + startTimeUpdate) }))}
                     value={dayjs(shift.startTime).format('HH:mm')}
                   />
                 </Td>
                 <Td>
                   <TimePicker
-                  disableClock
-                  clearIcon={null}
+                    disableClock
+                    clearIcon={null}
                     openClockOnFocus={false}
-                    onChange={(value) => setEndTime(value)}
+                    onChange={(value) => setEndTimeUpdate(value)}
+                    onBlur={() => dispatch(updateShift(shift.id, { endTime: new Date('01/01/1970 ' + endTimeUpdate) }))}
                     value={dayjs(shift.endTime).format('HH:mm')}
                   />
                 </Td>
                 <Td>
-                  <TagDropdown updateMethod={(id, data) => dispatch(updateShiftTags(id, {tags: data}))} item={shift} tags={tags} />
+                  <TagDropdown updateMethod={(id, data) => dispatch(updateShiftTags(id, { tags: data }))} item={shift} tags={tags} />
                 </Td>
                 <Td>
-                  <DayDropdown updateMethod={(id, data) => dispatch(updateShiftDays(id, {days: data}))} item={shift} days={shift.days} />
+                  <DayDropdown updateMethod={(id, data) => dispatch(updateShiftDays(id, { days: data }))} item={shift} days={shift.days} />
                 </Td>
                 <Td>
                   <IconButton

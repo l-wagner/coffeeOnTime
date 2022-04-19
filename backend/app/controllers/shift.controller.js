@@ -10,13 +10,13 @@ const { body, param, validationResult } = require('express-validator');
 
 // Create and Save a new Shift
 exports.add = [
-  body('business').isInt().not().isEmpty().trim().escape(),
-  body('name').not().isEmpty().trim().escape(),
-  body('startTime').not().isEmpty().trim().escape(),
-  body('endTime').not().isEmpty().trim().escape(),
-  body('description').trim().escape(),
-  body('days').trim().escape(),
-  body('tags').trim().escape(),
+  body('business').isInt().not().isEmpty().trim(),
+  body('name').not().isEmpty().trim(),
+  body('startTime').not().isEmpty().trim(),
+  body('endTime').not().isEmpty().trim(),
+  body('description').trim(),
+  body('days').trim(),
+  body('tags').trim(),
   function (req, res) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
@@ -25,7 +25,6 @@ exports.add = [
       errors.array().map((error) => (msg += error.param + ' invalid. '));
       return apiResponse.validationError(res, { errors: errors.array(), msg: errors.array() }, 400);
     }
-    console.log(req.body);
 
     // Pull and add tags
     const tags = req.body.tags?.split(',');
@@ -40,6 +39,7 @@ exports.add = [
           businessId: req.body.business,
         })
           .then((shift) => {
+            // still running when response returned, should fix
             tagsToAdd.forEach((tag) => shift.addTag(tag));
             apiResponse.successData(res, `${shift.name} was added.`, shift);
           })
@@ -70,8 +70,8 @@ exports.findOne = (req, res) => {
 
 // Update an Shift
 exports.update = [
-  param('id').not().isEmpty().trim().escape(),
-  body('data').trim().escape(),
+  param('id').not().isEmpty().trim(),
+  body('data').trim(),
   (req, res) => {
     // Validate Request
     const errors = validationResult(req);
@@ -95,32 +95,9 @@ exports.update = [
   },
 ];
 
-// Update an Shift's blocked days identified by the id in the request
-exports.updateDays = [
-  param('id').not().isEmpty().trim().escape(),
-  body('data').trim().escape(),
-  (req, res) => {
-    // Validate Request
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return apiResponse.validationError(res, { errors: errors.array() }, 400);
-    }
-
-    Shift.findByPk(req.params.id)
-      .then((shift) => {
-        req.body.blockedDays && (shift.blockedDays = req.body.blockedDays.join(','));
-        shift
-          .save()
-          .then((result) => apiResponse.successData(res, result))
-          .catch(() => apiResponse.notFoundResponse(res, 'Shift could not be updated.'));
-      })
-      .catch((e) => apiResponse.error(res, `Shift could not be added due to: ${e}`));
-  },
-];
-
 exports.updateTags = [
-  param('id').not().isEmpty().trim().escape(),
-  body('tags').trim().escape(),
+  param('id').not().isEmpty().trim(),
+  body('tags').trim(),
   (req, res) => {
     // Validate Request
     const errors = validationResult(req);
@@ -150,7 +127,7 @@ exports.updateTags = [
 // Delete a Shift with the specified id in the request
 
 exports.delete = [
-  param('id').not().isEmpty().trim().escape(),
+  param('id').not().isEmpty().trim(),
   (req, res) => {
     Shift.destroy({ where: { id: req.params.id } })
       .then(() => apiResponse.successMsg(res, 'Shift fired successfully.'))

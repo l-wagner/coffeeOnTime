@@ -29,6 +29,7 @@ export default function Business() {
   const dispatch = useDispatch();
 
   function onSubmit(values) {
+    // console.log(values);
     dispatch(createBusiness(values));
   }
 
@@ -60,19 +61,19 @@ export default function Business() {
                 <FormLabel htmlFor='name'>Who are the owners?</FormLabel>
                 <Input id='owner' placeholder='Lisa' {...register('owner', { required: 'Please name at least one owner.' })} />
                 <FormErrorMessage>{errors.owner?.message}</FormErrorMessage>
+                <FormHelperText align={'left'}>Separate by comma, please.</FormHelperText>
               </FormControl>
               <FormControl isInvalid={errors.nameForTags}>
                 <FormLabel htmlFor='name'>What do you call your tags?</FormLabel>
                 <Input id='nameForTags' placeholder='Skills, roles, tags?' {...register('nameForTags')} />
                 <FormErrorMessage>{errors.nameForTags?.message}</FormErrorMessage>
-                <FormHelperText>
-                  {' '}
-                  Roles, jobs, skills? Tags will be used to define needs per shift. E.g: Monday open shifts need 2 baristas and 1
-                  back-of-house. Employees who are tagged with those will be scheduled to fill the shift.
+                <FormHelperText align={'left'}>
+                  Roles, jobs, skills? Employees who are tagged with these will be scheduled to fill the shift. E.g: Monday open shifts need
+                  2 baristas and 1 back-of-house.
                 </FormHelperText>
               </FormControl>
-              <Button mt={4} colorScheme='teal' isLoading={isSubmitting} type='submit'>
-                Submit
+              <Button isFullWidth mt={4} colorScheme='teal' isLoading={isSubmitting} type='submit'>
+                Create business
               </Button>
             </form>
           </Stack>

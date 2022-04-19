@@ -1,19 +1,18 @@
-import { ChevronDownIcon } from '@chakra-ui/icons';
-import { Button, ChakraProvider, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import { retrieveBusiness } from './actions/business';
 import './App.css';
-import CreateBusiness from './components/business-create';
-import Employee from './components/employee/employee.component';
+import CreateError from './components/alerts/createError.component';
 import Error from './components/alerts/error.component';
 import UpdateError from './components/alerts/updateError.component';
-import CreateError from './components/alerts/createError.component';
+import CreateBusiness from './components/business-create';
+import Employee from './components/employee/employee.component';
 import AddShift from './components/shift-add.component';
-import TagList from './components/tag-list.component';
 import ShiftList from './components/shift-list.component';
+import TagList from './components/tag-list.component';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -22,7 +21,8 @@ export default function App() {
   const error = useSelector((state) => state.error);
 
   useEffect(() => {
-    dispatch(retrieveBusiness());
+    let id = 1;
+    dispatch(retrieveBusiness(id));
   }, []);
 
   return (
@@ -37,22 +37,6 @@ export default function App() {
             </Link>
 
             <div className='navbar-nav mr-auto'>
-              <Menu>
-                <MenuButton colorScheme='blue' as={Button} rightIcon={<ChevronDownIcon />}>
-                  Add stuff
-                </MenuButton>
-                <MenuList>
-                  <MenuItem>
-                    <Link to={'/employees'}>Add employee</Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link to={'/add-tag'}>Add tag</Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link to={'/add-shift'}>Add shift</Link>
-                  </MenuItem>
-                </MenuList>
-              </Menu>
               <li className='nav-item'>
                 <Link to={'/employees'} className='nav-link'>
                   Employees
@@ -90,7 +74,7 @@ export default function App() {
           </div>
         </Router>
       ) : (
-        !error && <CreateBusiness />
+        !error && !business.id && <CreateBusiness />
       )}
     </ChakraProvider>
   );

@@ -7,22 +7,13 @@ function businessReducer(business = initialState, action) {
 
   switch (type) {
     case CREATE_BUSINESS:
-      return [...business, payload];
-
-    case RETRIEVE_BUSINESS:
       return {...payload};
 
+    case RETRIEVE_BUSINESS:
+      return { ...payload };
+
     case UPDATE_BUSINESS:
-      return business.map((business) => {
-        if (business.id === payload.id) {
-          return {
-            ...business,
-            ...payload,
-          };
-        } else {
-          return business;
-        }
-      });
+      return { ...payload };
 
     case DELETE_BUSINESS:
       return business.filter(({ id }) => id !== payload.id);

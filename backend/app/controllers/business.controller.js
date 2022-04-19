@@ -10,9 +10,9 @@ const { sequelize } = require('../models/db.js');
 
 // Create and Save a new Business
 exports.create = [
-  body('name').not().isEmpty().trim().escape(),
-  body('owner').not().isEmpty().trim().escape(),
-  body('nameForTags').trim().escape().toLowerCase(),
+  body('name').not().isEmpty().trim(),
+  body('owner').not().isEmpty().trim(),
+  body('nameForTags').trim().toLowerCase(),
   function (req, res) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
@@ -20,20 +20,21 @@ exports.create = [
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
 
+    //create owner object
+    let ownerNames = req.body.owner.split(',');
+    let owners = [];
+    for (let index = 0; index < ownerNames.length; index++) {
+      owners[index] = { firstName: ownerNames[index] };
+      console.log(owners);
+    }
+
     // First, we start a transaction and save it into a variable
     const t = sequelize.transaction().then((t) => {
-      // const owner = Employee.create(
-      //   {
-      //     firstName: req.body.owner,
-      //   },
-      //   { transaction: t }
-      // );
-
       Business.create(
         {
           name: req.body.name,
           nameForTags: req.body.nameForTags || 'tags',
-          employees: [{ firstName: req.body.owner }],
+          employees: owners,
         },
         { include: [Employee] }
       )
@@ -55,7 +56,7 @@ exports.create = [
             description: 'Owner of business',
           }).then((tag) => {
             let counter = 0;
-            business.employees[0].addTag(tag);
+            business.employees.forEach((employee) => employee.addTag(tag));
             business.addTag(tag);
 
             res.send(business);
@@ -80,7 +81,7 @@ exports.findAll = (req, res) => {
 
 // Find a single Business by Id
 exports.findById = [
-  query('id').not().isEmpty().trim().escape(),
+  query('id').not().isEmpty().trim(),
   (req, res) => {
     const id = req.params.id;
     Business.findByPk(id, { include: Tag })

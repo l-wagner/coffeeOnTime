@@ -41,7 +41,7 @@ exports.findAll = (req, res) => {
 };
 // Retrieve all Tags from the database (with condition).
 exports.findAllByBusiness = [
-  param('business').not().isEmpty().trim().escape(),
+  param('business').not().isEmpty().trim(),
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -61,7 +61,7 @@ exports.findAllByBusiness = [
 
 // Find a single Tag by Id
 exports.findById = [
-  param('id').not().isEmpty().trim().escape(),
+  param('id').not().isEmpty().trim(),
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

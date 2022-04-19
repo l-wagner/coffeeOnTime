@@ -27,6 +27,7 @@ axiosInstance.interceptors.response.use(
   
     if (error.response) {
       error.payload = error.response.data;
+      console.log(error.payload);
       
       if (error.response.status === 401) {
         // Automatically redirect client to the login page

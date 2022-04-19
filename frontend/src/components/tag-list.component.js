@@ -32,7 +32,7 @@ export default function Employee() {
     if (!tagName || !tagDescription) {
       setError(true);
       setTimeout(() => setError(false), 3000);
-    } else
+    } else {
       dispatch(
         createTag({
           business: business.id,
@@ -40,8 +40,8 @@ export default function Employee() {
           description: tagDescription,
         })
       );
-
-    window.location.reload(false);
+      window.location.reload(false);
+    }
   };
 
   const areYouSure = (tag) => {

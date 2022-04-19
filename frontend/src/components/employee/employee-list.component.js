@@ -42,7 +42,6 @@ export default function Employee() {
   const dispatch = useDispatch();
 
   const hireEmployee = () => {
-    
     if (!firstName) {
       setError(true);
       setTimeout(() => setError(false), 3000);
@@ -55,7 +54,7 @@ export default function Employee() {
           tags: employeeTags || [],
         })
       );
-      // window.location.reload(false);
+      window.location.reload(false);
     }
   };
 

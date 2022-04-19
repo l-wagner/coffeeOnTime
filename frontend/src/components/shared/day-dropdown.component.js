@@ -10,9 +10,9 @@ export default function DayDropdown(props) {
   }, [props.days]);
 
   const onSave = () => {
-    console.log(options);
-    if (props.submitMethod) props.submitMethod(options.join(','));
-    else props.updateMethod(props.item.id, options.join(','));
+    // if days are part of a new create, they need to stay in an array
+    if (props.submitMethod) props.submitMethod(options);
+    else props.updateMethod(props.item.id, options?.join(','));
   };
 
   return (

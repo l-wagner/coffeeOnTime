@@ -3,7 +3,6 @@ import { UPDATE_ERROR, CREATE_EMPLOYEE, RETRIEVE_EMPLOYEES, UPDATE_EMPLOYEE, DEL
 import EmployeeDataService from '../services/employee.service.js';
 
 export const createEmployee = (values) => async (dispatch) => {
-  console.log(values);
 
   const res = EmployeeDataService.create(values)
     .then((result) => {
@@ -51,7 +50,6 @@ export const updateEmployee = (id, data) => async (dispatch) => {
 
 export const updateEmployeeTags = (id, data) => async (dispatch) => {
   try {
-    console.log(data);
 
     const res = await EmployeeDataService.updateTags(id, data);
 

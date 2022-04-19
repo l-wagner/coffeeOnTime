@@ -10,17 +10,16 @@ const { body, param, validationResult } = require('express-validator');
 
 // Create and Save a new Employee
 exports.add = [
-  body('firstName').not().isEmpty().trim().escape(),
-  body('business').isInt().not().isEmpty().trim().escape(),
-  body('blockedDays').trim().escape(),
-  body('tags').trim().escape(),
+  body('firstName').not().isEmpty().trim(),
+  body('business').isInt().not().isEmpty().trim(),
+  body('blockedDays').trim(),
+  body('tags').trim(),
   function (req, res) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
-    console.log(req.body);
 
     // Pull and add tags
     const tags = req.body.tags.split(',');
@@ -31,8 +30,10 @@ exports.add = [
           blockedDays: req.body.blockedDays || null,
           businessId: req.body.business,
         }).then((employee) => {
+          // still running when response returned, should fix
           tagsToAdd.forEach((tag) => employee.addTag(tag));
           employee.blockedDays = employee.blockedDays?.split(',');
+
           apiResponse.successData(res, `${employee.firstName} was added.`, employee);
         });
       })
@@ -61,8 +62,8 @@ exports.findOne = (req, res) => {
 
 // Update an Employee
 exports.update = [
-  param('id').not().isEmpty().trim().escape(),
-  body('data').trim().escape(),
+  param('id').not().isEmpty().trim(),
+  body('data').trim(),
   (req, res) => {
     // Validate Request
     const errors = validationResult(req);
@@ -84,10 +85,9 @@ exports.update = [
   },
 ];
 
-
 exports.updateTags = [
-  param('id').not().isEmpty().trim().escape(),
-  body('tags').trim().escape(),
+  param('id').not().isEmpty().trim(),
+  body('tags').trim(),
   (req, res) => {
     // Validate Request
     const errors = validationResult(req);
@@ -117,7 +117,7 @@ exports.updateTags = [
 // Delete a Employee with the specified id in the request
 
 exports.delete = [
-  param('id').not().isEmpty().trim().escape(),
+  param('id').not().isEmpty().trim(),
   (req, res) => {
     Employee.destroy({ where: { id: req.params.id } })
       .then(() => apiResponse.successMsg(res, 'Employee fired successfully.'))
