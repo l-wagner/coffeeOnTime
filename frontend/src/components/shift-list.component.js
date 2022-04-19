@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import TimePicker from 'react-time-picker';
 import { createShift, deleteShift, retrieveShifts, updateShift, updateShiftDays, updateShiftTags } from './../actions/shifts.js';
 import { retrieveTags } from './../actions/tags.js';
-import AreYouSure from './errors/areYouSure.component.js';
-import SlideError from './errors/slideError.component.js';
+import AreYouSure from './alerts/areYouSure.component.js';
+import SlideError from './alerts/slideError.component.js';
 import DayDropdown from './shared/day-dropdown.component.js';
 import TagDropdown from './shared/tag-dropdown.component.js';
 

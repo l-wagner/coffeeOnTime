@@ -4,8 +4,8 @@ import pluralize from 'pluralize';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createTag, deleteTag, retrieveTags, updateTag } from '../actions/tags';
-import AreYouSure from './errors/areYouSure.component';
-import SlideError from './errors/slideError.component';
+import AreYouSure from './alerts/areYouSure.component';
+import SlideError from './alerts/slideError.component';
 
 export default function Employee() {
   const [isOpen, setIsOpen] = React.useState(false);

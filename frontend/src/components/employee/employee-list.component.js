@@ -12,8 +12,8 @@ import {
   updateEmployeeTags,
 } from '../../actions/employees.js';
 import { retrieveTags } from '../../actions/tags';
-import AreYouSure from '../errors/areYouSure.component.js';
-import SlideError from '../errors/slideError.component.js';
+import AreYouSure from '../alerts/areYouSure.component.js';
+import SlideError from '../alerts/slideError.component.js';
 import DayDropdown from '../shared/day-dropdown.component.js';
 import TagDropdown from '../shared/tag-dropdown.component.js';
 
