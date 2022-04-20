@@ -13,6 +13,8 @@ import Employee from './components/employee/employee.component';
 import AddShift from './components/shift-add.component';
 import ShiftList from './components/shift-list.component';
 import TagList from './components/tag-list.component';
+import ScheduleCreate from './components/schedule/schedule-create.component';
+import Dashboard from './components/dashboard.component';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -53,6 +55,11 @@ export default function App() {
                   Shifts
                 </Link>
               </li>
+              <li className='nav-item'>
+                <Link to={'/shifts'} className='nav-link'>
+                  Switch business
+                </Link>
+              </li>
               {!business?.id && (
                 <li className='nav-item'>
                   <Link to={'/setup'} className='nav-link'>
@@ -65,10 +72,12 @@ export default function App() {
           <div className='container mt-3'>
             {error?.createError && <CreateError error={error.msg} />}
             <Switch>
+              <Route exact path={['/']} component={Dashboard} />
               <Route exact path={['/', '/employees']} component={Employee} />
               <Route exact path='/tags' component={TagList} />
               <Route exact path='/shifts' component={ShiftList} />
               <Route exact path='/add-shift' component={AddShift} />
+              <Route exact path='/schedule-create' component={ScheduleCreate} />
               <Route path='/setup' component={CreateBusiness} />
             </Switch>
           </div>

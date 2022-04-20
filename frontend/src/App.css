@@ -13,3 +13,16 @@
   max-width: 300px;
   margin: auto;
 }
+
+a:hover {
+  text-decoration: unset;
+  color: unset;
+}
+
+.react-calendar__tile--now {
+  background: lightblue !important;
+}
+
+.react-calendar__month-view__days__day--weekend {
+  color: darkolivegreen !important;
+}
