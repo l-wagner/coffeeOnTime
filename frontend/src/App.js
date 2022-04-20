@@ -39,6 +39,12 @@ export default function App() {
             </Link>
 
             <div className='navbar-nav mr-auto'>
+            <li className='nav-item'>
+                <Link to={'/schedule-create'} className='nav-link'>
+                  Schedule
+                </Link>
+              </li>
+
               <li className='nav-item'>
                 <Link to={'/employees'} className='nav-link'>
                   Employees
