@@ -1,13 +1,13 @@
 import { CREATE_SCHEDULE, RETRIEVE_SCHEDULES, UPDATE_SCHEDULE, DELETE_SCHEDULE, DELETE_ALL_SCHEDULES } from '../actions/types';
 
-const initialState = { dateRange: [], employees: [], shifts: [] };
+const initialState = [];
 
 function scheduleReducer(schedules = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
     case CREATE_SCHEDULE:
-      return [...schedules, payload];
+      return { ...schedules, new: payload };
 
     case RETRIEVE_SCHEDULES:
       return payload;
@@ -16,10 +16,7 @@ function scheduleReducer(schedules = initialState, action) {
       return schedules.map((schedule) => {
         if (schedule.id === payload.id) {
           console.log(schedule);
-          return {
-            ...schedules,
-            ...payload,
-          };
+          return [payload];
         } else {
           return schedule;
         }

@@ -41,13 +41,12 @@ export default function Shift() {
   }, [business.id]);
 
   const dispatch = useDispatch();
-  const handleDays = (value) => {
-    console.log(value);
-  };
+  
   const handleCreate = () => {
-    if (!shiftName || !shiftDescription || !startTime || !endTime) {
+    console.log(shiftDays);
+    if (!shiftName || !shiftDescription || !startTime || !endTime || shiftDays.length === 0) {
       setError(true);
-      setErrorMsg('Name, description, start, and end time are required.');
+      setErrorMsg('Name, description, days, start, and end time are required.');
       setTimeout(() => setError(false), 3000);
     // } else if (startTime > endTime) {
     //   setError(true);
@@ -62,11 +61,11 @@ export default function Shift() {
           description: shiftDescription,
           startTime: new Date('01/01/1970 ' + startTime),
           endTime: new Date('01/01/1970 ' + endTime),
-          days: shiftDays || [],
+          days: shiftDays.join(',') || [],
           tags: shiftTags || [],
         })
       );
-      window.location.reload(false);
+      // window.location.reload(false);
     }
   };
 
@@ -131,7 +130,7 @@ export default function Shift() {
               <TagDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftTags(value)} />
             </Td>
             <Td>
-              <DayDropdown item={emptyShift} submitMethod={(value) => handleDays(value)} days={shiftDays} />
+              <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} days={shiftDays} />
             </Td>
             <Td>
               <IconButton

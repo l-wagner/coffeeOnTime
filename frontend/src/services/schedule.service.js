@@ -16,6 +16,10 @@ class ScheduleDataService {
     return axios.post('/schedules', data);
   }
 
+  fill(data) {
+    return axios.post('/schedules/fill', data);
+  }
+
   update(data) {
     return axios.put(`/schedules/`, data);
   }

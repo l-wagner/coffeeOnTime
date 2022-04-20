@@ -12,6 +12,10 @@ Todo:
 - ability to select all days at once
 - Create schedule
     - show list of shifts and avaliable employess
+    - save
+    - submit
+- multiples of same tag: 
+    - buttons in dropdown? click on tag to remove tag?
 
 order of creation:
 - business

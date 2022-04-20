@@ -2,6 +2,9 @@ var Sequelize = require('sequelize');
 
 const db = require('../models/db.js');
 const Shift = db.shift;
+const Tag = db.tag;
+
+const dayjs = require('dayjs');
 
 const Schedule = db.schedule;
 const Employee = db.employee;
@@ -10,7 +13,8 @@ const { body, param, validationResult } = require('express-validator');
 
 exports.fill = [
   body('startDate').not().isEmpty().trim(),
-  body('endDate').isInt().not().isEmpty().trim(),
+  body('endDate').not().isEmpty().trim(),
+  body('business').not().isEmpty().trim(),
   function (req, res) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
@@ -18,23 +22,50 @@ exports.fill = [
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
 
-    // Pull and add tags
-    const tags = req.body.tags.split(',');
-    Employee.findAll({ where: { id: { [Sequelize.Op.in]: tags } } })
-      .then((tagsToAdd) => {
-        Employee.create({
-          firstName: req.body.firstName,
-          days: req.body.days || null,
-          businessId: req.body.business,
-        }).then((employee) => {
-          // still running when response returned, should fix
-          tagsToAdd.forEach((tag) => employee.addTag(tag));
-          employee.days = employee.days?.split(',');
+    // console.log(dayjs(req.body.startDate));
+    // console.log(dayjs(req.body.endDate));
+    let dates = getDates(new Date(req.body.startDate), new Date(req.body.endDate));
+    let weekdays = new Set();
+    // console.log(dates);
+    for (let index = 0; index < dates.length; index++) {
+      const weekday = dayjs(dates[index]).format('ddd');
+      // console.log(weekday);
+      weekdays.add(weekday);
+    }
+    // console.log(weekdays);
 
-          apiResponse.successData(res, `${employee.firstName} was added.`, employee);
-        });
-      })
-      .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
+    // let employees = Employee.findAll
+    let shiftPromise = Shift.findAll({ where: { businessID: req.body.business }, include: Tag });
+    let employeePromise = Employee.findAll({ where: { businessID: req.body.business }, include: Tag });
+
+    Promise.all([shiftPromise, employeePromise]).then((results) => {
+      if (results.some((x) => x.length === 0)) {
+        return apiResponse.errorResponse(res, 'Could not retrieve shifts and employees.');
+      }
+      let [shifts, employees] = results;
+      // console.log(employees, shifts);
+      // scheduleCreator(dates, employees, shifts);
+      let schedule = scheduleCreator(dates, employees, shifts);
+      apiResponse.successData(res, 'Schedule generated.', schedule);
+    });
+
+    // Pull and add tags
+    // const tags = req.body.tags.split(',');
+    // Employee.findAll({ where: { id: { [Sequelize.Op.in]: tags } } })
+    //   .then((tagsToAdd) => {
+    //     Employee.create({
+    //       firstName: req.body.firstName,
+    //       days: req.body.days || null,
+    //       businessId: req.body.business,
+    //     }).then((employee) => {
+    //       // still running when response returned, should fix
+    //       tagsToAdd.forEach((tag) => employee.addTag(tag));
+    //       employee.days = employee.days?.split(',');
+
+    //       apiResponse.successData(res, `${employee.firstName} was added.`, employee);
+    //     });
+    //   })
+    //   .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
   },
 ];
 
@@ -170,4 +201,70 @@ exports.deleteAll = (req, res) => {
   Schedule.destroy({ where: { id: { $gte: 0 } } })
     .then(() => apiResponse.successMsg(res, 'Schedule fired successfully.'))
     .catch((e) => apiResponse.error(res, `Schedule could not be added due to: ${e}`));
+};
+
+const getDates = (startDate, endDate) => {
+  const dates = [];
+  let currentDate = startDate;
+  const addDays = function (days) {
+    const date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+  };
+  while (currentDate <= endDate) {
+    dates.push(currentDate);
+
+    currentDate = addDays.call(currentDate, 1);
+  }
+  return dates;
+};
+
+const scheduleCreator = (dates, employees, shifts) => {
+  // let schedule = {
+  //   date: {
+  //     shifts: [shifts],
+  //     employees: [employees],
+  //   },
+  //   date: [
+  //     {
+  //       shift1: {
+  //         startTime: startTime,
+  //         endTime: endTime,
+  //         tags: [tags],
+  //         employees: [employees],
+  //       },
+  //     },
+  //     { shift2: [employees] },
+  //   ],
+  // };
+
+  let schedule = {};
+  dates.map((date) => {
+    let weekday = dayjs(date).format('ddd');
+    let day = dayjs(date).format('DD/MM/YYYY');
+    schedule[day] = { weekday: weekday, shifts: [] };
+    let dayShifts = shifts.filter((shift) => shift.days?.includes(weekday));
+    dayShifts.map((shift) => {
+      //first, get all employees who work on that day
+      let shiftEmployees = employees.filter((employee) => employee.days.split(',').includes(weekday));
+      //then, filter employees further by tags needed in that shift
+
+      //shifts with days but empty employees are an issue - offer to add new one
+      // only keep employees who have a tag that is listed in that shift
+
+      shift.tags.map((tag) => {
+        shiftEmployees = shiftEmployees.filter((employee) => {
+          let contains = false;
+          employee.tags.map((empeeTag) => {
+            if (empeeTag.id === tag.id) {
+              contains = true;
+            }
+          });
+          return contains;
+        });
+      });
+      schedule[day].shifts.push({ shift, employees: shiftEmployees });
+    });
+  });
+  return schedule;
 };

@@ -10,8 +10,9 @@ import Calendar from './calendar.component.js';
 export default function ScheduleCreate() {
   const [value, onChange] = React.useState();
   const [dates, onDateChange] = React.useState([]);
+  const [schedule, onScheduleCreate] = React.useState([]);
 
-  const { employees, business, tags, shifts } = useSelector((state) => state);
+  const { employees, business, tags, shifts, schedules } = useSelector((state) => state);
   useEffect(() => {
     // only run if business id avail
     business.id && dispatch(retrieveEmployees(business.id));
@@ -27,14 +28,14 @@ export default function ScheduleCreate() {
       formatted[1] = dayjs(value[1]);
       console.log(formatted);
       onDateChange(formatted);
-      dispatch(createSchedule(formatted));
+      dispatch(createSchedule({ startDate: formatted[0], endDate: formatted[1], business: business.id }));
     }
   };
 
   return (
     <>
       {/* add index to handle what's expanded and when */}
-      <Accordion allowMultiple allowToggle>
+      <Accordion index={[0, 1]} allowMultiple allowToggle>
         <AccordionItem>
           <h2>
             {/* <AccordionButton _expanded={{ bg: 'teal', color: 'white' }}> */}
@@ -46,21 +47,15 @@ export default function ScheduleCreate() {
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4}>
-            <Grid templateColumns='repeat(3, 1fr)' gap={4}>
-              <GridItem colSpan={2}>
-                <Center>
-                  <Calendar handleChange={(value) => calendarChange(value)} value={value} returnValue={'range'} />
-                </Center>
-              </GridItem>
-              <GridItem colSpan={1}>
-                {dates?.length !== 0 ? (
-                  <div>{Math.abs(dates[0].diff(dates[1], 'day'))} days selected.</div>
-                ) : (
-                  <div>Click on first and last date to set range.</div>
-                )}
-                {dates?.length !== 0 && dates?.map((date, index) => <div key={index}>{date.format('dddd – DD/MM/YYYY')}</div>)}
-              </GridItem>
-            </Grid>
+            <Center>
+              <Calendar handleChange={(value) => calendarChange(value)} value={value} returnValue={'range'} />
+            </Center>
+            {dates?.length !== 0 ? (
+              <span>{Math.abs(dates[0].diff(dates[1], 'day'))} days selected: </span>
+            ) : (
+              <span>Click on first and last date to set range.</span>
+            )}
+            {dates?.length !== 0 && dates?.map((date, index) => <span key={index}>{date.format('dddd – DD/MM/YYYY') + ' '}</span>)}
           </AccordionPanel>
         </AccordionItem>
 
@@ -75,8 +70,20 @@ export default function ScheduleCreate() {
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-            enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            {schedules?.new &&
+              Object.keys(schedules.new).map((item) => (
+                <>
+                  <div>{item}</div>
+                  <div>
+                    {schedules.new[item].weekday}
+                    <div>Available employees: {schedules.new[item].shifts[0].employees[0].firstName}</div>
+                    {schedules.new[item].shifts.map((shift) => {
+                      <div>{shifts.employees}</div>;
+                      shift.employees.map((employee) => {});
+                    })}
+                  </div>
+                </>
+              ))}
           </AccordionPanel>
         </AccordionItem>
       </Accordion>

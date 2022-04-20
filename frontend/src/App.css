@@ -23,6 +23,10 @@ a:hover {
   background: lightblue !important;
 }
 
+.react-calendar__tile.react-calendar__tile--active.react-calendar__tile--range.react-calendar__month-view__days__day.react-calendar__month-view__days__day--weekend{
+  color: white !important;
+}
+
 .react-calendar__month-view__days__day--weekend {
   color: darkolivegreen !important;
 }

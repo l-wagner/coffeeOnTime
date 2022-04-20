@@ -2,6 +2,8 @@ import { AddIcon } from '@chakra-ui/icons';
 import { Flex, IconButton, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup, Tag } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 
+const orderMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+
 export default function DayDropdown(props) {
   const [options, setOptions] = useState([]);
   // init selected options in menu
@@ -10,7 +12,9 @@ export default function DayDropdown(props) {
   }, [props.days]);
 
   const onSave = () => {
-    // if days are part of a new create, they need to stay in an array
+    // if days are part of a new create, they need to stay in an array – OR DO THEY??
+    options.sort((a, b) => orderMap[a] - orderMap[b]);
+
     if (props.submitMethod) props.submitMethod(options);
     else props.updateMethod(props.item.id, options?.join(','));
   };

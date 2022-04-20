@@ -1,11 +1,11 @@
-import { CREATE_SCHEDULE, RETRIEVE_SCHEDULES, UPDATE_SCHEDULE, DELETE_SCHEDULE, DELETE_ALL_SCHEDULES } from './types';
+import { ERROR, CREATE_SCHEDULE, RETRIEVE_SCHEDULES, UPDATE_SCHEDULE, DELETE_SCHEDULE, DELETE_ALL_SCHEDULES } from './types';
 
-import ScheduleDataService from '../services/tag.service';
+import ScheduleDataService from '../services/schedule.service';
 
 export const createSchedule = (values) => async (dispatch) => {
   try {
-    const res = await ScheduleDataService.create(values);
-
+    const res = await ScheduleDataService.fill(values);
+    console.log(res.payload);
     dispatch({
       type: CREATE_SCHEDULE,
       payload: res.payload,
@@ -13,6 +13,7 @@ export const createSchedule = (values) => async (dispatch) => {
 
     return Promise.resolve(res.payload);
   } catch (err) {
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
     return Promise.reject(err);
   }
 };

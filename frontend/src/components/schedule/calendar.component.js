@@ -5,10 +5,9 @@ import 'react-calendar/dist/Calendar.css';
 export default function CalendarComp(props) {
   const [value, onChange] = React.useState();
 
- 
   return (
     <>
-      <Calendar selectRange calendarType={'US'} onChange={(value) => props.handleChange(value)} value={value} />
+      <Calendar showDoubleView selectRange calendarType={'US'} onChange={(value) => props.handleChange(value)} value={value} />
     </>
   );
 }
