@@ -53,7 +53,7 @@ export default function App() {
 
               <li className='nav-item'>
                 <Link to={'/tags'} className='nav-link'>
-                  {business.nameForTags.charAt(0).toUpperCase() + business.nameForTags.slice(1)}
+                  {business.nameForTags}
                 </Link>
               </li>
               <li className='nav-item'>

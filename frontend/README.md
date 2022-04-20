@@ -9,8 +9,8 @@ Todo:
 - show newly created row without refresh    
 - allow adding of new roles in employee row
 - validate start < endTime
+- ability to select all days at once
 - Create schedule
-    - select dates
     - show list of shifts and avaliable employess
 
 order of creation:

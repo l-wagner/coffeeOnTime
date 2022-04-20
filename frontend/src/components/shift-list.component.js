@@ -96,7 +96,7 @@ export default function Shift() {
             <Th>Start time</Th>
             <Th>End time</Th>
             <Th>{business.nameForTags}</Th>
-            <Th>Days</Th>
+            <Th>Days active</Th>
             <Th></Th>
           </Tr>
         </Thead>

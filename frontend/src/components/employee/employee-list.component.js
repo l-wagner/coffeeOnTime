@@ -82,7 +82,7 @@ export default function Employee() {
           <Tr>
             <Th>Name</Th>
             <Th>{business.nameForTags}</Th>
-            <Th>Days</Th>
+            <Th>Days working</Th>
             <Th></Th>
           </Tr>
         </Thead>
@@ -96,7 +96,7 @@ export default function Employee() {
               </Editable>
             </Td>
             <Td>
-              <TagDropdown item={newEmployee} tags={tags} submitMethod={(value) => setEmployeeTags(value)} />
+              <TagDropdown nameForTags={business.nameForTags} item={newEmployee} tags={tags} submitMethod={(value) => setEmployeeTags(value)} />
             </Td>
             <Td>
               <DayDropdown item={newEmployee} submitMethod={(value) => setEmployeeDays(value)} days={newEmployee.days} />
@@ -125,7 +125,7 @@ export default function Employee() {
                   </Editable>
                 </Td>
                 <Td>
-                  <TagDropdown updateMethod={(id, data) => dispatch(updateEmployeeTags(id, { tags: data }))} item={employee} tags={tags} />
+                  <TagDropdown nameForTags={business.nameForTags} updateMethod={(id, data) => dispatch(updateEmployeeTags(id, { tags: data }))} item={employee} tags={tags} />
                 </Td>
                 <Td>
                   <DayDropdown

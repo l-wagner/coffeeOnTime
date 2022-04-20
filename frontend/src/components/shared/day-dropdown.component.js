@@ -17,18 +17,10 @@ export default function DayDropdown(props) {
 
   return (
     <Flex direction='row'>
-      {options?.map(
-        (day) =>
-          day !== '' && (
-            <Tag mr={1} size='sm' key={day} variant='solid' colorScheme='green'>
-              {day}
-            </Tag>
-          )
-      )}
       <Menu closeOnSelect={false} onClose={onSave}>
-        <MenuButton ml={2} as={IconButton} icon={<AddIcon />} aria-label='edit tags' isRound size='xs' _hover={{ bg: 'green.200' }} />
+        <MenuButton mr={2} as={IconButton} icon={<AddIcon />} aria-label='edit tags' isRound size='xs' _hover={{ bg: 'green.200' }} />
         <MenuList>
-          <MenuOptionGroup onChange={setOptions} title='Tags' type='checkbox' value={options}>
+          <MenuOptionGroup onChange={setOptions} title='Days' type='checkbox' value={options}>
             {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
               <MenuItemOption value={day} key={day}>
                 {day}
@@ -37,6 +29,15 @@ export default function DayDropdown(props) {
           </MenuOptionGroup>
         </MenuList>
       </Menu>
+
+      {options?.map(
+        (day) =>
+          day !== '' && (
+            <Tag mr={1} size='sm' key={day} variant='solid' colorScheme='green'>
+              {day}
+            </Tag>
+          )
+      )}
     </Flex>
   );
 }

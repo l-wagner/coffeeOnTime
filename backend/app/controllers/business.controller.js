@@ -86,8 +86,10 @@ exports.findById = [
     const id = req.params.id;
     Business.findByPk(id, { include: Tag })
       .then((data) => {
-        if (data) apiResponse.successData(res, '', data);
-        else apiResponse.notFoundResponse(res, 'Business not found.');
+        if (data) {
+          data.nameForTags = data.nameForTags.charAt(0).toUpperCase() + data.nameForTags.slice(1);
+          apiResponse.successData(res, '', data);
+        } else apiResponse.notFoundResponse(res, 'Business not found.');
       })
       .catch((err) => {
         res.status(500).send({

@@ -2,7 +2,6 @@ import { AddIcon } from '@chakra-ui/icons';
 import { Flex, IconButton, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup, Tag, Tooltip } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 
-
 export default function TagDropdown(props) {
   const [options, setOptions] = useState([]);
 
@@ -26,18 +25,11 @@ export default function TagDropdown(props) {
 
   return (
     <Flex direction='row'>
-      {options?.map((tag) => (
-        <Tooltip label={props.tags?.find((businessTag) => businessTag.name === tag)?.description} key={tag} aria-label='A tooltip'>
-          <Tag mr={1} size='sm' key={tag} variant='solid' colorScheme='teal'>
-            {tag?.toLowerCase()}
-          </Tag>
-        </Tooltip>
-      ))}
       {props.tags && (
         <Menu closeOnSelect={false} onClose={onSave}>
-          <MenuButton ml={2} as={IconButton} icon={<AddIcon />} aria-label='edit tags' isRound size='xs' _hover={{ bg: 'teal.200' }} />
+          <MenuButton mr={2} as={IconButton} icon={<AddIcon />} aria-label='edit tags' isRound size='xs' _hover={{ bg: 'teal.200' }} />
           <MenuList>
-            <MenuOptionGroup title='Tags' type='checkbox' onChange={setOptions} value={options}>
+            <MenuOptionGroup title={props.nameForTags} type='checkbox' onChange={setOptions} value={options}>
               {businessTags.map((tag) => (
                 <MenuItemOption value={tag} key={tag}>
                   {tag?.toLowerCase()}
@@ -47,6 +39,14 @@ export default function TagDropdown(props) {
           </MenuList>
         </Menu>
       )}
+      
+      {options?.map((tag) => (
+        <Tooltip label={props.tags?.find((businessTag) => businessTag.name === tag)?.description} key={tag} aria-label='A tooltip'>
+          <Tag mr={1} size='sm' key={tag} variant='solid' colorScheme='teal'>
+            {tag?.toLowerCase()}
+          </Tag>
+        </Tooltip>
+      ))}
     </Flex>
   );
 }
