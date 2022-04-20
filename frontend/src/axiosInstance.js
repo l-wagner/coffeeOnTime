@@ -24,15 +24,16 @@ axiosInstance.interceptors.response.use(
   },
 
   function (error) {
-  
     if (error.response) {
       error.payload = error.response.data;
       console.log(error.payload);
-      
+
       if (error.response.status === 401) {
         // Automatically redirect client to the login page
         // window.location.href = `${Config.AUTH_URL}/${Config.HOME_PAGE_PATH}`;
       }
+    } else {
+      error.payload = 'network error';
     }
     // Do something with response error
     return Promise.reject(error);

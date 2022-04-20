@@ -12,7 +12,7 @@ const { body, param, validationResult } = require('express-validator');
 exports.add = [
   body('firstName').not().isEmpty().trim(),
   body('business').isInt().not().isEmpty().trim(),
-  body('blockedDays').trim(),
+  body('days').trim(),
   body('tags').trim(),
   function (req, res) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
@@ -27,12 +27,12 @@ exports.add = [
       .then((tagsToAdd) => {
         Employee.create({
           firstName: req.body.firstName,
-          blockedDays: req.body.blockedDays || null,
+          days: req.body.days || null,
           businessId: req.body.business,
         }).then((employee) => {
           // still running when response returned, should fix
           tagsToAdd.forEach((tag) => employee.addTag(tag));
-          employee.blockedDays = employee.blockedDays?.split(',');
+          employee.days = employee.days?.split(',');
 
           apiResponse.successData(res, `${employee.firstName} was added.`, employee);
         });
@@ -45,7 +45,7 @@ exports.add = [
 exports.findAll = (req, res) => {
   Employee.findAll({ include: Tag }).then((employees) => {
     // change blocked days to array
-    employees.map((employee) => (employee.blockedDays = employee.blockedDays?.split(',')));
+    employees.map((employee) => (employee.days = employee.days?.split(',')));
     apiResponse.successData(res, `${Object.keys(employees).length} employees found.`, employees);
   });
 };
@@ -75,7 +75,7 @@ exports.update = [
       .then((employee) => {
         req.body.firstName && (employee.firstName = req.body.firstName);
         req.body.lastName && (employee.lastName = req.body.lastName);
-        req.body.blockedDays && (employee.blockedDays = req.body.blockedDays);
+        req.body.days && (employee.days = req.body.days);
         employee
           .save()
           .then((result) => apiResponse.successData(res, result))

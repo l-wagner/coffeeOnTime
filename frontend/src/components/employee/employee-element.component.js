@@ -7,7 +7,7 @@ class Employee extends Component {
   constructor(props) {
     super(props);
     this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeBlockedDays = this.onChangeBlockedDays.bind(this);
+    this.onChangeDays = this.onChangeDays.bind(this);
     this.getEmployee = this.getEmployee.bind(this);
     this.updateStatus = this.updateStatus.bind(this);
     this.updateContent = this.updateContent.bind(this);
@@ -17,7 +17,7 @@ class Employee extends Component {
       currentEmployee: {
         id: null,
         name: '',
-        blockedDays: '',
+        days: '',
         acive: true,
       },
       message: '',
@@ -41,13 +41,13 @@ class Employee extends Component {
     });
   }
 
-  onChangeBlockedDays(e) {
-    const blockedDays = e.target.value;
+  onChangeDays(e) {
+    const days = e.target.value;
 
     this.setState((prevState) => ({
       currentEmployee: {
         ...prevState.currentEmployee,
-        blockedDays: blockedDays,
+        days: days,
       },
     }));
   }
@@ -69,7 +69,7 @@ class Employee extends Component {
     var data = {
       id: this.state.currentEmployee.id,
       name: this.state.currentEmployee.name,
-      blockedDays: this.state.currentEmployee.blockedDays,
+      days: this.state.currentEmployee.days,
       acive: status,
     };
 
@@ -130,13 +130,13 @@ class Employee extends Component {
                 <input type='text' className='form-control' id='name' value={currentEmployee.name} onChange={this.onChangeName} />
               </div>
               <div className='form-group'>
-                <label htmlFor='blockedDays'>BlockedDays</label>
+                <label htmlFor='days'>Days</label>
                 <input
                   type='text'
                   className='form-control'
-                  id='blockedDays'
-                  value={currentEmployee.blockedDays}
-                  onChange={this.onChangeBlockedDays}
+                  id='days'
+                  value={currentEmployee.days}
+                  onChange={this.onChangeDays}
                 />
               </div>
 

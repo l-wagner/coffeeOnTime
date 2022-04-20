@@ -19,7 +19,7 @@ export default function Employee() {
   const business = useSelector((state) => state.business);
   const tags = useSelector((state) => state.tags);
 
-  // const newEmployee = { tag: { id: 0, name: '', lastName: '', tags: [], blockedDays: [] } };
+  // const newEmployee = { tag: { id: 0, name: '', lastName: '', tags: [], days: [] } };
 
   useEffect(() => {
     // only run if business id avail

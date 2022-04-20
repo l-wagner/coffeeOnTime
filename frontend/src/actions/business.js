@@ -24,9 +24,7 @@ export const retrieveBusiness = (id) => async (dispatch) => {
       payload: res.payload,
     });
   } catch (err) {
-    dispatch({
-      type: RETRIEVE_BUSINESS,
-    });
+    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
     return Promise.reject(err);
   }
 };

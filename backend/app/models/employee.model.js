@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     active: {
       type: DataTypes.BOOLEAN,
     },
-    blockedDays: {
+    days: {
       type: DataTypes.TEXT,
     },
   });

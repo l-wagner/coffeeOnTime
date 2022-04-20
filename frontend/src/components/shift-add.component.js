@@ -101,7 +101,7 @@
 
 //                 <InputGroup size='sm'>
 //                   <Stack spacing={5} direction='row'>
-//                     <Checkbox value={this.state.blockedDays} onChange={this.onChangeBlockedDays} defaultChecked>
+//                     <Checkbox value={this.state.days} onChange={this.onChangeDays} defaultChecked>
 //                       Mon
 //                     </Checkbox>
 //                     <Checkbox defaultChecked>Tue</Checkbox>

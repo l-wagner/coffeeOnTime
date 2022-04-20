@@ -4,10 +4,41 @@ const db = require('../models/db.js');
 const Shift = db.shift;
 
 const Schedule = db.schedule;
+const Employee = db.employee;
 const apiResponse = require('../util/apiResponse.js');
 const { body, param, validationResult } = require('express-validator');
 
-// Create and Save a new Shift
+exports.fill = [
+  body('startDate').not().isEmpty().trim(),
+  body('endDate').isInt().not().isEmpty().trim(),
+  function (req, res) {
+    // Finds the validation errors in this request and wraps them in an object with handy functions
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return apiResponse.validationError(res, { errors: errors.array() }, 400);
+    }
+
+    // Pull and add tags
+    const tags = req.body.tags.split(',');
+    Employee.findAll({ where: { id: { [Sequelize.Op.in]: tags } } })
+      .then((tagsToAdd) => {
+        Employee.create({
+          firstName: req.body.firstName,
+          days: req.body.days || null,
+          businessId: req.body.business,
+        }).then((employee) => {
+          // still running when response returned, should fix
+          tagsToAdd.forEach((tag) => employee.addTag(tag));
+          employee.days = employee.days?.split(',');
+
+          apiResponse.successData(res, `${employee.firstName} was added.`, employee);
+        });
+      })
+      .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
+  },
+];
+
+// Create and Save a new Schedule
 exports.add = [
   body('business').isInt().not().isEmpty().trim(),
   body('name').not().isEmpty().trim(),
@@ -29,7 +60,7 @@ exports.add = [
     const schedules = req.body.schedules?.split(',');
     Schedule.findAll({ where: { id: { [Sequelize.Op.in]: schedules } } })
       .then((schedulesToAdd) => {
-        Shift.create({
+        Schedule.create({
           name: req.body.name,
           description: req.body.description || null,
           days: req.body.days || null,
@@ -42,32 +73,32 @@ exports.add = [
             schedulesToAdd.forEach((schedule) => shift.addSchedule(schedule));
             apiResponse.successData(res, `${shift.name} was added.`, shift);
           })
-          .catch((e) => apiResponse.error(res, `Shift could not be added due to: ${e}`));
+          .catch((e) => apiResponse.error(res, `Schedule could not be added due to: ${e}`));
       })
-      .catch((e) => apiResponse.error(res, `Shift could not be added due to: ${e}`));
+      .catch((e) => apiResponse.error(res, `Schedule could not be added due to: ${e}`));
   },
 ];
 
-// Retrieve all Shifts from the database
+// Retrieve all Schedules from the database
 exports.findAll = (req, res) => {
-  Shift.findAll({ include: Schedule }).then((shifts) => {
+  Schedule.findAll({ include: Schedule }).then((shifts) => {
     // change blocked days to array
     shifts.map((shift) => (shift.days = shift.days?.split(',')));
     apiResponse.successData(res, `${Object.keys(shifts).length} shifts found.`, shifts);
   });
 };
 
-// Find a single Shift by Id
+// Find a single Schedule by Id
 exports.findOne = (req, res) => {
-  Shift.findByPk(req.params.id)
+  Schedule.findByPk(req.params.id)
     .then((shift) => {
       // req.body.schedules && (shift.schedules = req.body.schedules.join(','));
       apiResponse.successData(res, shift);
     })
-    .catch(() => apiResponse.notFoundResponse(res, 'Shift not found.'));
+    .catch(() => apiResponse.notFoundResponse(res, 'Schedule not found.'));
 };
 
-// Update an Shift
+// Update an Schedule
 exports.update = [
   param('id').not().isEmpty().trim(),
   body('data').trim(),
@@ -78,7 +109,7 @@ exports.update = [
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
 
-    Shift.findByPk(req.params.id)
+    Schedule.findByPk(req.params.id)
       .then((shift) => {
         req.body.name && (shift.name = req.body.name);
         req.body.description && (shift.description = req.body.description);
@@ -88,9 +119,9 @@ exports.update = [
         shift
           .save()
           .then((result) => apiResponse.successData(res, result))
-          .catch(() => apiResponse.notFoundResponse(res, 'Shift could not be updated.'));
+          .catch(() => apiResponse.notFoundResponse(res, 'Schedule could not be updated.'));
       })
-      .catch((e) => apiResponse.error(res, `Shift not found. Error: ${e}`));
+      .catch((e) => apiResponse.error(res, `Schedule not found. Error: ${e}`));
   },
 ];
 
@@ -105,7 +136,7 @@ exports.updateSchedules = [
     }
 
     const schedules = req.body.schedules.split(',');
-    Shift.findByPk(req.params.id).then((shift) => {
+    Schedule.findByPk(req.params.id).then((shift) => {
       //remove all schedules from shift TODO actually compare schedules
       Schedule.findAll({ where: { id: { [Sequelize.Op.notIn]: schedules } } })
         .then((schedulesToRemove) => {
@@ -123,20 +154,20 @@ exports.updateSchedules = [
   },
 ];
 
-// Delete a Shift with the specified id in the request
+// Delete a Schedule with the specified id in the request
 
 exports.delete = [
   param('id').not().isEmpty().trim(),
   (req, res) => {
-    Shift.destroy({ where: { id: req.params.id } })
-      .then(() => apiResponse.successMsg(res, 'Shift fired successfully.'))
-      .catch((e) => apiResponse.error(res, `Shift could not be added due to: ${e}`));
+    Schedule.destroy({ where: { id: req.params.id } })
+      .then(() => apiResponse.successMsg(res, 'Schedule fired successfully.'))
+      .catch((e) => apiResponse.error(res, `Schedule could not be added due to: ${e}`));
   },
 ];
 
-// Delete all Shifts from the database.
+// Delete all Schedules from the database.
 exports.deleteAll = (req, res) => {
-  Shift.destroy({ where: { id: { $gte: 0 } } })
-    .then(() => apiResponse.successMsg(res, 'Shift fired successfully.'))
-    .catch((e) => apiResponse.error(res, `Shift could not be added due to: ${e}`));
+  Schedule.destroy({ where: { id: { $gte: 0 } } })
+    .then(() => apiResponse.successMsg(res, 'Schedule fired successfully.'))
+    .catch((e) => apiResponse.error(res, `Schedule could not be added due to: ${e}`));
 };

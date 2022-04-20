@@ -59,27 +59,27 @@ export default function Employee() {
             </Stack>
             <FormErrorMessage>{errors.tags?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={errors.blockedDays}>
+          <FormControl isInvalid={errors.days}>
             <Stack spacing={5} direction='row'>
-              <Checkbox value='Mon' id='Mon' {...register('blockedDays')}>
+              <Checkbox value='Mon' id='Mon' {...register('days')}>
                 Mon
               </Checkbox>
-              <Checkbox value='Tue' id='Tue' {...register('blockedDays')}>
+              <Checkbox value='Tue' id='Tue' {...register('days')}>
                 Tue
               </Checkbox>
-              <Checkbox value='Wed' id='Wed' {...register('blockedDays')}>
+              <Checkbox value='Wed' id='Wed' {...register('days')}>
                 Wed
               </Checkbox>
-              <Checkbox value='Thu' id='Thu' {...register('blockedDays')}>
+              <Checkbox value='Thu' id='Thu' {...register('days')}>
                 Thu
               </Checkbox>
-              <Checkbox value='Fri' id='Fri' {...register('blockedDays')}>
+              <Checkbox value='Fri' id='Fri' {...register('days')}>
                 Fri
               </Checkbox>
-              <Checkbox value='Sat' id='Sat' {...register('blockedDays')}>
+              <Checkbox value='Sat' id='Sat' {...register('days')}>
                 Sat
               </Checkbox>
-              <Checkbox value='Sun' id='Sun' {...register('blockedDays')}>
+              <Checkbox value='Sun' id='Sun' {...register('days')}>
                 Sun
               </Checkbox>
             </Stack>

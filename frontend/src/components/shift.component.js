@@ -7,7 +7,7 @@ class Shift extends Component {
   constructor(props) {
     super(props);
     this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeBlockedDays = this.onChangeBlockedDays.bind(this);
+    this.onChangeDays = this.onChangeDays.bind(this);
     this.getShift = this.getShift.bind(this);
     this.updateStatus = this.updateStatus.bind(this);
     this.updateContent = this.updateContent.bind(this);
@@ -17,7 +17,7 @@ class Shift extends Component {
       currentShift: {
         id: null,
         name: '',
-        blockedDays: '',
+        days: '',
         acive: true,
       },
       message: '',
@@ -41,13 +41,13 @@ class Shift extends Component {
     });
   }
 
-  onChangeBlockedDays(e) {
-    const blockedDays = e.target.value;
+  onChangeDays(e) {
+    const days = e.target.value;
 
     this.setState((prevState) => ({
       currentShift: {
         ...prevState.currentShift,
-        blockedDays: blockedDays,
+        days: days,
       },
     }));
   }
@@ -69,7 +69,7 @@ class Shift extends Component {
     var data = {
       id: this.state.currentShift.id,
       name: this.state.currentShift.name,
-      blockedDays: this.state.currentShift.blockedDays,
+      days: this.state.currentShift.days,
       acive: status,
     };
 
@@ -130,13 +130,13 @@ class Shift extends Component {
                 <input type='text' className='form-control' id='name' value={currentShift.name} onChange={this.onChangeName} />
               </div>
               <div className='form-group'>
-                <label htmlFor='blockedDays'>BlockedDays</label>
+                <label htmlFor='days'>Days</label>
                 <input
                   type='text'
                   className='form-control'
-                  id='blockedDays'
-                  value={currentShift.blockedDays}
-                  onChange={this.onChangeBlockedDays}
+                  id='days'
+                  value={currentShift.days}
+                  onChange={this.onChangeDays}
                 />
               </div>
 

@@ -22,7 +22,7 @@ export default function Employee() {
 
   const [firstName, setFirstName] = React.useState(false);
   const [employeeTags, setEmployeeTags] = React.useState(false);
-  const [employeeBlockedDays, setEmployeeBlockedDays] = React.useState(false);
+  const [employeeDays, setEmployeeDays] = React.useState(false);
   const [error, setError] = React.useState(null);
 
   const [selectedEmployee, setSelectedEmployee] = React.useState(false);
@@ -31,7 +31,7 @@ export default function Employee() {
   const business = useSelector((state) => state.business);
   const tags = useSelector((state) => state.tags);
 
-  const newEmployee = { employee: { id: 0, firstName: '', lastName: '', tags: [], blockedDays: [] } };
+  const newEmployee = { employee: { id: 0, firstName: '', lastName: '', tags: [], days: [] } };
 
   useEffect(() => {
     // only run if business id avail
@@ -45,16 +45,17 @@ export default function Employee() {
     if (!firstName) {
       setError(true);
       setTimeout(() => setError(false), 3000);
+      console.log(employeeDays);
     } else {
       dispatch(
         createEmployee({
           business: business.id,
           firstName: firstName,
-          blockedDays: employeeBlockedDays || [],
+          days: employeeDays?.join(',') || [],
           tags: employeeTags || [],
         })
       );
-      window.location.reload(false);
+      // window.location.reload(false);
     }
   };
 
@@ -81,7 +82,7 @@ export default function Employee() {
           <Tr>
             <Th>Name</Th>
             <Th>{business.nameForTags}</Th>
-            <Th>Blocked days</Th>
+            <Th>Days</Th>
             <Th></Th>
           </Tr>
         </Thead>
@@ -98,7 +99,7 @@ export default function Employee() {
               <TagDropdown item={newEmployee} tags={tags} submitMethod={(value) => setEmployeeTags(value)} />
             </Td>
             <Td>
-              <DayDropdown item={newEmployee} submitMethod={(value) => setEmployeeBlockedDays(value)} days={newEmployee.blockedDays} />
+              <DayDropdown item={newEmployee} submitMethod={(value) => setEmployeeDays(value)} days={newEmployee.days} />
             </Td>
             <Td>
               <IconButton
@@ -128,9 +129,9 @@ export default function Employee() {
                 </Td>
                 <Td>
                   <DayDropdown
-                    updateMethod={(id, data) => dispatch(updateEmployee(id, { blockedDays: data }))}
+                    updateMethod={(id, data) => dispatch(updateEmployee(id, { days: data }))}
                     item={employee}
-                    days={employee.blockedDays}
+                    days={employee.days}
                   />
                 </Td>
                 <Td>
