@@ -73,8 +73,8 @@ exports.update = [
 
     Employee.findByPk(req.params.id)
       .then((employee) => {
-        req.body.firstName && (employee.firstName = req.body.firstName);
-        req.body.lastName && (employee.lastName = req.body.lastName);
+        req.body.firstName && (employee.firstName = req.body.firstName.trim());
+        req.body.lastName && (employee.lastName = req.body.lastName.trim());
         req.body.days && (employee.days = req.body.days);
         employee
           .save()

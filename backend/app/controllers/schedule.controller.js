@@ -238,7 +238,17 @@ const scheduleCreator = (dates, employees, shifts) => {
   //   ],
   // };
 
-  let scheduleGrid = { columns: [], config: [], rowLabels: [], rows: [] };
+  let scheduleGrid = { columns: [], config: [], rowLabels: [], rows: [], shiftsNeededByWeekday: [] };
+
+  let shiftsNeededByWeekday = { Sun: [], Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [] };
+  shifts.map((shift) => {
+    console.log(shift);
+    shift.days.split(',').map((day) => {
+      shiftsNeededByWeekday[day].push(shift);
+    });
+  });
+
+  scheduleGrid.shiftsNeededByWeekday = shiftsNeededByWeekday;
 
   dates.map((date) => {
     let weekday = dayjs(date).format('ddd');
@@ -248,6 +258,13 @@ const scheduleCreator = (dates, employees, shifts) => {
 
     // create columns (header) array => [ "date – weekday", "date - weekday"]
     // column header order defines column order in grid
+    if (shiftsNeededByWeekday[weekday]?.length === 0) {
+      header += '\nclosed';
+    } else {
+      // list of shifts
+      let names = shiftsNeededByWeekday[weekday].map((shift) => shift.name);
+      header += `\nShift(s) needed: ${names}`;
+    }
     scheduleGrid.columns.push(header);
 
     // create column config array of objects => [ {name: "", key: "linking this config to the correct data in the data object", settings}]
@@ -266,54 +283,51 @@ const scheduleCreator = (dates, employees, shifts) => {
   employees.map((employee) => {
     // create row header array => [ "employee name", "employee name"]
     scheduleGrid.rowLabels.push(employee.firstName);
+
     let row = {};
     // row.employee = employee.firstName;
 
     // run through dates/columns
     scheduleGrid.config.map((element) => {
       // [{date: value}, {date: value}]
-      console.log(element);
+      content = '';
 
-      if (employee.days.includes(element.weekday)) {
-        row[element.key] = employee.firstName + " could work.";
-      } else row[element.key] = '';
+      // if there are shifts set for this weekday
+      if (shiftsNeededByWeekday[element.weekday]?.length === 0) {
+        content += 'closed';
+      } else {
+        // list of shifts
+        let shiftsNeeded = shiftsNeededByWeekday[element.weekday];
+        let shiftTags = [];
+        shiftsNeeded.map((shift) => {
+          // content += `Shift ${shift.name}/${shift.id}: \n`;
+
+          // go through tags needed in this shift
+          shift.tags.map((tag) => {
+            shiftTags.push(tag.id);
+
+            // fulfill tags with employees who have it and can work that day
+            // check if employee could work
+            if (employee.days.includes(element.weekday)) {
+              // does employee have a skill that's needed on this weekday? let's fill by first come, first serve
+              employee.tags.map((employeeTag) => {
+                if (tag.id === employeeTag.id) {
+                  // content += `              ${employee.firstName} will work as ${tag.name}/${tag.id} in ${shift.name}/${shift.id}\n  `;
+
+                  content += `${dayjs(shift.startTime).format('hh:mm a')} – ${dayjs(shift.endTime).format('hh:mm a')} (${shift.name} - ${
+                    tag.name
+                  })\n  `;
+                }
+              });
+            }
+          });
+        });
+
+        row[element.key] = content;
+      }
     });
-    // row.employee = employee.firstName;
     scheduleGrid.rows.push(row);
   });
 
   return scheduleGrid;
-
-  // create schedule grid
-
-  // dates.map((date) => {
-  //   let weekday = dayjs(date).format('ddd');
-  //   let day = dayjs(date).format('DD/MM/YYYY');
-  //   schedule.columnHeaders.push(dayjs(date).format('DD/MM'));
-  //   schedule.weekdays.push(weekday);
-  //   schedule[day] = { weekday: weekday, shifts: [] };
-
-  //   let dayShifts = shifts.filter((shift) => shift.days?.includes(weekday));
-  //   dayShifts.map((shift) => {
-  //     //first, get all employees who work on that day
-  //     let shiftEmployees = employees.filter((employee) => employee.days.split(',').includes(weekday));
-  //     //then, filter employees further by tags needed in that shift
-
-  //     //shifts with days but empty employees are an issue - offer to add new one
-  //     // only keep employees who have a tag that is listed in that shift
-
-  //     // shift.tags.map((tag) => {
-  //     //   shiftEmployees = shiftEmployees.filter((employee) => {
-  //     //     let contains = false;
-  //     //     employee.tags.map((empeeTag) => {
-  //     //       if (empeeTag.id === tag.id) {
-  //     //         contains = true;
-  //     //       }
-  //     //     });
-  //     //     return contains;
-  //     //   });
-  //     // });
-  //     // schedule[day].shifts.push({ shift, employees: shiftEmployees });
-  //   });
-  // });
 };

@@ -16,6 +16,10 @@ Todo:
     - submit
 - multiples of same tag in shift? 
     - buttons in dropdown? click on tag to remove tag?
+- add info that "closed" means no shifts have been scheduled on that day
+- add unfilled shift array and remove from it as shifts are fully filled as to not double fill
+- show unfilled shifts in UI
+- open - close end times of shifts need to be called different sometimes. open - close, 7am BOH, maybe make end time optional
 
 order of creation:
 - business
