@@ -238,33 +238,79 @@ const scheduleCreator = (dates, employees, shifts) => {
   //   ],
   // };
 
-  let schedule = {};
+  let scheduleGrid = { columns: [], config: [], rowLabels: [], rows: [] };
+
   dates.map((date) => {
     let weekday = dayjs(date).format('ddd');
     let day = dayjs(date).format('DD/MM/YYYY');
-    schedule[day] = { weekday: weekday, shifts: [] };
-    let dayShifts = shifts.filter((shift) => shift.days?.includes(weekday));
-    dayShifts.map((shift) => {
-      //first, get all employees who work on that day
-      let shiftEmployees = employees.filter((employee) => employee.days.split(',').includes(weekday));
-      //then, filter employees further by tags needed in that shift
+    let dayWithoutYear = dayjs(date).format('DD/MM');
+    let header = `<div>${dayWithoutYear}</div><div>${weekday}</div>`;
 
-      //shifts with days but empty employees are an issue - offer to add new one
-      // only keep employees who have a tag that is listed in that shift
+    // create columns (header) array => [ "date – weekday", "date - weekday"]
+    // column header order defines column order in grid
+    scheduleGrid.columns.push(header);
 
-      shift.tags.map((tag) => {
-        shiftEmployees = shiftEmployees.filter((employee) => {
-          let contains = false;
-          employee.tags.map((empeeTag) => {
-            if (empeeTag.id === tag.id) {
-              contains = true;
-            }
-          });
-          return contains;
-        });
-      });
-      schedule[day].shifts.push({ shift, employees: shiftEmployees });
-    });
+    // create column config array of objects => [ {name: "", key: "linking this config to the correct data in the data object", settings}]
+    let config = { key: day };
+    scheduleGrid.config.push(config);
+
+    // if (weekday === 'Sun' || weekday === 'Sat') {
+    //   let tooltip = "It's the weekend!"
+    //   config = { ...config, tooltip: tooltip };
+    //   header = `<div title=${tooltip}><div>${dayWithoutYear}</div><div>${weekday}</div></div>`;
+    // }
+    // scheduleGrid.columns.push(header);
   });
-  return schedule;
+  // create rowData array of objects => [ {dataKey: "value", employee: "Chris", "date":"shiftName"}]
+
+  employees.map((employee) => {
+    // create row header array => [ "employee name", "employee name"]
+    scheduleGrid.rowLabels.push(employee.firstName);
+    let row = {};
+    // row.employee = employee.firstName;
+
+    // run through dates/columns
+    scheduleGrid.config.map((element) => {
+      // [{date: value}, {date: value}]
+      console.log(element);
+      row[element.key] = employee.firstName + element.key;
+    });
+    // row.employee = employee.firstName;
+    scheduleGrid.rows.push(row);
+  });
+
+  return scheduleGrid;
+
+  // create schedule grid
+
+  // dates.map((date) => {
+  //   let weekday = dayjs(date).format('ddd');
+  //   let day = dayjs(date).format('DD/MM/YYYY');
+  //   schedule.columnHeaders.push(dayjs(date).format('DD/MM'));
+  //   schedule.weekdays.push(weekday);
+  //   schedule[day] = { weekday: weekday, shifts: [] };
+
+  //   let dayShifts = shifts.filter((shift) => shift.days?.includes(weekday));
+  //   dayShifts.map((shift) => {
+  //     //first, get all employees who work on that day
+  //     let shiftEmployees = employees.filter((employee) => employee.days.split(',').includes(weekday));
+  //     //then, filter employees further by tags needed in that shift
+
+  //     //shifts with days but empty employees are an issue - offer to add new one
+  //     // only keep employees who have a tag that is listed in that shift
+
+  //     // shift.tags.map((tag) => {
+  //     //   shiftEmployees = shiftEmployees.filter((employee) => {
+  //     //     let contains = false;
+  //     //     employee.tags.map((empeeTag) => {
+  //     //       if (empeeTag.id === tag.id) {
+  //     //         contains = true;
+  //     //       }
+  //     //     });
+  //     //     return contains;
+  //     //   });
+  //     // });
+  //     // schedule[day].shifts.push({ shift, employees: shiftEmployees });
+  //   });
+  // });
 };

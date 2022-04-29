@@ -6,6 +6,7 @@ import { retrieveEmployees } from '../../actions/employees.js';
 import { retrieveTags } from '../../actions/tags';
 import { createSchedule } from '../../actions/schedules';
 import Calendar from './calendar.component.js';
+import ScheduleGrid from './scheduleGrid.component.js';
 
 export default function ScheduleCreate() {
   const [value, onChange] = React.useState();
@@ -30,6 +31,18 @@ export default function ScheduleCreate() {
       onDateChange(formatted);
       dispatch(createSchedule({ startDate: formatted[0], endDate: formatted[1], business: business.id }));
     }
+  };
+
+  const handleClick = () => {
+    Object.keys(schedules.new).map((item) => {
+      schedules.new[item].shifts.map((shift) => {
+        // console.log(shift);
+        shift.employees.map((employee) => console.log(employee.firstName));
+        console.log(shift.shift.name);
+      });
+      //   <div>{shift}</div>;
+      // })}
+    });
   };
 
   return (
@@ -69,22 +82,7 @@ export default function ScheduleCreate() {
               <AccordionIcon />
             </AccordionButton>
           </h2>
-          <AccordionPanel pb={4}>
-            {schedules?.new &&
-              Object.keys(schedules.new).map((item) => (
-                <>
-                  <div>{item}</div>
-                  <div>
-                    {schedules.new[item].weekday}
-                    <div>Available employees: {schedules.new[item].shifts[0].employees[0].firstName}</div>
-                    {schedules.new[item].shifts.map((shift) => {
-                      <div>{shifts.employees}</div>;
-                      shift.employees.map((employee) => {});
-                    })}
-                  </div>
-                </>
-              ))}
-          </AccordionPanel>
+          <AccordionPanel pb={4}>{schedules?.new && <ScheduleGrid data={schedules.new} />}</AccordionPanel>
         </AccordionItem>
       </Accordion>
     </>

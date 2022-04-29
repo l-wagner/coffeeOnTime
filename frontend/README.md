@@ -14,7 +14,7 @@ Todo:
     - show list of shifts and avaliable employess
     - save
     - submit
-- multiples of same tag: 
+- multiples of same tag in shift? 
     - buttons in dropdown? click on tag to remove tag?
 
 order of creation:
