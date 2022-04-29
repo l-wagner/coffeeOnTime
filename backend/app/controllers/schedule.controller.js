@@ -251,7 +251,7 @@ const scheduleCreator = (dates, employees, shifts) => {
     scheduleGrid.columns.push(header);
 
     // create column config array of objects => [ {name: "", key: "linking this config to the correct data in the data object", settings}]
-    let config = { key: day };
+    let config = { key: day, weekday: weekday };
     scheduleGrid.config.push(config);
 
     // if (weekday === 'Sun' || weekday === 'Sat') {
@@ -273,7 +273,10 @@ const scheduleCreator = (dates, employees, shifts) => {
     scheduleGrid.config.map((element) => {
       // [{date: value}, {date: value}]
       console.log(element);
-      row[element.key] = employee.firstName + element.key;
+
+      if (employee.days.includes(element.weekday)) {
+        row[element.key] = employee.firstName + " could work.";
+      } else row[element.key] = '';
     });
     // row.employee = employee.firstName;
     scheduleGrid.rows.push(row);

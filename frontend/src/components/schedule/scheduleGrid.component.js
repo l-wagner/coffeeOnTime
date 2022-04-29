@@ -13,7 +13,7 @@ export default function ScheduleGrid(props) {
 
   return (
     <div id='hot-app'>
-      <HotTable data={rows} settings={settings} colHeaders={columns} rowHeaders={rowLabels} width='600' height='300' />
+      <HotTable data={rows} settings={settings} colHeaders={columns} rowHeaders={rowLabels} width='95%' stretchH='all' />
     </div>
   );
 }
