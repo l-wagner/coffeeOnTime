@@ -268,66 +268,70 @@ const scheduleCreator = (dates, employees, shifts) => {
     scheduleGrid.columns.push(header);
 
     // create column config array of objects => [ {name: "", key: "linking this config to the correct data in the data object", settings}]
-    let config = { key: day, weekday: weekday };
+    let config = { data: day, weekday: weekday };
     scheduleGrid.config.push(config);
-
-    // if (weekday === 'Sun' || weekday === 'Sat') {
-    //   let tooltip = "It's the weekend!"
-    //   config = { ...config, tooltip: tooltip };
-    //   header = `<div title=${tooltip}><div>${dayWithoutYear}</div><div>${weekday}</div></div>`;
-    // }
-    // scheduleGrid.columns.push(header);
   });
-  // create rowData array of objects => [ {dataKey: "value", employee: "Chris", "date":"shiftName"}]
 
+  // create rowData array of objects => [ {dataKey: "value", employee: "Chris", "date":"shiftName"}]
   employees.map((employee) => {
     // create row header array => [ "employee name", "employee name"]
     scheduleGrid.rowLabels.push(employee.firstName);
-
-    let row = {};
-    // row.employee = employee.firstName;
-
-    // run through dates/columns
-    scheduleGrid.config.map((element) => {
-      // [{date: value}, {date: value}]
-      content = '';
-
-      // if there are shifts set for this weekday
-      if (shiftsNeededByWeekday[element.weekday]?.length === 0) {
-        content += 'closed';
-      } else {
-        // list of shifts
-        let shiftsNeeded = shiftsNeededByWeekday[element.weekday];
-        let shiftTags = [];
-        shiftsNeeded.map((shift) => {
-          // content += `Shift ${shift.name}/${shift.id}: \n`;
-
-          // go through tags needed in this shift
-          shift.tags.map((tag) => {
-            shiftTags.push(tag.id);
-
-            // fulfill tags with employees who have it and can work that day
-            // check if employee could work
-            if (employee.days.includes(element.weekday)) {
-              // does employee have a skill that's needed on this weekday? let's fill by first come, first serve
-              employee.tags.map((employeeTag) => {
-                if (tag.id === employeeTag.id) {
-                  // content += `              ${employee.firstName} will work as ${tag.name}/${tag.id} in ${shift.name}/${shift.id}\n  `;
-
-                  content += `${dayjs(shift.startTime).format('hh:mm a')} – ${dayjs(shift.endTime).format('hh:mm a')} (${shift.name} - ${
-                    tag.name
-                  })\n  `;
-                }
-              });
-            }
-          });
-        });
-
-        row[element.key] = content;
-      }
-    });
-    scheduleGrid.rows.push(row);
+    // prefill rows with employeeNames to make sure they'll display in the right order
+    scheduleGrid.rows[employee.firstName] = {};
   });
+
+  // run through dates/columns
+  for (let i = 0; i < scheduleGrid.config.length; i++) {
+    const key = scheduleGrid.config[i].data;
+    const weekday = scheduleGrid.config[i].weekday;
+
+    const shifts = shiftsNeededByWeekday[weekday];
+
+    // no shifts, no service
+    if (shifts.length === 0) {
+      continue;
+    }
+    //  go through shifts that day
+    for (let j = 0; j < shifts.length; j++) {
+      const shift = shifts[j];
+      const tags = shift.tags;
+      // remember which tags you already filled (TODO: change to tagsNeeded to allow for mult. tags per shift)
+      let tagsFilled = [];
+      for (let k = 0; k < tags.length; k++) {
+        const tag = tags[k];
+
+        for (let l = 0; l < employees.length; l++) {
+          const employee = employees[l];
+
+          //  can this employee even work that day? TODO: add PTO
+          if (!employee.days.includes(weekday)) {
+            continue;
+          }
+          let eTags = employee.tags.map((tag) => tag.id);
+
+          // employee has correct tag and tag is not filled yet, schedule this employee
+          if (eTags.includes(tag.id) && !tagsFilled.includes(tag.id)) {
+            console.log(`${employee.firstName} is taking ${tag.name}`);
+            scheduleGrid.rows[employee.firstName] = {
+              ...scheduleGrid.rows[employee.firstName],
+              [key]: `${dayjs(shift.startTime).format('hh:mm a')} – ${dayjs(shift.endTime).format('hh:mm a')} (${shift.name} - ${
+                tag.name
+              })\n  `,
+            };
+            tagsFilled.push[tag.id];
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  let cleanRows = [];
+  console.log(scheduleGrid.rows);
+  Object.keys(scheduleGrid.rows).map((row) => {
+    cleanRows.push(scheduleGrid.rows[row]);
+  });
+  scheduleGrid.rows = cleanRows;
 
   return scheduleGrid;
 };
