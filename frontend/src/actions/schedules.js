@@ -1,4 +1,4 @@
-import { ERROR, CREATE_SCHEDULE, RETRIEVE_SCHEDULES, UPDATE_SCHEDULE, DELETE_SCHEDULE, DELETE_ALL_SCHEDULES } from './types';
+import { ERROR, CREATE_SCHEDULE, RETRIEVE_SCHEDULES, SAVE_SCHEDULE, DELETE_SCHEDULE, DELETE_ALL_SCHEDULES } from './types';
 
 import ScheduleDataService from '../services/schedule.service';
 
@@ -30,12 +30,12 @@ export const retrieveSchedules = (businessId) => async (dispatch) => {
   }
 };
 
-export const updateSchedule = (data) => async (dispatch) => {
+export const saveSchedule = (data) => async (dispatch) => {
   try {
-    const res = await ScheduleDataService.update(data);
+    const res = await ScheduleDataService.save(data);
 
     dispatch({
-      type: UPDATE_SCHEDULE,
+      type: SAVE_SCHEDULE,
       payload: data,
     });
 

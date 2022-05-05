@@ -242,7 +242,7 @@ const scheduleCreator = (dates, employees, shifts) => {
 
   let shiftsNeededByWeekday = { Sun: [], Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [] };
   shifts.map((shift) => {
-    console.log(shift);
+    // console.log(shift);
     shift.days.split(',').map((day) => {
       shiftsNeededByWeekday[day].push(shift);
     });
@@ -279,24 +279,30 @@ const scheduleCreator = (dates, employees, shifts) => {
     // prefill rows with employeeNames to make sure they'll display in the right order
     scheduleGrid.rows[employee.firstName] = {};
   });
-
+  scheduleGrid.rowLabels.push('<bold>NOTES:</bold>');
+  scheduleGrid.rows.notes = {};
   // run through dates/columns
   for (let i = 0; i < scheduleGrid.config.length; i++) {
     const key = scheduleGrid.config[i].data;
     const weekday = scheduleGrid.config[i].weekday;
-
+    console.log('\n' + weekday);
     const shifts = shiftsNeededByWeekday[weekday];
+    let shiftsNeeded = shifts.map((shift) => shift.name);
 
     // no shifts, no service
     if (shifts.length === 0) {
+      scheduleGrid.rows.notes[key] = 'closed';
+
       continue;
     }
     //  go through shifts that day
     for (let j = 0; j < shifts.length; j++) {
       const shift = shifts[j];
       const tags = shift.tags;
-      // remember which tags you already filled (TODO: change to tagsNeeded to allow for mult. tags per shift)
-      let tagsFilled = [];
+      let tagsNeeded = shift.tags.map((tag) => tag.id);
+
+      console.log(shift.name + ' now filling');
+
       for (let k = 0; k < tags.length; k++) {
         const tag = tags[k];
 
@@ -305,29 +311,52 @@ const scheduleCreator = (dates, employees, shifts) => {
 
           //  can this employee even work that day? TODO: add PTO
           if (!employee.days.includes(weekday)) {
+            scheduleGrid.rows[employee.firstName] = {
+              ...scheduleGrid.rows[employee.firstName],
+              [key]: '',
+            };
             continue;
           }
           let eTags = employee.tags.map((tag) => tag.id);
 
-          // employee has correct tag and tag is not filled yet, schedule this employee
-          if (eTags.includes(tag.id) && !tagsFilled.includes(tag.id)) {
-            console.log(`${employee.firstName} is taking ${tag.name}`);
+          // employee has correct tag and tag is not filled yet and employee is not working yet on that day, schedule this employee
+          if (eTags.includes(tag.id) && tagsNeeded.includes(tag.id)) {
+            if (scheduleGrid.rows[employee.firstName][key]) {
+              console.log(employee.firstName + ' already working on this day');
+              continue;
+            }
+
             scheduleGrid.rows[employee.firstName] = {
               ...scheduleGrid.rows[employee.firstName],
               [key]: `${dayjs(shift.startTime).format('hh:mm a')} – ${dayjs(shift.endTime).format('hh:mm a')} (${shift.name} - ${
                 tag.name
               })\n  `,
             };
-            tagsFilled.push[tag.id];
+            console.log(shift.name + ' tag ' + tag.name + ' just filled by ' + employee.firstName);
+            tagsNeeded = tagsNeeded.filter((element) => element != tag.id);
+            //employee was found, go to next tag
             break;
           }
         }
+        if (tagsNeeded.length === 0) {
+          console.log(shift.name + ' shift just filled\n');
+          shiftsNeeded = shiftsNeeded.filter((element) => element != shift.name);
+          break;
+        }
+
+        if (k === tags.length - 1 && tagsNeeded !== 0) {
+          console.log(shift.name + ' could not be filled\n');
+          scheduleGrid.rows.notes[key] = shift.name + ' could not be filled\n ';
+        }
+      }
+
+      if (shiftsNeeded.length === 0) {
+        scheduleGrid.rows.notes[key] = 'all shifts were filled\n ';
       }
     }
   }
 
   let cleanRows = [];
-  console.log(scheduleGrid.rows);
   Object.keys(scheduleGrid.rows).map((row) => {
     cleanRows.push(scheduleGrid.rows[row]);
   });

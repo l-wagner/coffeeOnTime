@@ -1,4 +1,4 @@
-import { CREATE_SCHEDULE, RETRIEVE_SCHEDULES, UPDATE_SCHEDULE, DELETE_SCHEDULE, DELETE_ALL_SCHEDULES } from '../actions/types';
+import { CREATE_SCHEDULE, RETRIEVE_SCHEDULES, SAVE_SCHEDULE, DELETE_SCHEDULE, DELETE_ALL_SCHEDULES } from '../actions/types';
 
 const initialState = [];
 
@@ -12,7 +12,7 @@ function scheduleReducer(schedules = initialState, action) {
     case RETRIEVE_SCHEDULES:
       return payload;
 
-    case UPDATE_SCHEDULE:
+    case SAVE_SCHEDULE:
       return schedules.map((schedule) => {
         if (schedule.id === payload.id) {
           console.log(schedule);

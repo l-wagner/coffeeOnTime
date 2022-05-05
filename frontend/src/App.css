@@ -1,3 +1,7 @@
+body{
+  background-color:gray;
+}
+
 .list {
   text-align: left;
   max-width: 750px;
@@ -33,327 +37,30 @@ a:hover {
 
 .light-pink {
   background-color: #ffadadff !important;
-  color: black;
 }
 .deep-champagne {
   background-color: #ffd6a5ff !important;
-  color: black;
 }
 .lemon-yellow-crayola {
   background-color: #fdffb6ff !important;
-  color: black;
 }
 .tea-green {
   background-color: #caffbfff !important;
-  color: black;
 }
 .electric-blue {
   background-color: #9bf6ffff !important;
-  color: black;
 }
 .baby-blue-eyes {
   background-color: #a0c4ffff !important;
-  color: black;
 }
 .maximum-blue-purple {
   background-color: #bdb2ffff !important;
-  color: black;
 }
 .mauve {
   background-color: #ffc6ffff !important;
-  color: black;
 }
 .baby-powder {
   background-color: #fffffcff !important;
-  color: black;
-}
-.light-pink {
-  background-color: #ffadadff !important;
-  color: black;
-}
-.deep-champagne {
-  background-color: #ffd6a5ff !important;
-  color: black;
-}
-.lemon-yellow-crayola {
-  background-color: #fdffb6ff !important;
-  color: black;
-}
-.tea-green {
-  background-color: #caffbfff !important;
-  color: black;
-}
-.electric-blue {
-  background-color: #9bf6ffff !important;
-  color: black;
-}
-.baby-blue-eyes {
-  background-color: #a0c4ffff !important;
-  color: black;
-}
-.maximum-blue-purple {
-  background-color: #bdb2ffff !important;
-  color: black;
-}
-.mauve {
-  background-color: #ffc6ffff !important;
-  color: black;
-}
-.baby-powder {
-  background-color: #fffffcff !important;
-  color: black;
-}
-.light-pink {
-  background-color: #ffadadff !important;
-  color: black;
-}
-.deep-champagne {
-  background-color: #ffd6a5ff !important;
-  color: black;
-}
-.lemon-yellow-crayola {
-  background-color: #fdffb6ff !important;
-  color: black;
-}
-.tea-green {
-  background-color: #caffbfff !important;
-  color: black;
-}
-.electric-blue {
-  background-color: #9bf6ffff !important;
-  color: black;
-}
-.baby-blue-eyes {
-  background-color: #a0c4ffff !important;
-  color: black;
-}
-.maximum-blue-purple {
-  background-color: #bdb2ffff !important;
-  color: black;
-}
-.mauve {
-  background-color: #ffc6ffff !important;
-  color: black;
-}
-.baby-powder {
-  background-color: #fffffcff !important;
-  color: black;
-}
-.light-pink {
-  background-color: #ffadadff !important;
-  color: black;
-}
-.deep-champagne {
-  background-color: #ffd6a5ff !important;
-  color: black;
-}
-.lemon-yellow-crayola {
-  background-color: #fdffb6ff !important;
-  color: black;
-}
-.tea-green {
-  background-color: #caffbfff !important;
-  color: black;
-}
-.electric-blue {
-  background-color: #9bf6ffff !important;
-  color: black;
-}
-.baby-blue-eyes {
-  background-color: #a0c4ffff !important;
-  color: black;
-}
-.maximum-blue-purple {
-  background-color: #bdb2ffff !important;
-  color: black;
-}
-.mauve {
-  background-color: #ffc6ffff !important;
-  color: black;
-}
-.baby-powder {
-  background-color: #fffffcff !important;
-  color: black;
-}
-.light-pink {
-  background-color: #ffadadff !important;
-  color: black;
-}
-.deep-champagne {
-  background-color: #ffd6a5ff !important;
-  color: black;
-}
-.lemon-yellow-crayola {
-  background-color: #fdffb6ff !important;
-  color: black;
-}
-.tea-green {
-  background-color: #caffbfff !important;
-  color: black;
-}
-.electric-blue {
-  background-color: #9bf6ffff !important;
-  color: black;
-}
-.baby-blue-eyes {
-  background-color: #a0c4ffff !important;
-  color: black;
-}
-.maximum-blue-purple {
-  background-color: #bdb2ffff !important;
-  color: black;
-}
-.mauve {
-  background-color: #ffc6ffff !important;
-  color: black;
-}
-.baby-powder {
-  background-color: #fffffcff !important;
-  color: black;
-}
-.light-pink {
-  background-color: #ffadadff !important;
-  color: black;
-}
-.deep-champagne {
-  background-color: #ffd6a5ff !important;
-  color: black;
-}
-.lemon-yellow-crayola {
-  background-color: #fdffb6ff !important;
-  color: black;
-}
-.tea-green {
-  background-color: #caffbfff !important;
-  color: black;
-}
-.electric-blue {
-  background-color: #9bf6ffff !important;
-  color: black;
-}
-.baby-blue-eyes {
-  background-color: #a0c4ffff !important;
-  color: black;
-}
-.maximum-blue-purple {
-  background-color: #bdb2ffff !important;
-  color: black;
-}
-.mauve {
-  background-color: #ffc6ffff !important;
-  color: black;
-}
-.baby-powder {
-  background-color: #fffffcff !important;
-  color: black;
-}
-.light-pink {
-  background-color: #ffadadff !important;
-  color: black;
-}
-.deep-champagne {
-  background-color: #ffd6a5ff !important;
-  color: black;
-}
-.lemon-yellow-crayola {
-  background-color: #fdffb6ff !important;
-  color: black;
-}
-.tea-green {
-  background-color: #caffbfff !important;
-  color: black;
-}
-.electric-blue {
-  background-color: #9bf6ffff !important;
-  color: black;
-}
-.baby-blue-eyes {
-  background-color: #a0c4ffff !important;
-  color: black;
-}
-.maximum-blue-purple {
-  background-color: #bdb2ffff !important;
-  color: black;
-}
-.mauve {
-  background-color: #ffc6ffff !important;
-  color: black;
-}
-.baby-powder {
-  background-color: #fffffcff !important;
-  color: black;
-}
-.light-pink {
-  background-color: #ffadadff !important;
-  color: black;
-}
-.deep-champagne {
-  background-color: #ffd6a5ff !important;
-  color: black;
-}
-.lemon-yellow-crayola {
-  background-color: #fdffb6ff !important;
-  color: black;
-}
-.tea-green {
-  background-color: #caffbfff !important;
-  color: black;
-}
-.electric-blue {
-  background-color: #9bf6ffff !important;
-  color: black;
-}
-.baby-blue-eyes {
-  background-color: #a0c4ffff !important;
-  color: black;
-}
-.maximum-blue-purple {
-  background-color: #bdb2ffff !important;
-  color: black;
-}
-.mauve {
-  background-color: #ffc6ffff !important;
-  color: black;
-}
-.baby-powder {
-  background-color: #fffffcff !important;
-  color: black;
-}
-.light-pink {
-  background-color: #ffadadff !important;
-  color: black;
-}
-.deep-champagne {
-  background-color: #ffd6a5ff !important;
-  color: black;
-}
-.lemon-yellow-crayola {
-  background-color: #fdffb6ff !important;
-  color: black;
-}
-.tea-green {
-  background-color: #caffbfff !important;
-  color: black;
-}
-.electric-blue {
-  background-color: #9bf6ffff !important;
-  color: black;
-}
-.baby-blue-eyes {
-  background-color: #a0c4ffff !important;
-  color: black;
-}
-.maximum-blue-purple {
-  background-color: #bdb2ffff !important;
-  color: black;
-}
-.mauve {
-  background-color: #ffc6ffff !important;
-  color: black;
-}
-.baby-powder {
-  background-color: #fffffcff !important;
-  color: black;
 }
 
 /* 
