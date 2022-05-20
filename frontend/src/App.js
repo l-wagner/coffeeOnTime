@@ -24,7 +24,7 @@ export default function App() {
   const error = useSelector((state) => state.error);
 
   useEffect(() => {
-    let id = 1;
+    let id = 2;
     dispatch(retrieveBusiness(id));
   }, []);
 

@@ -13,14 +13,7 @@ function scheduleReducer(schedules = initialState, action) {
       return payload;
 
     case SAVE_SCHEDULE:
-      return schedules.map((schedule) => {
-        if (schedule.id === payload.id) {
-          console.log(schedule);
-          return [payload];
-        } else {
-          return schedule;
-        }
-      });
+      return { ...schedules, old: payload };
 
     case DELETE_SCHEDULE:
       return schedules.filter(({ id }) => id !== payload.id);

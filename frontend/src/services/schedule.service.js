@@ -20,8 +20,8 @@ class ScheduleDataService {
     return axios.post('/schedules/fill', data);
   }
 
-  update(data) {
-    return axios.put(`/schedules/`, data);
+  save(data) {
+    return axios.post(`/schedules/save`, data);
   }
 
   delete(id) {

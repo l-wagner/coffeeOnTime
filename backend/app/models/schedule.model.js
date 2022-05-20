@@ -3,9 +3,21 @@ module.exports = (sequelize, DataTypes) => {
     startDate: {
       type: DataTypes.DATE,
     },
-    endEnd: {
+    endDate: {
       type: DataTypes.DATE,
     },
+    columns:{
+      type: DataTypes.JSON,
+    },
+    config:{
+      type: DataTypes.JSON,
+    },
+    rows:{
+      type: DataTypes.JSON,
+    },
+    rowLabels:{
+      type: DataTypes.JSON,
+    }
   });
 
   

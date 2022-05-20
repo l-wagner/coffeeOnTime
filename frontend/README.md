@@ -21,6 +21,13 @@ Todo:
 - row data wasn't shown in correct columns: add columns=config to HOT
 - save schedule
 - export schedule
+- indicate if shifts were updated since selected schedule was created -> recreate would change schedule
+- indicate if schedule was manually updated and they try to rerun -> recreate would change schedule
+- create business screen: add last names, add "add" button to add multiples separately
+- add last names
+- add "login"
+- when creating new business, next screen shows old business's stats
+- get everything by business id
 
 order of creation:
 - business

@@ -32,11 +32,20 @@ export const retrieveSchedules = (businessId) => async (dispatch) => {
 
 export const saveSchedule = (data) => async (dispatch) => {
   try {
+    console.log(data.config);
     const res = await ScheduleDataService.save(data);
 
     dispatch({
       type: SAVE_SCHEDULE,
-      payload: data,
+      payload: {
+        config: JSON.parse(data.config),
+        rows: JSON.parse(data.rows),
+        rowLabels: JSON.parse(data.rowLabels),
+        columns: JSON.parse(data.columns),
+        business: data.businessId,
+        startDate: data.startDate,
+        endDate: data.endDate,
+      },
     });
 
     return Promise.resolve(res.data);

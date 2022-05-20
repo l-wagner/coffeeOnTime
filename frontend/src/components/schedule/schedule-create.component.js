@@ -45,7 +45,21 @@ export default function ScheduleCreate() {
 
   const onSave = () => {
     console.log(schedules.new);
-    
+    let formatted = [];
+    formatted[0] = new Date(schedules.new.config[0].data);
+    formatted[1] = new Date(schedules.new.config[schedules.new.config.length - 1].data);
+
+    console.log(formatted);
+    let data = {
+      config: JSON.stringify(schedules.new.config),
+      rows: JSON.stringify(schedules.new.rows),
+      rowLabels: JSON.stringify(schedules.new.rowLabels),
+      columns: JSON.stringify(schedules.new.columns),
+      business: business.id,
+      startDate: formatted[0],
+      endDate: formatted[1],
+    };
+    dispatch(saveSchedule(data));
   };
 
   return (
@@ -65,7 +79,7 @@ export default function ScheduleCreate() {
       ) : (
         <span>Click on first and last date to set range.</span>
       )}
-      {dates?.length !== 0 && dates?.map((date, index) => <span key={index}>{date.format('dddd – DD/MM/YYYY') + ' '}</span>)}
+      {dates?.length !== 0 && dates?.map((date, index) => <span key={index}>{date.format('dddd – MM/DD/YYYY') + ' '}</span>)}
 
       <h2>
         <Box flex='1' textAlign='left'>
@@ -79,6 +93,12 @@ export default function ScheduleCreate() {
           <Center>
             <Button onClick={onSave}>Save schedule</Button>
           </Center>
+        </>
+      )}
+      {schedules?.old && (
+        <>
+          OLD SCHEDULE
+          <ScheduleGrid data={schedules.old} />{' '}
         </>
       )}
     </>

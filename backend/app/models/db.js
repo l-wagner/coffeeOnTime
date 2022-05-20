@@ -45,6 +45,7 @@ db.employee = dbEmployee;
 db.tag = dbTag;
 db.shift = dbShift;
 db.business = dbBusiness;
+db.schedule = dbSchedule; 
 db.scheduledShift = dbScheduledShift;
 
 module.exports = db;

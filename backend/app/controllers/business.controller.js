@@ -89,7 +89,7 @@ exports.findById = [
         if (data) {
           data.nameForTags = data.nameForTags.charAt(0).toUpperCase() + data.nameForTags.slice(1);
           apiResponse.successData(res, '', data);
-        } else apiResponse.notFoundResponse(res, 'Business not found.');
+        } else apiResponse.successMsg(res, 'Business not found.');
       })
       .catch((err) => {
         res.status(500).send({

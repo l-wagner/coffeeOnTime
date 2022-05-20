@@ -22,6 +22,9 @@ module.exports = (app) => {
   // Update a Tag with id
   router.put('/', schedules.update);
 
+  // Update a Tag with id
+  router.post('/save', schedules.save);
+
   // Delete a Tag with id
   router.delete('/:id', schedules.delete);
 
