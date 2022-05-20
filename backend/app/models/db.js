@@ -17,12 +17,14 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 let dbEmployee = require('./employee.model.js')(sequelize, Sequelize.DataTypes);
+let dbRTO = require('./rto.model.js')(sequelize, Sequelize.DataTypes);
 let dbTag = require('./tag.model.js')(sequelize, Sequelize.DataTypes);
 let dbShift = require('./shift.model.js')(sequelize, Sequelize.DataTypes);
 let dbBusiness = require('./business.model.js')(sequelize, Sequelize.DataTypes);
 let dbSchedule = require('./schedule.model.js')(sequelize, Sequelize.DataTypes);
 
 dbEmployee.belongsToMany(dbTag, { through: 'employeeTags' });
+dbEmployee.hasMany(dbRTO, { onDelete: 'CASCADE' });
 
 dbTag.belongsToMany(dbEmployee, { through: 'employeeTags' });
 dbTag.belongsToMany(dbShift, { through: 'shiftTags' });

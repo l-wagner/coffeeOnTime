@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../actions/auth';
 
+import RTO from './rto.component.js';
+
 export default function Profile() {
   const {
     handleSubmit,
@@ -16,7 +18,6 @@ export default function Profile() {
   const dispatch = useDispatch();
   const onSubmit = (values) => {
     dispatch(login(values));
-    console.log(values);
   };
 
   return (
@@ -24,20 +25,20 @@ export default function Profile() {
       <Stack as={Box} textAlign={'center'} spacing={{ base: 8, md: 14 }} py={{ base: 20, md: 10 }}>
         {auth?.firstName ? (
           <>
-            <Text fontSize='lg'>
-              <div>Welcome, {auth.firstName}!</div>
-            </Text>
+            <Text fontSize='lg'>Welcome, {auth.firstName}!</Text>
+            <RTO employee={auth} />
           </>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={4}>
               <FormControl isInvalid={errors.firstName}>
-                <Input id='name' placeholder='Your first name' {...register('firstName', { required: 'Please enter your first name.' })} />
+                <Input id='name' value='Chris' placeholder='Your first name' {...register('firstName', { required: 'Please enter your first name.' })} />
                 <FormErrorMessage>{errors.firstName?.message}</FormErrorMessage>
               </FormControl>
 
               <FormControl isInvalid={errors.businessName}>
                 <Input
+                value='Cafe Beit'
                   id='businessName'
                   placeholder='The business you work for'
                   {...register('businessName', { required: 'Please enter the name of your business.' })}
