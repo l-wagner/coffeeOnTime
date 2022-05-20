@@ -1,6 +1,6 @@
 // error.reducer.js
 
-import { ERROR, UPDATE_ERROR, CREATE_ERROR } from '../actions/types';
+import { ERROR, UPDATE_ERROR, CREATE_ERROR, LOGIN_ERROR } from '../actions/types';
 
 const initState = null;
 
@@ -17,6 +17,10 @@ export default function errorReducer(state = initState, action) {
 
   if (type === CREATE_ERROR) {
     return { ...state, createError: true, msg: payload.msg };
+  }
+
+  if (type === LOGIN_ERROR) {
+    return { ...state, loginError: true, msg: payload.msg };
   }
 
   return initState;

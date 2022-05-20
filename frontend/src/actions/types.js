@@ -1,6 +1,10 @@
 export const ERROR = 'ERROR';
 export const UPDATE_ERROR = 'UPDATE_ERROR';
 export const CREATE_ERROR = 'CREATE_ERROR';
+export const LOGIN_ERROR = 'LOGIN_ERROR';
+
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
 
 export const CREATE_EMPLOYEE = 'CREATE_EMPLOYEE';
 export const RETRIEVE_EMPLOYEES = 'RETRIEVE_EMPLOYEES';

@@ -21,7 +21,9 @@ Todo:
 - indicate if schedule was manually updated and they try to rerun -> recreate would change schedule
 - create business screen: add last names, add "add" button to add multiples separately
 - add last names
-- add "login"
+- add "login" (first name and business name)
+  - verify employee exists for this business
+- login: read owner tag and handle accordingly in FE
 
 order of creation:
 

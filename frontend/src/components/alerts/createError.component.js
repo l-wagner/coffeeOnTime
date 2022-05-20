@@ -5,7 +5,7 @@ export default function CreateError(props) {
     <>
       <Alert status='error'>
         <AlertIcon />
-        <AlertTitle mr={2}>We could not create this element.</AlertTitle>
+        <AlertTitle mr={2}>{props.msg || 'We could not create this element.'}</AlertTitle>
         <AlertDescription>{props.error}</AlertDescription>
         <CloseButton position='absolute' right='8px' top='8px' />
       </Alert>

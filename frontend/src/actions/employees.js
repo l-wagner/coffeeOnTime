@@ -13,7 +13,7 @@ export const createEmployee = (values) => async (dispatch) => {
       return Promise.resolve(res.payload);
     })
     .catch((err) => {
-      dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true ' } });
+      dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
       return Promise.reject(err);
     });
 };
@@ -27,7 +27,7 @@ export const retrieveEmployees = (business) => async (dispatch) => {
       payload: res.payload,
     });
   } catch (err) {
-    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    dispatch({ type: ERROR, payload: { ...err, error: 'true' } });
     return Promise.reject(err);
   }
 };
@@ -74,7 +74,7 @@ export const deleteEmployee = (id) => async (dispatch) => {
       payload: { id },
     });
   } catch (err) {
-    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    dispatch({ type: ERROR, payload: { ...err, error: 'true' } });
     return Promise.reject(err);
   }
 };
@@ -90,7 +90,7 @@ export const deleteAllEmployees = () => async (dispatch) => {
 
     return Promise.resolve(res.payload);
   } catch (err) {
-    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    dispatch({ type: ERROR, payload: { ...err, error: 'true' } });
     return Promise.reject(err);
   }
 };
@@ -104,7 +104,7 @@ export const findEmployeesByName = (name) => async (dispatch) => {
       payload: res.payload,
     });
   } catch (err) {
-    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    dispatch({ type: ERROR, payload: { ...err, error: 'true' } });
     return Promise.reject(err);
   }
 };
