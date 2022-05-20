@@ -2,7 +2,11 @@ import axios from '../axiosInstance';
 
 class EmployeeDataService {
   getAll() {
-    return axios.get('/employees');
+    return axios.get(`/employees/`);
+  }
+
+  getAllByBusiness(businessId) {
+    return axios.get(`/employees/business/${businessId}`);
   }
 
   get(id) {

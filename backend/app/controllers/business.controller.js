@@ -24,7 +24,7 @@ exports.create = [
     let ownerNames = req.body.owner.split(',');
     let owners = [];
     for (let index = 0; index < ownerNames.length; index++) {
-      owners[index] = { firstName: ownerNames[index] };
+      owners[index] = { firstName: ownerNames[index].trim() };
       console.log(owners);
     }
 

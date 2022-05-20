@@ -15,7 +15,7 @@ export default function DayDropdown(props) {
     // if days are part of a new create, they need to stay in an array – OR DO THEY??
     options.sort((a, b) => orderMap[a] - orderMap[b]);
 
-    if (props.submitMethod) props.submitMethod(options);
+    if (props.submitMethod) props.submitMethod(options.join(','));
     else props.updateMethod(props.item.id, options?.join(','));
   };
 

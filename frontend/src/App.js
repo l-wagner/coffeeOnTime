@@ -24,7 +24,7 @@ export default function App() {
   const error = useSelector((state) => state.error);
 
   useEffect(() => {
-    let id = 2;
+    let id = 4;
     dispatch(retrieveBusiness(id));
   }, []);
 
@@ -40,7 +40,7 @@ export default function App() {
             </Link>
 
             <div className='navbar-nav mr-auto'>
-            <li className='nav-item'>
+              <li className='nav-item'>
                 <Link to={'/schedule-create'} className='nav-link'>
                   Schedule
                 </Link>

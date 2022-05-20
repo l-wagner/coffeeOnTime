@@ -50,6 +50,19 @@ exports.findAll = (req, res) => {
   });
 };
 
+exports.findAllByBusiness = [
+  param('business').not().isEmpty().trim(),
+  (req, res) => {
+    console.log(req.params.business);
+    Employee.findAll({ where: { businessId: req.params.business }, include: Tag }).then((employees) => {
+      // change blocked days to array
+      console.log(employees);
+      employees.map((employee) => (employee.days = employee.days?.split(',')));
+      apiResponse.successData(res, `${Object.keys(employees).length} employees found.`, employees);
+    });
+  },
+];
+
 // Find a single Employee by Id
 exports.findOne = (req, res) => {
   Employee.findByPk(req.params.id)

@@ -42,16 +42,16 @@ export default function Employee() {
   const dispatch = useDispatch();
 
   const hireEmployee = () => {
+    console.log(employeeDays);
     if (!firstName) {
       setError(true);
       setTimeout(() => setError(false), 3000);
-      console.log(employeeDays);
     } else {
       dispatch(
         createEmployee({
           business: business.id,
           firstName: firstName,
-          days: employeeDays?.join(',') || [],
+          days: employeeDays || [],
           tags: employeeTags || [],
         })
       );
@@ -96,7 +96,12 @@ export default function Employee() {
               </Editable>
             </Td>
             <Td>
-              <TagDropdown nameForTags={business.nameForTags} item={newEmployee} tags={tags} submitMethod={(value) => setEmployeeTags(value)} />
+              <TagDropdown
+                nameForTags={business.nameForTags}
+                item={newEmployee}
+                tags={tags}
+                submitMethod={(value) => setEmployeeTags(value)}
+              />
             </Td>
             <Td>
               <DayDropdown item={newEmployee} submitMethod={(value) => setEmployeeDays(value)} days={newEmployee.days} />
@@ -125,7 +130,12 @@ export default function Employee() {
                   </Editable>
                 </Td>
                 <Td>
-                  <TagDropdown nameForTags={business.nameForTags} updateMethod={(id, data) => dispatch(updateEmployeeTags(id, { tags: data }))} item={employee} tags={tags} />
+                  <TagDropdown
+                    nameForTags={business.nameForTags}
+                    updateMethod={(id, data) => dispatch(updateEmployeeTags(id, { tags: data }))}
+                    item={employee}
+                    tags={tags}
+                  />
                 </Td>
                 <Td>
                   <DayDropdown

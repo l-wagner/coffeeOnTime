@@ -18,9 +18,9 @@ export const createEmployee = (values) => async (dispatch) => {
     });
 };
 
-export const retrieveEmployees = () => async (dispatch) => {
+export const retrieveEmployees = (business) => async (dispatch) => {
   try {
-    const res = await EmployeeDataService.getAll();
+    const res = await EmployeeDataService.getAllByBusiness(business);
 
     dispatch({
       type: RETRIEVE_EMPLOYEES,
