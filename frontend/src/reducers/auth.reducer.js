@@ -7,7 +7,6 @@ function authReducer(auth = initialState, action) {
 
   switch (type) {
     case LOGIN: {
-      console.log(payload);
       return payload;
     }
 
@@ -15,7 +14,7 @@ function authReducer(auth = initialState, action) {
       return [];
 
     default:
-      return [];
+      return auth;
   }
 }
 

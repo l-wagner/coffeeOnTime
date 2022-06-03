@@ -46,7 +46,7 @@ export default function Shift() {
     console.log(shiftDays);
     if (!shiftName || !shiftDescription || !startTime || !endTime || shiftDays.length === 0) {
       setError(true);
-      setErrorMsg('Name, description, days, start, and end time are required.');
+      setErrorMsg('Name, description, days, start, end time, and active days are required.');
       setTimeout(() => setError(false), 3000);
     // } else if (startTime > endTime) {
     //   setError(true);

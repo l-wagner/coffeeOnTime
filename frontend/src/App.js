@@ -1,4 +1,4 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { Button, ChakraProvider, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'handsontable/dist/handsontable.full.css';
 import React, { useEffect } from 'react';
@@ -18,6 +18,8 @@ import TagList from './components/tag-list.component';
 import ScheduleCreate from './components/schedule/schedule-create.component';
 import Dashboard from './components/dashboard.component';
 import Profile from './components/profile.component';
+import RTO from './components/rto/rto-index.component';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -55,25 +57,34 @@ export default function App() {
               </li>
 
               <li className='nav-item'>
-                <Link to={'/employees'} className='nav-link'>
-                  Employees
+                <Link to={'/shifts'} className='nav-link'>
+                  Switch business
                 </Link>
               </li>
 
               <li className='nav-item'>
-                <Link to={'/tags'} className='nav-link'>
-                  {business.nameForTags.charAt(0).toUpperCase() + business.nameForTags.slice(1)}
+                <Link to={'/rto'} className='nav-link'>
+                  RTO
                 </Link>
               </li>
-              <li className='nav-item'>
-                <Link to={'/shifts'} className='nav-link'>
-                  Shifts
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link to={'/shifts'} className='nav-link'>
-                  Switch business
-                </Link>
+
+              <li>
+                <Menu>
+                  <MenuButton colorScheme='teal' size='sm' as={Button} rightIcon={<ChevronDownIcon />}>
+                    Manage
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem>
+                      <Link to={'/employees'}>Employees</Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link to={'/tags'}> {business.nameForTags.charAt(0).toUpperCase() + business.nameForTags.slice(1)}</Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link to={'/shifts'}>Shifts</Link>
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
               </li>
 
               {!business?.id && (
@@ -92,7 +103,7 @@ export default function App() {
                   </div>
                 ) : (
                   <Link to={'/profile'} className='nav-link'>
-                    Profile
+                    Login
                   </Link>
                 )}
               </li>
@@ -110,6 +121,7 @@ export default function App() {
               <Route exact path='/schedule-create' component={ScheduleCreate} />
               <Route path='/setup' component={CreateBusiness} />
               <Route path='/profile' component={Profile} />
+              <Route path='/rto' component={RTO} />
             </Switch>
           </div>
         </Router>

@@ -32,6 +32,12 @@ exports.auth = [
                 console.log('employee not found');
                 apiResponse.error(res, `Denied, check your credentials.`);
               } else {
+                if (employee.tags[0].dataValues.name === 'Owner') {
+                  employee.active = 'Owner';
+                } else {
+                  employee.active = 'Empee';
+                }
+
                 apiResponse.successData(res, `${employee.firstName} was logged in.`, employee);
               }
             })

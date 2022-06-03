@@ -32,13 +32,18 @@ export default function Profile() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={4}>
               <FormControl isInvalid={errors.firstName}>
-                <Input id='name' value='Chris' placeholder='Your first name' {...register('firstName', { required: 'Please enter your first name.' })} />
+                <Input
+                  id='name'
+                  value='Dee'
+                  placeholder='Your first name'
+                  {...register('firstName', { required: 'Please enter your first name.' })}
+                />
                 <FormErrorMessage>{errors.firstName?.message}</FormErrorMessage>
               </FormControl>
 
               <FormControl isInvalid={errors.businessName}>
                 <Input
-                value='Cafe Beit'
+                  value="Paddy's Pub"
                   id='businessName'
                   placeholder='The business you work for'
                   {...register('businessName', { required: 'Please enter the name of your business.' })}

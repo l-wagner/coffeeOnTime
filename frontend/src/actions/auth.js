@@ -5,6 +5,7 @@ import AuthService from '../services/auth.service';
 export const login = (values) => async (dispatch) => {
   try {
     const res = await AuthService.login({ ...values });
+    console.log(res.payload);
     dispatch({
       type: LOGIN,
       payload: res.payload,
