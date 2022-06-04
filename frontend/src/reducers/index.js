@@ -5,6 +5,7 @@ import business from './business.js';
 import shifts from './shifts.js';
 import schedules from './schedules.js';
 import auth from './auth.reducer.js';
+import rto from './rto.reducer.js';
 import error from './error.reducer.js';
 
 export default combineReducers({
@@ -15,4 +16,5 @@ export default combineReducers({
   business,
   schedules,
   auth,
+  rto,
 });

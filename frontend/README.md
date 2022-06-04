@@ -23,10 +23,10 @@ Todo:
 - add last names
 - login: read owner tag and handle accordingly in FE
 - RTO screen:
-  - allow range requests
-  - allow single date requests
+  - load rto on page load
   - show any upcoming RTO
-  - show RTO in approved or pending stage
+  - sort by date
+  - owner view/manage rto 
 
 
 order of creation:

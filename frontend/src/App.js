@@ -62,11 +62,13 @@ export default function App() {
                 </Link>
               </li>
 
-              <li className='nav-item'>
-                <Link to={'/rto'} className='nav-link'>
-                  RTO
-                </Link>
-              </li>
+              {auth?.firstName && (
+                <li className='nav-item'>
+                  <Link to={'/rto'} className='nav-link'>
+                    RTO
+                  </Link>
+                </li>
+              )}
 
               <li>
                 <Menu>

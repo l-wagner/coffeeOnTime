@@ -1,7 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
   const RTO = sequelize.define('rto', {
-    date: {
+    day: {
       type: DataTypes.DATE,
+    },
+    status: {
+      // 'pending', 'approved', 'rejected'
+      type: DataTypes.STRING(30),
     },
   });
 

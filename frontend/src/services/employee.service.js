@@ -13,8 +13,8 @@ class EmployeeDataService {
     return axios.get(`/employees/id=${id}`);
   }
 
-  requestRto(id, data) {
-    return axios.post(`/employees/rto/id=${id}`, data);
+  requestRto(data) {
+    return axios.post(`/employees/rto-request`, data);
   }
 
   create(data) {

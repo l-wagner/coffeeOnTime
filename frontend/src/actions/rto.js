@@ -1,13 +1,10 @@
 import { CREATE_RTO, RETRIEVE_RTOS, UPDATE_RTO, DELETE_RTO, DELETE_ALL_RTOS } from './types';
 
-
 import employeeService from '../services/employee.service';
 
 export const submitRTORequest = (values) => async (dispatch) => {
   try {
-    console.log(values);
     const res = await employeeService.requestRto(values);
-
     dispatch({
       type: CREATE_RTO,
       payload: res.payload,

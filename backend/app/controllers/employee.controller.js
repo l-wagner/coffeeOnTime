@@ -1,10 +1,11 @@
-const util = require('util');
+const util = require('../util/util.js');
 var Sequelize = require('sequelize');
 
 const db = require('../models/db.js');
 const Employee = db.employee;
 
 const Tag = db.tag;
+const RTO = db.rto;
 const apiResponse = require('../util/apiResponse.js');
 const { body, param, validationResult } = require('express-validator');
 
@@ -147,18 +148,26 @@ exports.deleteAll = (req, res) => {
 
 // Find a single Employee by Id
 exports.requestRto = [
-  param('id').not().isEmpty().trim(),
-  body('data').trim(),
+  body('startDate').not().isEmpty().trim(),
+  body('startDate').not().isEmpty().trim(),
+  body('id').not().isEmpty().trim(),
   (req, res) => {
+    // Validate Request
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return apiResponse.validationError(res, { errors: errors.array() }, 400);
+    }
     let dates = util.getDates(new Date(req.body.startDate), new Date(req.body.endDate));
+    dates.map((date) => console.log(date));
 
-    Employee.findByPk(req.params.id)
-      .then((employee) => {
-        // req.body.tags && (employee.tags = req.body.tags.join(','));
-
-        dates.map((date) => console.log(date));
-        // apiResponse.successData(res, employee);
-      })
-      .catch(() => apiResponse.notFoundResponse(res, 'Employee not found.'));
+    for (let i = 0; i < dates.length; i++) {
+      const date = dates[i];
+      RTO.create({ employeeId: req.body.id, day: date, status: 'requested' });
+      if (i === dates.length - 1) {
+        RTO.findAll({ where: { employeeId: req.body.id } }).then((rto) => {
+          apiResponse.successData(res, 'RTO requested', rto);
+        });
+      }
+    }
   },
 ];

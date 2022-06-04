@@ -43,5 +43,6 @@ db.tag = dbTag;
 db.shift = dbShift;
 db.business = dbBusiness;
 db.schedule = dbSchedule;
+db.rto = dbRTO;
 
 module.exports = db;
