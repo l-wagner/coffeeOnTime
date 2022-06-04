@@ -12,10 +12,7 @@ export default function Employee() {
   const dispatch = useDispatch();
 
   const submit = () => {
-    let start = new Date(startDate);
-    let end = new Date(endDate);
-    console.log(start);
-    console.log(end);
+    dispatch(submitRTORequest(auth.id, { startDate, endDate }));
   };
 
   return (
@@ -37,13 +34,13 @@ export default function Employee() {
           {' '}
           <Tr>
             <Td>
-              <Editable onSubmit={(startDate) => setStartDate(startDate)} defaultValue={`MM/DD/YY`}>
+              <Editable onSubmit={(startDate) => setStartDate(startDate)} defaultValue={`MM/DD/YY`} value={'02/02/2022'}>
                 <EditablePreview />
                 <EditableInput />
               </Editable>
             </Td>
             <Td>
-              <Editable onSubmit={(endDate) => setEndDate(endDate)} defaultValue={`MM/DD/YY`}>
+              <Editable onSubmit={(endDate) => setEndDate(endDate)} defaultValue={`MM/DD/YY`}value={'03/03/2022'}>
                 <EditablePreview />
                 <EditableInput />
               </Editable>

@@ -144,3 +144,21 @@ exports.deleteAll = (req, res) => {
     .then(() => apiResponse.successMsg(res, 'Employee fired successfully.'))
     .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
 };
+
+// Find a single Employee by Id
+exports.requestRto = [
+  param('id').not().isEmpty().trim(),
+  body('data').trim(),
+  (req, res) => {
+    let dates = util.getDates(new Date(req.body.startDate), new Date(req.body.endDate));
+
+    Employee.findByPk(req.params.id)
+      .then((employee) => {
+        // req.body.tags && (employee.tags = req.body.tags.join(','));
+
+        dates.map((date) => console.log(date));
+        // apiResponse.successData(res, employee);
+      })
+      .catch(() => apiResponse.notFoundResponse(res, 'Employee not found.'));
+  },
+];

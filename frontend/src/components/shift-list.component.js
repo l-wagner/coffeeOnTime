@@ -41,18 +41,19 @@ export default function Shift() {
   }, [business.id]);
 
   const dispatch = useDispatch();
-  
+
+
   const handleCreate = () => {
     console.log(shiftDays);
     if (!shiftName || !shiftDescription || !startTime || !endTime || shiftDays.length === 0) {
       setError(true);
       setErrorMsg('Name, description, days, start, end time, and active days are required.');
       setTimeout(() => setError(false), 3000);
-    // } else if (startTime > endTime) {
-    //   setError(true);
-    //   console.log(startTime, endTime);
-    //   setErrorMsg('Start time should be earlier than end time.');
-    //   setTimeout(() => setError(false), 3000);
+      // } else if (startTime > endTime) {
+      //   setError(true);
+      //   console.log(startTime, endTime);
+      //   setErrorMsg('Start time should be earlier than end time.');
+      //   setTimeout(() => setError(false), 3000);
     } else {
       dispatch(
         createShift({
@@ -61,7 +62,7 @@ export default function Shift() {
           description: shiftDescription,
           startTime: new Date('01/01/1970 ' + startTime),
           endTime: new Date('01/01/1970 ' + endTime),
-          days: shiftDays.join(',') || [],
+          days: shiftDays || [],
           tags: shiftTags || [],
         })
       );

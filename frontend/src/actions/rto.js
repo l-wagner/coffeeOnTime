@@ -1,10 +1,12 @@
 import { CREATE_RTO, RETRIEVE_RTOS, UPDATE_RTO, DELETE_RTO, DELETE_ALL_RTOS } from './types';
-import dayjs from 'dayjs';
-import TagDataService from '../services/tag.service';
+
+
+import employeeService from '../services/employee.service';
 
 export const submitRTORequest = (values) => async (dispatch) => {
   try {
-    const res = await TagDataService.create(values);
+    console.log(values);
+    const res = await employeeService.requestRto(values);
 
     dispatch({
       type: CREATE_RTO,
@@ -19,7 +21,7 @@ export const submitRTORequest = (values) => async (dispatch) => {
 
 export const retrieveTags = (businessId) => async (dispatch) => {
   try {
-    const res = await TagDataService.getAllByBusiness(businessId);
+    const res = await employeeService.getAllByBusiness(businessId);
     dispatch({
       type: RETRIEVE_RTOS,
       payload: res.data.data,
@@ -31,7 +33,7 @@ export const retrieveTags = (businessId) => async (dispatch) => {
 
 export const updateTag = (data) => async (dispatch) => {
   try {
-    const res = await TagDataService.update(data);
+    const res = await employeeService.update(data);
 
     dispatch({
       type: UPDATE_RTO,
@@ -46,7 +48,7 @@ export const updateTag = (data) => async (dispatch) => {
 
 export const deleteTag = (id) => async (dispatch) => {
   try {
-    await TagDataService.delete(id);
+    await employeeService.delete(id);
 
     dispatch({
       type: DELETE_RTO,
@@ -59,7 +61,7 @@ export const deleteTag = (id) => async (dispatch) => {
 
 export const deleteAllTags = () => async (dispatch) => {
   try {
-    const res = await TagDataService.deleteAll();
+    const res = await employeeService.deleteAll();
 
     dispatch({
       type: DELETE_ALL_RTOS,
@@ -74,7 +76,7 @@ export const deleteAllTags = () => async (dispatch) => {
 
 export const findTagsByName = (name) => async (dispatch) => {
   try {
-    const res = await TagDataService.findByName(name);
+    const res = await employeeService.findByName(name);
 
     dispatch({
       type: RETRIEVE_RTOS,

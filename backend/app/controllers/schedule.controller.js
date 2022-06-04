@@ -24,17 +24,12 @@ exports.fill = [
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
 
-    // console.log(dayjs(req.body.startDate));
-    // console.log(dayjs(req.body.endDate));
-    let dates = getDates(new Date(req.body.startDate), new Date(req.body.endDate));
+    let dates = util.getDates(new Date(req.body.startDate), new Date(req.body.endDate));
     let weekdays = new Set();
-    // console.log(dates);
     for (let index = 0; index < dates.length; index++) {
       const weekday = dayjs(dates[index]).format('ddd');
-      // console.log(weekday);
       weekdays.add(weekday);
     }
-    // console.log(weekdays);
 
     // let employees = Employee.findAll
     let shiftPromise = Shift.findAll({ where: { businessID: req.body.business }, include: Tag });
@@ -42,32 +37,12 @@ exports.fill = [
 
     Promise.all([shiftPromise, employeePromise]).then((results) => {
       if (results.some((x) => x.length === 0)) {
-        return apiResponse.errorResponse(res, 'Could not retrieve shifts and employees.');
+        return apiResponse.error(res, 'Could not retrieve shifts and/or employees.');
       }
       let [shifts, employees] = results;
-      // console.log(employees, shifts);
-      // scheduleCreator(dates, employees, shifts);
       let schedule = util.scheduleCreator(dates, employees, shifts);
       apiResponse.successData(res, 'Schedule generated.', schedule);
     });
-
-    // Pull and add tags
-    // const tags = req.body.tags.split(',');
-    // Employee.findAll({ where: { id: { [Sequelize.Op.in]: tags } } })
-    //   .then((tagsToAdd) => {
-    //     Employee.create({
-    //       firstName: req.body.firstName,
-    //       days: req.body.days || null,
-    //       businessId: req.body.business,
-    //     }).then((employee) => {
-    //       // still running when response returned, should fix
-    //       tagsToAdd.forEach((tag) => employee.addTag(tag));
-    //       employee.days = employee.days?.split(',');
-
-    //       apiResponse.successData(res, `${employee.firstName} was added.`, employee);
-    //     });
-    //   })
-    //   .catch((e) => apiResponse.error(res, `Employee could not be added due to: ${e}`));
   },
 ];
 
@@ -237,20 +212,4 @@ exports.deleteAll = (req, res) => {
   Schedule.destroy({ where: { id: { $gte: 0 } } })
     .then(() => apiResponse.successMsg(res, 'Schedule fired successfully.'))
     .catch((e) => apiResponse.error(res, `Schedule could not be added due to: ${e}`));
-};
-
-const getDates = (startDate, endDate) => {
-  const dates = [];
-  let currentDate = startDate;
-  const addDays = function (days) {
-    const date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
-  };
-  while (currentDate <= endDate) {
-    dates.push(currentDate);
-
-    currentDate = addDays.call(currentDate, 1);
-  }
-  return dates;
 };

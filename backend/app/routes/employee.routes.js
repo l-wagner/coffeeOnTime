@@ -15,6 +15,9 @@ module.exports = (app) => {
   // Retrieve a single Employee with id
   router.get('/:id', employees.findOne);
 
+  // create RTO requtes
+  router.post('/rto/:id', employees.requestRto);
+
   // Update a Employee with id
   router.put('/:id', employees.update);
 

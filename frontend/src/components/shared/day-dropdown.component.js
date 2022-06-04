@@ -9,20 +9,25 @@ export default function DayDropdown(props) {
   // init selected options in menu
   useEffect(() => {
     setOptions(props.days);
+    console.log(props.days);
   }, [props.days]);
 
   const onSave = () => {
-    // if days are part of a new create, they need to stay in an array – OR DO THEY??
-    options.sort((a, b) => orderMap[a] - orderMap[b]);
-
-    if (props.submitMethod) props.submitMethod(options.join(','));
-    else props.updateMethod(props.item.id, options?.join(','));
+    try {
+      options.sort((a, b) => orderMap[a] - orderMap[b]);
+      console.log(options);
+      if (props.submitMethod) props.submitMethod(options);
+      else props.updateMethod(props.item.id, options?.join(','));  
+    } catch (error) {
+      console.log(error);
+    }
+    
   };
 
   return (
     <Flex direction='row'>
       <Menu closeOnSelect={false} onClose={onSave}>
-        <MenuButton mr={2} as={IconButton} icon={<AddIcon />} aria-label='edit tags' isRound size='xs' _hover={{ bg: 'green.200' }} />
+        <MenuButton mr={2} as={IconButton} icon={<AddIcon />} aria-label='edit days' isRound size='xs' _hover={{ bg: 'green.200' }} />
         <MenuList>
           <MenuOptionGroup onChange={setOptions} title='Days' type='checkbox' value={options}>
             {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
@@ -34,7 +39,7 @@ export default function DayDropdown(props) {
         </MenuList>
       </Menu>
 
-      {options?.map(
+      {options && options.map(
         (day) =>
           day !== '' && (
             <Tag mr={1} size='sm' key={day} variant='solid' colorScheme='green'>
