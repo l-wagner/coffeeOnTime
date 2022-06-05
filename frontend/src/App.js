@@ -1,25 +1,25 @@
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Button, ChakraProvider, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'handsontable/dist/handsontable.full.css';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
-import { retrieveBusiness } from './actions/business';
 import { logout } from './actions/auth';
+import { retrieveBusiness } from './actions/business';
 import './App.css';
 import ErrorWithMsg from './components/alerts/createError.component';
 import Error from './components/alerts/error.component';
 import UpdateError from './components/alerts/updateError.component';
 import CreateBusiness from './components/business-create';
+import Dashboard from './components/dashboard.component';
 import Employee from './components/employee/employee.component';
+import Profile from './components/profile.component';
+import RTO from './components/rto/rto-index.component';
+import ScheduleCreate from './components/schedule/schedule-create.component';
 import AddShift from './components/shift-add.component';
 import ShiftList from './components/shift-list.component';
 import TagList from './components/tag-list.component';
-import ScheduleCreate from './components/schedule/schedule-create.component';
-import Dashboard from './components/dashboard.component';
-import Profile from './components/profile.component';
-import RTO from './components/rto/rto-index.component';
-import { ChevronDownIcon } from '@chakra-ui/icons';
 
 export default function App() {
   const dispatch = useDispatch();

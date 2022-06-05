@@ -68,7 +68,6 @@ exports.findAllByBusiness = [
 exports.findOne = (req, res) => {
   Employee.findByPk(req.params.id)
     .then((employee) => {
-      // req.body.tags && (employee.tags = req.body.tags.join(','));
       apiResponse.successData(res, employee);
     })
     .catch(() => apiResponse.notFoundResponse(res, 'Employee not found.'));

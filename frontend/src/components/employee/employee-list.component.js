@@ -2,20 +2,18 @@ import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { Editable, EditableInput, EditablePreview, IconButton, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import {
   createEmployee,
   deleteEmployee,
   retrieveEmployees,
-  updateEmployee,
-  updateEmployeeDays,
-  updateEmployeeTags,
+  updateEmployee, updateEmployeeTags
 } from '../../actions/employees.js';
 import { retrieveTags } from '../../actions/tags';
 import AreYouSure from '../alerts/areYouSure.component.js';
 import SlideNotification from '../alerts/slideNotification.component.js';
 import DayDropdown from '../shared/day-dropdown.component.js';
 import TagDropdown from '../shared/tag-dropdown.component.js';
+
 
 export default function Employee() {
   const [isOpen, setIsOpen] = React.useState(false);

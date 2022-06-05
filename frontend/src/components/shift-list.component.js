@@ -4,10 +4,16 @@ import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TimePicker from 'react-time-picker';
-import { createShift, deleteShift, retrieveShifts, updateShift, updateShiftDays, updateShiftTags } from './../actions/shifts.js';
+import {
+  createShift,
+  deleteShift,
+  retrieveShifts,
+  updateShift, updateShiftTags
+} from './../actions/shifts.js';
 import { retrieveTags } from './../actions/tags.js';
 import AreYouSure from './alerts/areYouSure.component.js';
 import SlideNotification from './alerts/slideNotification.component.js';
+import ConfigDropdown from './shared/config-dropdown.component.js';
 import DayDropdown from './shared/day-dropdown.component.js';
 import TagDropdown from './shared/tag-dropdown.component.js';
 
@@ -26,6 +32,8 @@ export default function Shift() {
 
   const [shiftTags, setShiftTags] = React.useState(false);
   const [shiftDays, setShiftDays] = React.useState([]);
+
+  const [shiftConfig, setShiftConfig] = React.useState(null);
 
   const [selectedShift, setSelectedShift] = React.useState(false);
 
@@ -56,7 +64,7 @@ export default function Shift() {
     } else {
       setLoading(true);
       setTimeout(() => setLoading(false), 300);
-
+      console.log(shiftConfig);
       dispatch(
         createShift({
           business: business.id,
@@ -66,6 +74,7 @@ export default function Shift() {
           endTime: new Date('01/01/1970 ' + endTime),
           days: shiftDays.join(',') || [],
           tags: shiftTags || [],
+          config: shiftConfig || 'all',
         })
       );
       // window.location.reload(false);
@@ -98,6 +107,7 @@ export default function Shift() {
             <Th>Start time</Th>
             <Th>End time</Th>
             <Th>{business.nameForTags}</Th>
+            <Th>Any or all {business.nameForTags}?</Th>
             <Th>Days active</Th>
             <Th></Th>
           </Tr>
@@ -105,6 +115,7 @@ export default function Shift() {
         <Tbody>
           {loading ? (
             <Tr background={'teal.100'} borderWidth='2px' borderColor={'teal.200'}>
+              <Td>Loading...</Td>
               <Td>Loading...</Td>
               <Td>Loading...</Td>
               <Td>Loading...</Td>
@@ -148,6 +159,9 @@ export default function Shift() {
               </Td>
               <Td>
                 <TagDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftTags(value)} />
+              </Td>
+              <Td>
+                <ConfigDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftConfig(value)} />
               </Td>
               <Td>
                 <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} />
@@ -205,7 +219,10 @@ export default function Shift() {
                   <TagDropdown updateMethod={(id, data) => dispatch(updateShiftTags(id, { tags: data }))} item={shift} tags={tags} />
                 </Td>
                 <Td>
-                  <DayDropdown updateMethod={(id, data) => dispatch(updateShiftDays(id, { days: data }))} item={shift} days={shift.days} />
+                  <ConfigDropdown submitMethod={(data) => dispatch(updateShift(shift.id, { config: data }))} item={shift} />
+                </Td>
+                <Td>
+                  <DayDropdown updateMethod={(id, data) => dispatch(updateShift(id, { days: data }))} item={shift} days={shift.days} />
                 </Td>
                 <Td>
                   <IconButton

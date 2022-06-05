@@ -101,7 +101,6 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   Schedule.findByPk(req.params.id)
     .then((shift) => {
-      // req.body.schedules && (shift.schedules = req.body.schedules.join(','));
       apiResponse.successData(res, shift);
     })
     .catch(() => apiResponse.notFoundResponse(res, 'Schedule not found.'));

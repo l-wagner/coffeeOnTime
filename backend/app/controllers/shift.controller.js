@@ -1,4 +1,3 @@
-const util = require('util');
 var Sequelize = require('sequelize');
 
 const db = require('../models/db.js');
@@ -74,7 +73,6 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   Shift.findByPk(req.params.id)
     .then((shift) => {
-      // req.body.tags && (shift.tags = req.body.tags.join(','));
       apiResponse.successData(res, shift);
     })
     .catch(() => apiResponse.notFoundResponse(res, 'Shift not found.'));
@@ -98,6 +96,7 @@ exports.update = [
         req.body.days && (shift.days = req.body.days);
         req.body.startTime && (shift.startTime = req.body.startTime);
         req.body.endTime && (shift.endTime = req.body.endTime);
+        req.body.config && (shift.config = req.body.config);
         shift
           .save()
           .then((result) => apiResponse.successData(res, result))

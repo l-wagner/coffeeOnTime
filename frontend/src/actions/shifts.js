@@ -7,14 +7,13 @@ export const createShift = (values) => async (dispatch) => {
   ShiftDataService.create(values)
     .then((result) => {
       // if (result.payload.days) result.payload.days = result.payload.days.split(',');
-      ShiftDataService.getAll().then(res => {
+      ShiftDataService.getAll().then((res) => {
         dispatch({
           type: CREATE_SHIFT,
           payload: res.payload,
         });
         return Promise.resolve(res.payload);
       });
-      
     })
     .catch((err) => {
       dispatch({ type: CREATE_ERROR, payload: { msg: err.response?.data?.msg || err.response?.data?.message, error: 'true' } });
@@ -36,23 +35,23 @@ export const retrieveShifts = () => async (dispatch) => {
   }
 };
 
+// export const updateShift = (id, data) => async (dispatch) => {
+//   try {
+//     const res = await ShiftDataService.update(id, data);
+//     dispatch({
+//       type: UPDATE_SHIFT,
+//       payload: data,
+//     });
+
+//     return Promise.resolve(res.payload);
+//   } catch (err) {
+//     dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
+//     return Promise.reject(err);
+//   }
+// };
 export const updateShift = (id, data) => async (dispatch) => {
   try {
     const res = await ShiftDataService.update(id, data);
-    dispatch({
-      type: UPDATE_SHIFT,
-      payload: data,
-    });
-
-    return Promise.resolve(res.payload);
-  } catch (err) {
-    dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
-    return Promise.reject(err);
-  }
-};
-export const updateShiftDays = (id, data) => async (dispatch) => {
-  try {
-    const res = await ShiftDataService.update(id, data);
 
     dispatch({
       type: UPDATE_SHIFT,
@@ -65,6 +64,21 @@ export const updateShiftDays = (id, data) => async (dispatch) => {
     return Promise.reject(err);
   }
 };
+// export const updateShiftConfig = (id, data) => async (dispatch) => {
+//   try {
+//     const res = await ShiftDataService.update(id, data);
+
+//     dispatch({
+//       type: UPDATE_SHIFT,
+//       payload: data,
+//     });
+
+//     // return Promise.resolve(res.payload);
+//   } catch (err) {
+//     dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
+//     return Promise.reject(err);
+//   }
+// };
 export const updateShiftTags = (id, data) => async (dispatch) => {
   try {
     const res = await ShiftDataService.updateTags(id, data);

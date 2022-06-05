@@ -21,6 +21,8 @@ Todo:
 - indicate if schedule was manually updated and they try to rerun -> recreate would change schedule
 - create business screen: add last names, add "add" button to add multiples separately
 - add last names
+- add all to day dropdown
+- add any/all to shifts
 - login: read owner tag and handle accordingly in FE
 - RTO screen:
   - load rto on page load
