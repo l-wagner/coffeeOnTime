@@ -17,6 +17,7 @@ exports.add = [
   body('description').trim(),
   body('days').trim(),
   body('tags').trim(),
+  body('config').trim(),
   function (req, res) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
@@ -37,6 +38,7 @@ exports.add = [
           startTime: req.body.startTime || null,
           endTime: req.body.endTime || null,
           businessId: req.body.business,
+          config: req.body.config || "all",
         })
           .then((shift) => {
             // still running when response returned, should fix
