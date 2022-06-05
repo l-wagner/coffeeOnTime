@@ -30,7 +30,6 @@ exports.fill = [
       const weekday = dayjs(dates[index]).format('ddd');
       weekdays.add(weekday);
     }
-    console.log(req.body);
     // let employees = Employee.findAll
     let shiftPromise = Shift.findAll({ where: { businessID: req.body.business }, include: Tag });
     let employeePromise = Employee.findAll({ where: { businessID: req.body.business }, include: Tag });

@@ -22,7 +22,7 @@ export default function Employee() {
 
   const [firstName, setFirstName] = React.useState(false);
   const [employeeTags, setEmployeeTags] = React.useState(false);
-  const [employeeDays, setEmployeeDays] = React.useState(false);
+  const [employeeDays, setEmployeeDays] = React.useState([]);
   const [error, setError] = React.useState(null);
 
   const [selectedEmployee, setSelectedEmployee] = React.useState(false);
@@ -51,11 +51,11 @@ export default function Employee() {
         createEmployee({
           business: business.id,
           firstName: firstName,
-          days: employeeDays || [],
+          days: employeeDays.join(',') || [],
           tags: employeeTags || [],
         })
       );
-      // window.location.reload(false);
+      window.location.reload(false);
     }
   };
 
@@ -104,7 +104,7 @@ export default function Employee() {
               />
             </Td>
             <Td>
-              <DayDropdown item={newEmployee} submitMethod={(value) => setEmployeeDays(value)} days={newEmployee.days} />
+              <DayDropdown item={newEmployee} submitMethod={(value) => setEmployeeDays(value)} days={employeeDays} />
             </Td>
             <Td>
               <IconButton

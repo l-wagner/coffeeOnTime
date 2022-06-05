@@ -29,7 +29,7 @@ export default function App() {
   const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
-    let id = 2;
+    let id = 1;
     dispatch(retrieveBusiness(id));
   }, []);
 

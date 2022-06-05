@@ -171,3 +171,26 @@ exports.requestRto = [
     }
   },
 ];
+
+// Retrieve all Employees from the database
+exports.findAllRto = [
+  body('employeeId').not().isEmpty().trim(),
+  body('role').not().isEmpty().trim(),
+  (req, res) => {
+    console.log(req.body);
+     // Validate Request
+     const errors = validationResult(req);
+     if (!errors.isEmpty()) {
+       return apiResponse.validationError(res, { errors: errors.array() }, 400);
+     }
+    if (role === 'Owner') {
+      RTO.findAll({ include: Tag }).then((rtos) => {
+        apiResponse.successData(res, `${Object.keys(rtos).length} rtos found.`, rtos);
+      });
+    } else {
+      RTO.findAll({ where: { employeeId: req.body.employeeId } }).then((rto) => {
+        apiResponse.successData(res, 'RTO requested', rto);
+      });
+    }
+  },
+];

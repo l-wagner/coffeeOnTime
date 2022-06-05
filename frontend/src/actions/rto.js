@@ -16,9 +16,9 @@ export const submitRTORequest = (values) => async (dispatch) => {
   }
 };
 
-export const retrieveTags = (businessId) => async (dispatch) => {
+export const retrieveRto = (employeeId, employeeRole) => async (dispatch) => {
   try {
-    const res = await employeeService.getAllByBusiness(businessId);
+    const res = await employeeService.getRto({employeeId, employeeRole});
     dispatch({
       type: RETRIEVE_RTOS,
       payload: res.data.data,

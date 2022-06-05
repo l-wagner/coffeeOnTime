@@ -1,8 +1,8 @@
 import { CheckCircleIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { Editable, EditableInput, EditablePreview, IconButton, Table, Tag, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { submitRTORequest } from '../../actions/rto.js';
+import { retrieveRto, submitRTORequest } from '../../actions/rto.js';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import dayjs from 'dayjs';
@@ -14,6 +14,15 @@ export default function Employee() {
   const [endDate, setEndDate] = React.useState(new Date());
   const [error, setError] = React.useState(null);
   const dispatch = useDispatch();
+
+
+
+  useEffect(() => {
+    // only run if business id avail
+    auth.id && dispatch(retrieveRto(auth.id, auth.role));
+    
+  }, [auth.id]);
+
 
   const submit = () => {
     dispatch(submitRTORequest({ startDate, endDate, id: auth.id }));
