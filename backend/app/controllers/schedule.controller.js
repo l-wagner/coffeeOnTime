@@ -30,19 +30,21 @@ exports.fill = [
       const weekday = dayjs(dates[index]).format('ddd');
       weekdays.add(weekday);
     }
-
+    console.log(req.body);
     // let employees = Employee.findAll
     let shiftPromise = Shift.findAll({ where: { businessID: req.body.business }, include: Tag });
     let employeePromise = Employee.findAll({ where: { businessID: req.body.business }, include: Tag });
 
-    Promise.all([shiftPromise, employeePromise]).then((results) => {
-      if (results.some((x) => x.length === 0)) {
-        return apiResponse.error(res, 'Could not retrieve shifts and/or employees.');
-      }
-      let [shifts, employees] = results;
-      let schedule = util.scheduleCreator(dates, employees, shifts);
-      apiResponse.successData(res, 'Schedule generated.', schedule);
-    });
+    Promise.all([shiftPromise, employeePromise])
+      .then((results) => {
+        if (results.some((x) => x.length === 0)) {
+          return apiResponse.error(res, 'Could not retrieve shifts and/or employees. Are you sure you added them?', 400);
+        }
+        let [shifts, employees] = results;
+        let schedule = util.scheduleCreator(dates, employees, shifts);
+        apiResponse.successData(res, 'Schedule generated.', schedule);
+      })
+      .catch((e) => apiResponse.error(res, `Schedule could not be created due to: ${e}`));
   },
 ];
 

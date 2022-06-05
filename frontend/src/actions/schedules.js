@@ -1,4 +1,4 @@
-import { ERROR, CREATE_SCHEDULE, RETRIEVE_SCHEDULES, SAVE_SCHEDULE, DELETE_SCHEDULE, DELETE_ALL_SCHEDULES } from './types';
+import { ERROR, CREATE_SCHEDULE, RETRIEVE_SCHEDULES, SAVE_SCHEDULE, DELETE_SCHEDULE, DELETE_ALL_SCHEDULES, CREATE_ERROR, UPDATE_ERROR } from './types';
 
 import ScheduleDataService from '../services/schedule.service';
 
@@ -13,7 +13,7 @@ export const createSchedule = (values) => async (dispatch) => {
 
     return Promise.resolve(res.payload);
   } catch (err) {
-    dispatch({ type: ERROR, payload: { ...err, error: 'true ' } });
+    dispatch({ type: CREATE_ERROR, payload: { ...err.payload, error: 'true ' } });
     return Promise.reject(err);
   }
 };

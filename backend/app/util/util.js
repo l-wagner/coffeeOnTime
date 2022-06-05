@@ -90,7 +90,7 @@ exports.scheduleCreator = (dates, employees, shifts) => {
           const employee = employees[l];
 
           //  can this employee even work that day? TODO: add PTO
-          if (!employee.days.includes(weekday)) {
+          if (!employee?.days?.includes(weekday)) {
             scheduleGrid.rows[employee.firstName] = {
               ...scheduleGrid.rows[employee.firstName],
               [key]: '',

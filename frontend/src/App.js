@@ -112,7 +112,7 @@ export default function App() {
             </div>
           </nav>
           <div className='container mt-3'>
-            {error?.createError && <ErrorWithMsg error={error.msg} />}
+            {error?.createError && <ErrorWithMsg msg={error.msg} />}
 
             <Switch>
               <Route exact path={['/']} component={Dashboard} />

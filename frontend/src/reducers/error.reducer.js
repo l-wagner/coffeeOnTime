@@ -16,7 +16,8 @@ export default function errorReducer(state = initState, action) {
   }
 
   if (type === CREATE_ERROR) {
-    return { ...state, createError: true, msg: payload.msg };
+    console.log(payload);
+    return { ...state, createError: true, msg: payload.msg || payload.message};
   }
 
   if (type === LOGIN_ERROR) {
