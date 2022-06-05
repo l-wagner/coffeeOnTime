@@ -7,8 +7,7 @@ function employeeReducer(employees = initialState, action) {
 
   switch (type) {
     case CREATE_EMPLOYEE: {
-      console.log(payload);
-      return [...employees, payload];
+      return payload;
     }
 
     case RETRIEVE_EMPLOYEES:

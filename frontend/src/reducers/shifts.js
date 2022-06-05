@@ -1,10 +1,4 @@
-import {
-  CREATE_SHIFT,
-  RETRIEVE_SHIFTS,
-  UPDATE_SHIFT,
-  DELETE_SHIFT,
-  DELETE_ALL_SHIFTS,
-} from "../actions/types";
+import { CREATE_SHIFT, RETRIEVE_SHIFTS, UPDATE_SHIFT, DELETE_SHIFT, DELETE_ALL_SHIFTS } from '../actions/types';
 
 const initialState = [];
 
@@ -13,7 +7,7 @@ function shiftReducer(shifts = initialState, action) {
 
   switch (type) {
     case CREATE_SHIFT:
-      return [...shifts, payload];
+      return payload;
 
     case RETRIEVE_SHIFTS:
       return payload;
@@ -39,6 +33,6 @@ function shiftReducer(shifts = initialState, action) {
     default:
       return shifts;
   }
-};
+}
 
 export default shiftReducer;

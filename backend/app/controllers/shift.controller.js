@@ -38,12 +38,22 @@ exports.add = [
           startTime: req.body.startTime || null,
           endTime: req.body.endTime || null,
           businessId: req.body.business,
-          config: req.body.config || "all",
+          config: req.body.config || 'all',
         })
           .then((shift) => {
             // still running when response returned, should fix
-            tagsToAdd.forEach((tag) => shift.addTag(tag));
-            apiResponse.successData(res, `${shift.name} was added.`, shift);
+            for (let i = 0; i < tagsToAdd.length; i++) {
+              const tag = tagsToAdd[i];
+              shift.addTag(tag);
+              shift.save();
+              if (i === tagsToAdd.length - 1) {
+                Shift.findAll({ include: Tag }).then((shifts) => {
+                  shifts.map((shift) => (shift.days = shift.days?.split(',')));
+
+                  apiResponse.successData(res, `${shifts.name} was added.`, shifts);
+                });
+              }
+            }
           })
           .catch((e) => apiResponse.error(res, `Shift could not be added due to: ${e}`));
       })

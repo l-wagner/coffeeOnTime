@@ -6,12 +6,15 @@ import ShiftDataService from '../services/shift.service.js';
 export const createShift = (values) => async (dispatch) => {
   ShiftDataService.create(values)
     .then((result) => {
-      if (result.payload.days) result.payload.days = result.payload.days.split(',');
-      dispatch({
-        type: CREATE_SHIFT,
-        payload: result.payload,
+      // if (result.payload.days) result.payload.days = result.payload.days.split(',');
+      ShiftDataService.getAll().then(res => {
+        dispatch({
+          type: CREATE_SHIFT,
+          payload: res.payload,
+        });
+        return Promise.resolve(res.payload);
       });
-      return Promise.resolve(result.payload);
+      
     })
     .catch((err) => {
       dispatch({ type: CREATE_ERROR, payload: { msg: err.response?.data?.msg || err.response?.data?.message, error: 'true' } });

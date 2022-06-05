@@ -3,14 +3,15 @@ import { UPDATE_ERROR, CREATE_EMPLOYEE, RETRIEVE_EMPLOYEES, UPDATE_EMPLOYEE, DEL
 import EmployeeDataService from '../services/employee.service.js';
 
 export const createEmployee = (values) => async (dispatch) => {
-
-  const res = EmployeeDataService.create(values)
-    .then((result) => {
-      dispatch({
-        type: CREATE_EMPLOYEE,
-        payload: result.payload,
+  EmployeeDataService.create(values)
+    .then(() => {
+      EmployeeDataService.getAllByBusiness(values.business).then((res) => {
+        dispatch({
+          type: CREATE_EMPLOYEE,
+          payload: res.payload,
+        });
+        return Promise.resolve(res.payload);
       });
-      return Promise.resolve(res.payload);
     })
     .catch((err) => {
       dispatch({ type: UPDATE_ERROR, payload: { ...err, error: 'true' } });
@@ -50,7 +51,6 @@ export const updateEmployee = (id, data) => async (dispatch) => {
 
 export const updateEmployeeTags = (id, data) => async (dispatch) => {
   try {
-
     const res = await EmployeeDataService.updateTags(id, data);
 
     dispatch({

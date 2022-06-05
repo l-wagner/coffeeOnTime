@@ -9,13 +9,11 @@ export default function DayDropdown(props) {
   // init selected options in menu
   useEffect(() => {
     setOptions(props.days);
-    console.log(props.days);
   }, [props.days]);
 
   const onSave = () => {
     try {
       options.sort((a, b) => orderMap[a] - orderMap[b]);
-      console.log(options);
       if (props.submitMethod) props.submitMethod(options);
       else props.updateMethod(props.item.id, options?.join(','));  
     } catch (error) {

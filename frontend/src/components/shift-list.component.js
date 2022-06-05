@@ -21,6 +21,7 @@ export default function Shift() {
   const [startTimeUpdate, setStartTimeUpdate] = React.useState(null);
   const [endTimeUpdate, setEndTimeUpdate] = React.useState(null);
   const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState(null);
 
   const [shiftTags, setShiftTags] = React.useState(false);
@@ -42,9 +43,7 @@ export default function Shift() {
 
   const dispatch = useDispatch();
 
-
   const handleCreate = () => {
-    console.log(shiftDays);
     if (!shiftName || !startTime || !endTime || shiftDays.length === 0) {
       setError(true);
       setErrorMsg('Name, description, days, start, end time, and active days are required.');
@@ -55,6 +54,9 @@ export default function Shift() {
       //   setErrorMsg('Start time should be earlier than end time.');
       //   setTimeout(() => setError(false), 3000);
     } else {
+      setLoading(true);
+      setTimeout(() => setLoading(false), 300);
+
       dispatch(
         createShift({
           business: business.id,
@@ -101,50 +103,67 @@ export default function Shift() {
           </Tr>
         </Thead>
         <Tbody>
-          <Tr background={'green.100'} borderWidth='2px' borderColor={'green.200'}>
-            <Td>
-              {/* new shift row */}
-              <Editable onSubmit={(name) => setShiftName(name)} defaultValue='Add new shift'>
-                <EditablePreview />
-                <EditableInput />
-              </Editable>
-            </Td>
-            <Td>
-              <Editable onSubmit={(description) => setShiftDesc(description)} defaultValue={`Describe this shift.`}>
-                <EditablePreview />
-                <EditableInput />
-              </Editable>
-            </Td>
-            <Td>
-              <TimePicker
-                disableClock
-                clearIcon={null}
-                openClockOnFocus={false}
-                onChange={(value) => setStartTime(value)}
-                value={startTime}
-              />
-            </Td>
-            <Td>
-              <TimePicker disableClock clearIcon={null} openClockOnFocus={false} onChange={(value) => setEndTime(value)} value={endTime} />
-            </Td>
-            <Td>
-              <TagDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftTags(value)} />
-            </Td>
-            <Td>
-              <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} />
-            </Td>
-            <Td>
-              <IconButton
-                isRound
-                size='sm'
-                aria-label='add shift'
-                icon={<CheckCircleIcon />}
-                _hover={{ bg: error ? 'red.300' : 'green.300' }}
-                onClick={handleCreate}
-              />
-            </Td>
-          </Tr>
-
+          {loading ? (
+            <Tr background={'teal.100'} borderWidth='2px' borderColor={'teal.200'}>
+              <Td>Loading...</Td>
+              <Td>Loading...</Td>
+              <Td>Loading...</Td>
+              <Td>Loading...</Td>
+              <Td>Loading...</Td>
+              <Td>Loading...</Td>
+              <Td>Loading...</Td>
+            </Tr>
+          ) : (
+            <Tr background={'green.100'} borderWidth='2px' borderColor={'green.200'}>
+              <Td>
+                {/* new shift row */}
+                <Editable onSubmit={(name) => setShiftName(name)} defaultValue='Add new shift'>
+                  <EditablePreview />
+                  <EditableInput />
+                </Editable>
+              </Td>
+              <Td>
+                <Editable onSubmit={(description) => setShiftDesc(description)} defaultValue={`Describe this shift.`}>
+                  <EditablePreview />
+                  <EditableInput />
+                </Editable>
+              </Td>
+              <Td>
+                <TimePicker
+                  disableClock
+                  clearIcon={null}
+                  openClockOnFocus={false}
+                  onChange={(value) => setStartTime(value)}
+                  value={startTime}
+                />
+              </Td>
+              <Td>
+                <TimePicker
+                  disableClock
+                  clearIcon={null}
+                  openClockOnFocus={false}
+                  onChange={(value) => setEndTime(value)}
+                  value={endTime}
+                />
+              </Td>
+              <Td>
+                <TagDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftTags(value)} />
+              </Td>
+              <Td>
+                <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} />
+              </Td>
+              <Td>
+                <IconButton
+                  isRound
+                  size='sm'
+                  aria-label='add shift'
+                  icon={<CheckCircleIcon />}
+                  _hover={{ bg: error ? 'red.300' : 'green.300' }}
+                  onClick={handleCreate}
+                />
+              </Td>
+            </Tr>
+          )}
           {shifts &&
             shifts.map((shift) => (
               <Tr key={shift?.id}>

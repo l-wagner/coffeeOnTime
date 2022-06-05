@@ -24,6 +24,7 @@ export default function Employee() {
   const [employeeTags, setEmployeeTags] = React.useState(false);
   const [employeeDays, setEmployeeDays] = React.useState([]);
   const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
 
   const [selectedEmployee, setSelectedEmployee] = React.useState(false);
 
@@ -47,6 +48,9 @@ export default function Employee() {
       setError(true);
       setTimeout(() => setError(false), 3000);
     } else {
+      setLoading(true);
+      setTimeout(() => setLoading(false), 300);
+
       dispatch(
         createEmployee({
           business: business.id,
@@ -55,7 +59,6 @@ export default function Employee() {
           tags: employeeTags || [],
         })
       );
-      // window.location.reload(false);
     }
   };
 
@@ -87,36 +90,46 @@ export default function Employee() {
           </Tr>
         </Thead>
         <Tbody>
-          {/* new employee row */}
-          <Tr background='green.100' borderWidth='2px' borderColor='green.200'>
-            <Td>
-              <Editable onSubmit={(name) => setFirstName(name)} defaultValue='Add new hire' value>
-                <EditablePreview />
-                <EditableInput />
-              </Editable>
-            </Td>
-            <Td>
-              <TagDropdown
-                nameForTags={business.nameForTags}
-                item={newEmployee}
-                tags={tags}
-                submitMethod={(value) => setEmployeeTags(value)}
-              />
-            </Td>
-            <Td>
-              <DayDropdown submitMethod={(value) => setEmployeeDays(value)} days={employeeDays} />
-            </Td>
-            <Td>
-              <IconButton
-                isRound
-                size='sm'
-                aria-label='add employee'
-                icon={<CheckCircleIcon />}
-                _hover={{ bg: error ? 'red.300' : 'green.300' }}
-                onClick={hireEmployee}
-              />
-            </Td>
-          </Tr>
+          {loading ? (
+            <Tr background={'teal.100'} borderWidth='2px' borderColor={'teal.200'}>
+              <Td>Loading...</Td>
+              <Td>Loading...</Td>
+              <Td>Loading...</Td>
+              <Td>Loading...</Td>
+              
+            </Tr>
+          ) : (
+            // new employee row
+            <Tr background='green.100' borderWidth='2px' borderColor='green.200'>
+              <Td>
+                <Editable onSubmit={(name) => setFirstName(name)} defaultValue='Add new hire' value>
+                  <EditablePreview />
+                  <EditableInput />
+                </Editable>
+              </Td>
+              <Td>
+                <TagDropdown
+                  nameForTags={business.nameForTags}
+                  item={newEmployee}
+                  tags={tags}
+                  submitMethod={(value) => setEmployeeTags(value)}
+                />
+              </Td>
+              <Td>
+                <DayDropdown submitMethod={(value) => setEmployeeDays(value)} item={newEmployee} />
+              </Td>
+              <Td>
+                <IconButton
+                  isRound
+                  size='sm'
+                  aria-label='add employee'
+                  icon={<CheckCircleIcon />}
+                  _hover={{ bg: error ? 'red.300' : 'green.300' }}
+                  onClick={hireEmployee}
+                />
+              </Td>
+            </Tr>
+          )}
 
           {employees &&
             employees.map((employee) => (
