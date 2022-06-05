@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     endTime: {
       type: DataTypes.DATE,
     },
-    shiftConfig: {
+    config: {
       // "any", "all"
       type: DataTypes.STRING,
     },

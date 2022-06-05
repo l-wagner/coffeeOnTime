@@ -14,8 +14,8 @@ import TagDropdown from './shared/tag-dropdown.component.js';
 export default function Shift() {
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const [shiftName, setShiftName] = React.useState(false);
-  const [shiftDescription, setShiftDesc] = React.useState(false);
+  const [shiftName, setShiftName] = React.useState('false');
+  const [shiftDescription, setShiftDesc] = React.useState('false');
   const [startTime, setStartTime] = React.useState('05:00');
   const [endTime, setEndTime] = React.useState('21:00');
   const [startTimeUpdate, setStartTimeUpdate] = React.useState(null);
@@ -45,7 +45,7 @@ export default function Shift() {
 
   const handleCreate = () => {
     console.log(shiftDays);
-    if (!shiftName || !shiftDescription || !startTime || !endTime || shiftDays.length === 0) {
+    if (!shiftName || !startTime || !endTime || shiftDays.length === 0) {
       setError(true);
       setErrorMsg('Name, description, days, start, end time, and active days are required.');
       setTimeout(() => setError(false), 3000);
@@ -62,7 +62,7 @@ export default function Shift() {
           description: shiftDescription,
           startTime: new Date('01/01/1970 ' + startTime),
           endTime: new Date('01/01/1970 ' + endTime),
-          days: shiftDays || [],
+          days: shiftDays.join(',') || [],
           tags: shiftTags || [],
         })
       );
@@ -131,7 +131,7 @@ export default function Shift() {
               <TagDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftTags(value)} />
             </Td>
             <Td>
-              <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} days={shiftDays} />
+              <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} />
             </Td>
             <Td>
               <IconButton

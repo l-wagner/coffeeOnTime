@@ -20,7 +20,7 @@ import TagDropdown from '../shared/tag-dropdown.component.js';
 export default function Employee() {
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const [firstName, setFirstName] = React.useState(false);
+  const [firstName, setFirstName] = React.useState('Test');
   const [employeeTags, setEmployeeTags] = React.useState(false);
   const [employeeDays, setEmployeeDays] = React.useState([]);
   const [error, setError] = React.useState(null);
@@ -55,7 +55,7 @@ export default function Employee() {
           tags: employeeTags || [],
         })
       );
-      window.location.reload(false);
+      // window.location.reload(false);
     }
   };
 
@@ -90,7 +90,7 @@ export default function Employee() {
           {/* new employee row */}
           <Tr background='green.100' borderWidth='2px' borderColor='green.200'>
             <Td>
-              <Editable onSubmit={(name) => setFirstName(name)} defaultValue='Add new hire'>
+              <Editable onSubmit={(name) => setFirstName(name)} defaultValue='Add new hire' value>
                 <EditablePreview />
                 <EditableInput />
               </Editable>
@@ -104,7 +104,7 @@ export default function Employee() {
               />
             </Td>
             <Td>
-              <DayDropdown item={newEmployee} submitMethod={(value) => setEmployeeDays(value)} days={employeeDays} />
+              <DayDropdown submitMethod={(value) => setEmployeeDays(value)} days={employeeDays} />
             </Td>
             <Td>
               <IconButton
