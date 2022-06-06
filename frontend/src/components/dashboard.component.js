@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { retrieveEmployees } from '../actions/employees.js';
 import { retrieveTags } from '../actions/tags';
+import { retrieveShifts } from '../actions/shifts';
 
 const Feature = ({ number, link, item }) => {
   return (
@@ -32,6 +33,7 @@ export default function Dashboard() {
     // only run if business id avail
     business.id && dispatch(retrieveEmployees(business.id));
     business.id && dispatch(retrieveTags(business.id));
+    business.id && dispatch(retrieveShifts(business.id));
   }, [business.id]);
 
   const dispatch = useDispatch();

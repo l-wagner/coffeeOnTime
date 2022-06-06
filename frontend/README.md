@@ -22,7 +22,6 @@ Todo:
 - create business screen: add last names, add "add" button to add multiples separately
 - add last names
 - add all to day dropdown
-- add any/all to shifts
 - login: read owner tag and handle accordingly in FE
 - RTO screen:
   - load rto on page load

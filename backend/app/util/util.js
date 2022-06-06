@@ -82,6 +82,7 @@ exports.scheduleCreator = (dates, employees, shifts) => {
       let tagsNeeded = shift.tags.map((tag) => tag.id);
 
       console.log(shift.name + ' now filling');
+      console.log(shift.config || 'all' + ' tags need to be filled');
 
       for (let k = 0; k < tags.length; k++) {
         const tag = tags[k];
@@ -123,6 +124,13 @@ exports.scheduleCreator = (dates, employees, shifts) => {
           shiftsNeeded = shiftsNeeded.filter((element) => element != shift.name);
           break;
         }
+        if (tagsNeeded.length > 0 && shift.config === 'any') {
+          console.log(shift.name + ' shift just filled, needed only one tag.\n');
+          shiftsNeeded = shiftsNeeded.filter((element) => element != shift.name);
+          break;
+        }
+        
+
 
         if (k === tags.length - 1 && tagsNeeded !== 0) {
           console.log(shift.name + ' could not be filled\n');
