@@ -52,12 +52,17 @@ exports.scheduleCreator = (dates, employees, shifts) => {
     scheduleGrid.config.push(config);
   });
 
+  // keep track of how many days employee is working to keep mapx < 5 => {alexa: 5, cameron: 3 }
+  let daysByEmployee = {};
   // create rowData array of objects => [ {dataKey: "value", employee: "Chris", "date":"shiftName"}]
   employees.map((employee) => {
     // create row header array => [ "employee name", "employee name"]
     scheduleGrid.rowLabels.push(employee.firstName);
     // prefill rows with employeeNames to make sure they'll display in the right order
     scheduleGrid.rows[employee.firstName] = {};
+
+    // keep track of how many days employee is working to keep mapx < 5
+    daysByEmployee[employee.firstName] = 0;
   });
   scheduleGrid.rowLabels.push('<bold>NOTES:</bold>');
   scheduleGrid.rows.notes = {};
@@ -68,6 +73,8 @@ exports.scheduleCreator = (dates, employees, shifts) => {
     console.log('\n' + weekday);
     const shifts = shiftsNeededByWeekday[weekday];
     let shiftsNeeded = shifts.map((shift) => shift.name);
+
+    //TODO if weekday == monday, reset employee day counter?
 
     // no shifts, no service
     if (shifts.length === 0) {
@@ -91,7 +98,7 @@ exports.scheduleCreator = (dates, employees, shifts) => {
           const employee = employees[l];
 
           //  can this employee even work that day? TODO: add PTO
-          if (!employee?.days?.includes(weekday)) {
+          if (!employee?.days?.includes(weekday) || daysByEmployee[employee.firstName] > 5) {
             scheduleGrid.rows[employee.firstName] = {
               ...scheduleGrid.rows[employee.firstName],
               [key]: '',
@@ -107,13 +114,16 @@ exports.scheduleCreator = (dates, employees, shifts) => {
               continue;
             }
 
+            // schedule employee
             scheduleGrid.rows[employee.firstName] = {
               ...scheduleGrid.rows[employee.firstName],
               [key]: `${dayjs(shift.startTime).format('hh:mm a')} – ${dayjs(shift.endTime).format('hh:mm a')} (${shift.name} - ${
                 tag.name
               })\n  `,
             };
+            daysByEmployee[employee.firstName] += 1;
             console.log(shift.name + ' tag ' + tag.name + ' just filled by ' + employee.firstName);
+            console.log(employee.firstName + ' now working ' + daysByEmployee[employee.firstName] + ' days');
             tagsNeeded = tagsNeeded.filter((element) => element != tag.id);
             //employee was found, go to next tag
             break;
@@ -124,13 +134,12 @@ exports.scheduleCreator = (dates, employees, shifts) => {
           shiftsNeeded = shiftsNeeded.filter((element) => element != shift.name);
           break;
         }
+        //TODO check if shift has at least one tag in it
         if (tagsNeeded.length > 0 && shift.config === 'any') {
           console.log(shift.name + ' shift just filled, needed only one tag.\n');
           shiftsNeeded = shiftsNeeded.filter((element) => element != shift.name);
           break;
         }
-        
-
 
         if (k === tags.length - 1 && tagsNeeded !== 0) {
           console.log(shift.name + ' could not be filled\n');
