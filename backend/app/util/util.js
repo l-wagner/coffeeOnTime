@@ -74,7 +74,15 @@ exports.scheduleCreator = (dates, employees, shifts) => {
     const shifts = shiftsNeededByWeekday[weekday];
     let shiftsNeeded = shifts.map((shift) => shift.name);
 
-    //TODO if weekday == monday, reset employee day counter?
+    // //TODO if weekday == monday, reset employee day counter? Test by Checking that an employee with full-week availability works for 5 days every week)
+    
+    if (weekday === "Mon") {
+      console.log(daysByEmployee, "reset time")
+      Object.keys(daysByEmployee).map((key) => {
+        daysByEmployee[key] = 0;
+      });
+      console.log(daysByEmployee, "reset time")
+    }
 
     // no shifts, no service
     if (shifts.length === 0) {
@@ -87,9 +95,10 @@ exports.scheduleCreator = (dates, employees, shifts) => {
       const shift = shifts[j];
       const tags = shift.tags;
       let tagsNeeded = shift.tags.map((tag) => tag.id);
+      let oneTagFilled = false;
 
       console.log(shift.name + ' now filling');
-      console.log(shift.config || 'all' + ' tags need to be filled');
+      tagsNeeded.length > 1 && console.log('Shift has more than one tag and ' + (shift.config || 'all') + ' tags need to be filled');
 
       for (let k = 0; k < tags.length; k++) {
         const tag = tags[k];
@@ -125,6 +134,7 @@ exports.scheduleCreator = (dates, employees, shifts) => {
             console.log(shift.name + ' tag ' + tag.name + ' just filled by ' + employee.firstName);
             console.log(employee.firstName + ' now working ' + daysByEmployee[employee.firstName] + ' days');
             tagsNeeded = tagsNeeded.filter((element) => element != tag.id);
+            oneTagFilled = true;
             //employee was found, go to next tag
             break;
           }
@@ -134,8 +144,7 @@ exports.scheduleCreator = (dates, employees, shifts) => {
           shiftsNeeded = shiftsNeeded.filter((element) => element != shift.name);
           break;
         }
-        //TODO check if shift has at least one tag in it
-        if (tagsNeeded.length > 0 && shift.config === 'any') {
+        if (oneTagFilled && shift.config === 'any') {
           console.log(shift.name + ' shift just filled, needed only one tag.\n');
           shiftsNeeded = shiftsNeeded.filter((element) => element != shift.name);
           break;

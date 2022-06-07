@@ -54,10 +54,8 @@ exports.findAll = (req, res) => {
 exports.findAllByBusiness = [
   param('business').not().isEmpty().trim(),
   (req, res) => {
-    console.log(req.params.business);
     Employee.findAll({ where: { businessId: req.params.business }, include: Tag }).then((employees) => {
       // change blocked days to array
-      console.log(employees);
       employees.map((employee) => (employee.days = employee.days?.split(',')));
       apiResponse.successData(res, `${Object.keys(employees).length} employees found.`, employees);
     });
@@ -157,7 +155,7 @@ exports.requestRto = [
       return apiResponse.validationError(res, { errors: errors.array() }, 400);
     }
     let dates = util.getDates(new Date(req.body.startDate), new Date(req.body.endDate));
-    dates.map((date) => console.log(date));
+    // dates.map((date) => console.log(date));
 
     for (let i = 0; i < dates.length; i++) {
       const date = dates[i];
@@ -176,7 +174,6 @@ exports.findAllRto = [
   body('employeeId').not().isEmpty().trim(),
   body('role').not().isEmpty().trim(),
   (req, res) => {
-    console.log(req.body);
      // Validate Request
      const errors = validationResult(req);
      if (!errors.isEmpty()) {

@@ -25,7 +25,6 @@ exports.create = [
     let owners = [];
     for (let index = 0; index < ownerNames.length; index++) {
       owners[index] = { firstName: ownerNames[index].trim() };
-      console.log(owners);
     }
 
     // First, we start a transaction and save it into a variable
