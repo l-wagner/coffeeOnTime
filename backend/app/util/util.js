@@ -110,7 +110,7 @@ exports.scheduleCreator = (dates, employees, shifts) => {
           if (!employee?.days?.includes(weekday) || daysByEmployee[employee.firstName] > 5) {
             scheduleGrid.rows[employee.firstName] = {
               ...scheduleGrid.rows[employee.firstName],
-              [key]: '',
+              [key]: 'off',
             };
             continue;
           }
@@ -127,7 +127,9 @@ exports.scheduleCreator = (dates, employees, shifts) => {
             // row entry looks like: 07:30 am – 03:00 pm (Opening Shift #2 - Barista)
             scheduleGrid.rows[employee.firstName] = {
               ...scheduleGrid.rows[employee.firstName],
-              [key]: `${dayjs(shift.startTime).format('h:mma')} – ${dayjs(shift.endTime).format('h:mma')} \n${tag.name}`,
+              [key]: `${dayjs(shift.startTime).format('h:mma').replace('m', '')}–${dayjs(shift.endTime)
+                .format('h:mma')
+                .replace('m', '')} \n${tag.name}`,
             };
             daysByEmployee[employee.firstName] += 1;
             console.log(shift.name + ' tag ' + tag.name + ' just filled by ' + employee.firstName);
@@ -151,7 +153,7 @@ exports.scheduleCreator = (dates, employees, shifts) => {
 
         if (k === tags.length - 1 && tagsNeeded !== 0) {
           console.log(shift.name + ' could not be filled\n');
-          scheduleGrid.rows.notes[key] = shift.name + '!\n ';
+          scheduleGrid.rows.notes[key] = shift.name.replace(' ', '\n') + ' not\nfilled\n ';
         }
       }
 

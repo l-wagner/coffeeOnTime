@@ -29,6 +29,8 @@ Todo:
   - sort by date
   - owner view/manage rto 
 - icons not showing up on dashboard
+- split up calendar into two week batches
+- replace empty elements with off
 
 order of creation:
 
