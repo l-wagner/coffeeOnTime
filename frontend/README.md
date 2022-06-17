@@ -28,7 +28,7 @@ Todo:
   - show any upcoming RTO
   - sort by date
   - owner view/manage rto 
-
+- icons not showing up on dashboard
 
 order of creation:
 

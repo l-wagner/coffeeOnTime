@@ -6,5 +6,6 @@ import OwnerRTO from './rto-owner.component';
 export default function Employee() {
   const auth = useSelector((state) => state.auth);
 
-  return auth.firstName ? (auth.active === 'Owner' ? <OwnerRTO></OwnerRTO> : <EmployeeRTO></EmployeeRTO>) : <div></div>;
+  // return auth.firstName ? (auth.active === 'Owner' ? <OwnerRTO></OwnerRTO> : <EmployeeRTO></EmployeeRTO>) : <div></div>;
+  return <OwnerRTO></OwnerRTO>
 }

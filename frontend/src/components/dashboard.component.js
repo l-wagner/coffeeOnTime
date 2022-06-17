@@ -1,4 +1,4 @@
-import { Box, Button, Container, Flex, Heading, Icon, SimpleGrid, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Container, Flex, Heading, Icon, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { FcAssistant, FcDonate, FcInTransit } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +26,6 @@ const Feature = ({ number, link, item }) => {
   );
 };
 export default function Dashboard() {
-  
   const { employees, business, tags, shifts } = useSelector((state) => state);
 
   useEffect(() => {
@@ -56,9 +55,14 @@ export default function Dashboard() {
           <Feature icon={<Icon as={FcDonate} w={10} h={10} />} number={tags.length} item={business.nameForTags} link={'/tags'} />
           <Feature icon={<Icon as={FcInTransit} w={10} h={10} />} number={shifts.length} item={'shifts'} link={'/shifts'} />
         </SimpleGrid>
-        <Button isFullWidth mt={12} colorScheme='pink'>
-          <Link to={'/schedule-create'}> Create schedule</Link>
-        </Button>
+
+        <Center >
+          <Link to={'/schedule-create'}>
+            <Button  mt={12} colorScheme='pink'>
+              Create schedule
+            </Button>
+          </Link>
+        </Center>
       </Box>
     </>
   );

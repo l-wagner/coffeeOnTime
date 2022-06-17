@@ -1,7 +1,8 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import { Button, ChakraProvider, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Box, Button, ChakraProvider, Menu, MenuButton, MenuItem, MenuList, Stack } from '@chakra-ui/react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'handsontable/dist/handsontable.full.css';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
@@ -62,13 +63,13 @@ export default function App() {
                 </Link>
               </li>
 
-              {auth?.firstName && (
-                <li className='nav-item'>
-                  <Link to={'/rto'} className='nav-link'>
-                    RTO
-                  </Link>
-                </li>
-              )}
+              {/* {auth?.firstName && ( */}
+              <li className='nav-item'>
+                <Link to={'/rto'} className='nav-link'>
+                  RTO
+                </Link>
+              </li>
+              {/* )} */}
 
               <li>
                 <Menu>
@@ -97,7 +98,8 @@ export default function App() {
                 </li>
               )}
             </div>
-            <div className='navbar-nav my-2 my-lg-0'>
+            {/* Login deactivated until further notice */}
+            {/* <div className='navbar-nav my-2 my-lg-0'>
               <li className='nav-item'>
                 {auth?.firstName ? (
                   <div onClick={handleLogout} className='nav-link'>
@@ -109,23 +111,24 @@ export default function App() {
                   </Link>
                 )}
               </li>
-            </div>
+            </div> */}
           </nav>
-          <div className='container mt-3'>
+          <Box w='98%'>
             {error?.createError && <ErrorWithMsg msg={error.msg} />}
-
-            <Switch>
-              <Route exact path={['/']} component={Dashboard} />
-              <Route exact path={['/', '/employees']} component={Employee} />
-              <Route exact path='/tags' component={TagList} />
-              <Route exact path='/shifts' component={ShiftList} />
-              <Route exact path='/add-shift' component={AddShift} />
-              <Route exact path='/schedule-create' component={ScheduleCreate} />
-              <Route path='/setup' component={CreateBusiness} />
-              <Route path='/profile' component={Profile} />
-              <Route path='/rto' component={RTO} />
-            </Switch>
-          </div>
+            <Stack>
+              <Switch>
+                <Route exact path={['/']} component={Dashboard} />
+                <Route exact path={['/', '/employees']} component={Employee} />
+                <Route exact path='/tags' component={TagList} />
+                <Route exact path='/shifts' component={ShiftList} />
+                <Route exact path='/add-shift' component={AddShift} />
+                <Route exact path='/schedule-create' component={ScheduleCreate} />
+                <Route path='/setup' component={CreateBusiness} />
+                <Route path='/profile' component={Profile} />
+                <Route path='/rto' component={RTO} />
+              </Switch>
+            </Stack>
+          </Box>
         </Router>
       ) : (
         !error && !business.id && <CreateBusiness />

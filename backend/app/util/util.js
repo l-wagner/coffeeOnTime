@@ -43,7 +43,7 @@ exports.scheduleCreator = (dates, employees, shifts) => {
     } else {
       // list of shifts
       let names = shiftsNeededByWeekday[weekday].map((shift) => shift.name);
-      header += `\nShift(s) needed: ${names}`;
+      // header += `\nShift(s) needed: ${names}`;
     }
     scheduleGrid.columns.push(header);
 
@@ -75,13 +75,13 @@ exports.scheduleCreator = (dates, employees, shifts) => {
     let shiftsNeeded = shifts.map((shift) => shift.name);
 
     // //TODO if weekday == monday, reset employee day counter? Test by Checking that an employee with full-week availability works for 5 days every week)
-    
-    if (weekday === "Mon") {
-      console.log(daysByEmployee, "reset time")
+
+    if (weekday === 'Mon') {
+      console.log(daysByEmployee, 'reset time');
       Object.keys(daysByEmployee).map((key) => {
         daysByEmployee[key] = 0;
       });
-      console.log(daysByEmployee, "reset time")
+      console.log(daysByEmployee, 'reset time');
     }
 
     // no shifts, no service
@@ -124,11 +124,10 @@ exports.scheduleCreator = (dates, employees, shifts) => {
             }
 
             // schedule employee
+            // row entry looks like: 07:30 am – 03:00 pm (Opening Shift #2 - Barista)
             scheduleGrid.rows[employee.firstName] = {
               ...scheduleGrid.rows[employee.firstName],
-              [key]: `${dayjs(shift.startTime).format('hh:mm a')} – ${dayjs(shift.endTime).format('hh:mm a')} (${shift.name} - ${
-                tag.name
-              })\n  `,
+              [key]: `${dayjs(shift.startTime).format('h:mma')} – ${dayjs(shift.endTime).format('h:mma')} \n${tag.name}`,
             };
             daysByEmployee[employee.firstName] += 1;
             console.log(shift.name + ' tag ' + tag.name + ' just filled by ' + employee.firstName);
@@ -152,12 +151,13 @@ exports.scheduleCreator = (dates, employees, shifts) => {
 
         if (k === tags.length - 1 && tagsNeeded !== 0) {
           console.log(shift.name + ' could not be filled\n');
-          scheduleGrid.rows.notes[key] = shift.name + ' could not be filled\n ';
+          scheduleGrid.rows.notes[key] = shift.name + '!\n ';
         }
       }
 
       if (shiftsNeeded.length === 0) {
-        scheduleGrid.rows.notes[key] = 'all shifts were filled\n ';
+        console.log(shift.name + ' all shifts filled\n');
+        // scheduleGrid.rows.notes[key] = 'shifts filled\n ';
       }
     }
   }

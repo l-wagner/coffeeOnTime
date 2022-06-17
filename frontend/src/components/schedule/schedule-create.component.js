@@ -1,21 +1,10 @@
-import React, { useEffect } from 'react';
-import {
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Box,
-  Grid,
-  GridItem,
-  Center,
-  Button,
-} from '@chakra-ui/react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Box, Button, Center, Container, Heading, Stack, Text } from '@chakra-ui/react';
 import dayjs from 'dayjs';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { retrieveEmployees } from '../../actions/employees.js';
-import { retrieveTags } from '../../actions/tags';
 import { createSchedule, saveSchedule } from '../../actions/schedules';
+import { retrieveTags } from '../../actions/tags';
 import Calendar from './calendar.component.js';
 import ScheduleGrid from './scheduleGrid.component.js';
 
@@ -65,42 +54,42 @@ export default function ScheduleCreate() {
   return (
     <>
       {/* add index to handle what's expanded and when */}
-      <h2>
-        {/* <AccordionButton _expanded={{ bg: 'teal', color: 'white' }}> */}
-        <Box flex='1' textAlign='left'>
-          Select date range
-        </Box>
-      </h2>
-      <Center>
-        <Calendar handleChange={(value) => calendarChange(value)} value={value} returnValue={'range'} />
-      </Center>
-      {dates?.length !== 0 ? (
-        <span>{Math.abs(dates[0].diff(dates[1], 'day'))} days selected: </span>
-      ) : (
-        <span>Click on first and last date to set range.</span>
-      )}
-      {dates?.length !== 0 && dates?.map((date, index) => <span key={index}>{date.format('dddd – MM/DD/YYYY') + ' '}</span>)}
 
-      <h2>
-        <Box flex='1' textAlign='left'>
-          Check employees and shifts
-          {dates?.length === 0 && <span> – select date range first</span>}
-        </Box>
-      </h2>
-      {schedules?.new && (
-        <>
-          <ScheduleGrid data={schedules.new} />{' '}
+      <Container maxW={'95vw'}>
+        <Stack as={Box} spacing={{ base: 4, md: 4 }} py={{ base: 20, md: 10 }}>
           <Center>
-            <Button onClick={onSave}>Save schedule</Button>
+            <Heading fontWeight={10} fontSize={{ base: '2xl', sm: '4xl', md: '2xl' }}>
+              <Text color={'teal.400'}>Select date range</Text>
+            </Heading>
           </Center>
-        </>
-      )}
-      {schedules?.old && (
-        <>
-          OLD SCHEDULE
-          <ScheduleGrid data={schedules.old} />{' '}
-        </>
-      )}
+          <Center>
+            <Calendar handleChange={(value) => calendarChange(value)} value={value} returnValue={'range'} />
+          </Center>
+          {dates?.length > 0 && (
+            <Center>
+              <Heading fontWeight={10} fontSize={{ base: 'xl', sm: '2xl', md: 'xl' }}>
+                <Text color={'teal'}>
+                  {Math.abs(dates[0].diff(dates[1], 'day'))} days selected:{' '}
+                  {dates?.length !== 0 && dates?.map((date, index) => <span key={index}>{date.format('dddd – MM/DD/YYYY') + ' '}</span>)}
+                </Text>
+              </Heading>
+            </Center>
+          )}
+          {schedules?.new && (
+            <>
+              <ScheduleGrid data={schedules.new} />
+
+              <Button onClick={onSave}>Save schedule</Button>
+            </>
+          )}
+          {schedules?.old && (
+            <>
+              OLD SCHEDULE
+              <ScheduleGrid data={schedules.old} />{' '}
+            </>
+          )}
+        </Stack>
+      </Container>
     </>
   );
 }
