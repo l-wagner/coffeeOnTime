@@ -1,5 +1,7 @@
 Todo:
 
+- save RTO
+- save colors by employee
 - when exporting to CSV, some empty cells might not be rendered yet. Fill with "off" server side.
 - limit table width to vw.
 - add search

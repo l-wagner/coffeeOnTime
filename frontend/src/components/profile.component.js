@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../actions/auth';
 
-import RTO from './rto.component.js';
 
 export default function Profile() {
   const {
@@ -26,7 +25,6 @@ export default function Profile() {
         {auth?.firstName ? (
           <>
             <Text fontSize='lg'>Welcome, {auth.firstName}!</Text>
-            <RTO employee={auth} />
           </>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>

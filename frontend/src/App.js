@@ -45,7 +45,7 @@ export default function App() {
       {error?.loginError && <ErrorWithMsg msg={error.msg} />}
       {!error?.serverError && business?.id ? (
         <Router>
-          <nav className='navbar navbar-expand navbar-dark bg-dark'>
+          <nav className='navbar navbar-expand navbar-dark bg-custom'>
             <Link to={'/'} className='navbar-brand'>
               {business?.name ? business.name : 'Coffee On Time'}
             </Link>
@@ -57,38 +57,40 @@ export default function App() {
                 </Link>
               </li>
 
-              <li className='nav-item'>
-                <Link to={'/shifts'} className='nav-link'>
-                  Switch business
-                </Link>
-              </li>
-
               {/* {auth?.firstName && ( */}
               <li className='nav-item'>
                 <Link to={'/rto'} className='nav-link'>
                   RTO
                 </Link>
               </li>
-              {/* )} */}
 
-              <li>
+              <li className='nav-item'>
+                <Link to={'/employees'} className='nav-link'>
+                  Employees
+                </Link>
+              </li>
+
+              <li className='nav-item'>
+                <Link to={'/tags'} className='nav-link'>
+                  {business.nameForTags.charAt(0).toUpperCase() + business.nameForTags.slice(1)}
+                </Link>
+              </li>
+
+              <li className='nav-item'>
+                <Link to={'/shifts'} className='nav-link'>
+                  Shifts
+                </Link>
+              </li>
+
+              {/* <li>
                 <Menu>
                   <MenuButton colorScheme='teal' size='sm' as={Button} rightIcon={<ChevronDownIcon />}>
                     Manage
                   </MenuButton>
                   <MenuList>
-                    <MenuItem>
-                      <Link to={'/employees'}>Employees</Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link to={'/tags'}> {business.nameForTags.charAt(0).toUpperCase() + business.nameForTags.slice(1)}</Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link to={'/shifts'}>Shifts</Link>
-                    </MenuItem>
                   </MenuList>
                 </Menu>
-              </li>
+              </li> */}
 
               {!business?.id && (
                 <li className='nav-item'>
@@ -97,6 +99,13 @@ export default function App() {
                   </Link>
                 </li>
               )}
+            </div>
+            <div className='navbar-nav my-2 my-lg-0'>
+              <li className='nav-item'>
+                <Link to={'/shifts'} className='nav-link'>
+                  Switch business
+                </Link>
+              </li>
             </div>
             {/* Login deactivated until further notice */}
             {/* <div className='navbar-nav my-2 my-lg-0'>

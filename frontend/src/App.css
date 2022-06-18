@@ -1,5 +1,5 @@
-body{
-  background-color:gray;
+body {
+  background-color: gray;
 }
 
 .list {
@@ -35,7 +35,23 @@ a:hover {
   color: darkolivegreen !important;
 }
 
-.light-pink {
+.handsontable {
+  font-size: 11px !important;
+}
+
+.bg-custom {
+  background: #065666;
+  color: rgb(226, 225, 225);
+}
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.nav-item-custom:hover,
+.nav-item-custom:active {
+  color: white;
+}
+*/ .light-pink {
   background-color: #ffadadff !important;
 }
 .deep-champagne {
@@ -61,9 +77,6 @@ a:hover {
 }
 .baby-powder {
   background-color: #fffffcff !important;
-}
-.handsontable {
-  font-size: 11px !important;
 }
 
 /* 
