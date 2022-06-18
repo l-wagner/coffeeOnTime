@@ -10,6 +10,7 @@ import ScheduleGrid from './scheduleGrid.component.js';
 
 export default function ScheduleCreate() {
   const [value, onChange] = React.useState();
+  const [filename, setFileName] = React.useState();
   const [dates, onDateChange] = React.useState([]);
 
   const { employees, business, tags, shifts, schedules } = useSelector((state) => state);
@@ -28,6 +29,7 @@ export default function ScheduleCreate() {
       formatted[1] = dayjs(value[1]);
       console.log(formatted);
       onDateChange(formatted);
+      setFileName(`${dayjs(value[0]).format('YY-MM-DD')}_${dayjs(value[1]).format('YY-MM-DD')}_${business.name}_Schedule`);
       dispatch(createSchedule({ startDate: formatted[0], endDate: formatted[1], business: business.id }));
     }
   };
@@ -53,8 +55,6 @@ export default function ScheduleCreate() {
 
   return (
     <>
-      {/* add index to handle what's expanded and when */}
-
       <Container maxW={'95vw'}>
         <Stack as={Box} spacing={{ base: 4, md: 4 }} py={{ base: 20, md: 10 }}>
           <Center>
@@ -75,11 +75,14 @@ export default function ScheduleCreate() {
               </Heading>
             </Center>
           )}
+        </Stack>
+      </Container>
+      <Container maxW={'100vw'}>
+        <Stack>
           {schedules?.new && (
             <>
-              <ScheduleGrid data={schedules.new} />
-
-              <Button onClick={onSave}>Save schedule</Button>
+              <ScheduleGrid data={schedules.new} filename={filename} />
+              {/* <Button onClick={onSave}>Save schedule</Button> */}
             </>
           )}
           {schedules?.old && (

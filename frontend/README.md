@@ -1,7 +1,10 @@
 Todo:
 
-- replace findEmployeeByName with debounced inplace search
-- change form validation design
+- when exporting to CSV, some empty cells might not be rendered yet. Fill with "off" server side.
+- limit table width to vw.
+- add search
+- set filename from data, not only when selecting range on calendar, to also reliably use filename for old schedules
+- keep download & export buttons same width when clicked
 - add loader gifs
 - checkout Gatsby.js
 - use react form in new employee table row

@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
-import { Button } from '@chakra-ui/react';
+import React, { useRef } from 'react';
+import { Button, Center, Stack } from '@chakra-ui/react';
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
 import * as htmlToImage from 'html-to-image';
 
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
+import Handsontable from 'handsontable';
 
 // register Handsontable's modules
 
@@ -24,51 +25,42 @@ const rowColors = [
 
 export default function ScheduleGrid(props) {
   const { columns, rowLabels, rows, config } = props.data;
+  const filename = props.filename;
+  // this.hotTableComponent = React.createRef();
 
-  const [value, setValue] = React.useState('Copy (as image)');
-
-  const handleCopy = () => {
+  const [copyImg, setCopyImg] = React.useState('Copy image');
+  const [downloadCSV, setDownloadCSV] = React.useState('Download CSV');
+  const hotTableComponent = useRef(null);
+  const handleCopyAsImage = () => {
     var node = document.getElementById('hot-app');
-    setValue('Copied!');
-    setTimeout(() => setValue('Copy (as image)'), 3000);
-
-    // var node = document.body;
-
-    // htmlToImage
-    //   .toPng(node)
-    //   .then(function (dataUrl) {
-    //     var img = new Image();
-    //     img.src = dataUrl;
-
-    //     document.body.appendChild(img);
-    //     // navigator.clipboard.write([new window.ClipboardItem({ 'image/png': window.blob })]);
-    //   })
-    //   .catch(function (error) {
-    //     console.error('oops, something went wrong!', error);
-    //   });
+    setCopyImg('Copied!');
+    setTimeout(() => setCopyImg('Copy image'), 3000);
     htmlToImage
       .toBlob(node)
-      .then(function (img) {
-        navigator.clipboard.write([new window.ClipboardItem({ 'image/png': img })]);
-        // document.body.appendChild(img);
-        // navigator.clipboard.write([new window.ClipboardItem({ 'image/png': window.blob })]);
+      .then(function (blob) {
+        navigator.clipboard.write([new window.ClipboardItem({ 'image/png': blob })]);
       })
       .catch(function (error) {
         console.error('oops, something went wrong!', error);
       });
-
-    // var urlField = document.querySelector('#hot-5p7mf29h');
-    // // var urlField = document.querySelector('#hot-app');
-
-    // // create a Range object
-    // var range = document.createRange();
-    // // set the Node to select the "range"
-    // range.selectNode(urlField);
-    // // add the Range to the set of window selections
-    // window.getSelection().addRange(range);
-
-    // // execute 'copy', can't 'cut' in this case
-    // document.execCommand('copy');
+  };
+  const handleDownloadAsCSV = () => {
+    console.log(filename);
+    setDownloadCSV('Copied!');
+    setTimeout(() => setDownloadCSV('Download CSV'), 3000);
+    const exportPlugin1 = hotTableComponent.current.hotInstance.getPlugin('exportFile');
+    exportPlugin1.downloadFile('csv', {
+      bom: false,
+      columnDelimiter: ',',
+      columnHeaders: false,
+      exportHiddenColumns: true,
+      exportHiddenRows: true,
+      fileExtension: 'csv',
+      filename: filename,
+      mimeType: 'text/csv',
+      rowDelimiter: '\r\n',
+      rowHeaders: true,
+    });
   };
 
   const settings = {
@@ -96,15 +88,21 @@ export default function ScheduleGrid(props) {
 
   return (
     <>
-      <Button onClick={handleCopy}>{value}</Button>
+      <Center>
+        <Stack spacing={4} direction='row' align='center'>
+          <Button onClick={handleCopyAsImage}>{copyImg}</Button>
+          <Button onClick={handleDownloadAsCSV}>{downloadCSV}</Button>
+        </Stack>
+      </Center>
       <div id='hot-app'>
         <HotTable
+          ref={hotTableComponent}
           data={rows}
           settings={settings}
           colHeaders={columns}
           columns={config}
           rowHeaders={rowLabels}
-          width='95vw'
+          width='100%'
           stretchH='all'
         />
       </div>
