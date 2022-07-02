@@ -47,22 +47,22 @@ export default function App() {
         <Router>
           <nav className='navbar navbar-expand navbar-dark bg-custom'>
             <Link to={'/'} className='navbar-brand'>
-              {business?.name ? business.name : 'Coffee On Time'}
+              {business?.name ? 'business.name.placeholder' : 'Coffee On Time'}
             </Link>
 
             <div className='navbar-nav mr-auto'>
-              <li className='nav-item'>
+              {/* <li className='nav-item'>
                 <Link to={'/schedule-create'} className='nav-link'>
                   Schedule
                 </Link>
               </li>
 
               {/* {auth?.firstName && ( */}
-              <li className='nav-item'>
+              {/* <li className='nav-item'>
                 <Link to={'/rto'} className='nav-link'>
                   RTO
                 </Link>
-              </li>
+              </li>  */}
 
               <li className='nav-item'>
                 <Link to={'/employees'} className='nav-link'>
@@ -72,15 +72,16 @@ export default function App() {
 
               <li className='nav-item'>
                 <Link to={'/tags'} className='nav-link'>
-                  {business.nameForTags.charAt(0).toUpperCase() + business.nameForTags.slice(1)}
+                  {/* {business.nameForTags.charAt(0).toUpperCase() + business.nameForTags.slice(1)} */}
+                  Tags
                 </Link>
               </li>
 
-              <li className='nav-item'>
+              {/* <li className='nav-item'>
                 <Link to={'/shifts'} className='nav-link'>
                   Shifts
                 </Link>
-              </li>
+              </li> */}
 
               {/* <li>
                 <Menu>
@@ -100,13 +101,13 @@ export default function App() {
                 </li>
               )}
             </div>
-            <div className='navbar-nav my-2 my-lg-0'>
+            {/* <div className='navbar-nav my-2 my-lg-0'>
               <li className='nav-item'>
                 <Link to={'/shifts'} className='nav-link'>
                   Switch business
                 </Link>
               </li>
-            </div>
+            </div> */}
             {/* Login deactivated until further notice */}
             {/* <div className='navbar-nav my-2 my-lg-0'>
               <li className='nav-item'>

@@ -39,12 +39,15 @@ export default function TagDropdown(props) {
           </MenuList>
         </Menu>
       )}
-      
+
       {options?.map((tag) => (
         <Tooltip label={props.tags?.find((businessTag) => businessTag.name === tag)?.description} key={tag} aria-label='A tooltip'>
-          <Tag mr={1} size='sm' key={tag} variant='solid' colorScheme='teal'>
-            {tag?.toLowerCase()}
-          </Tag>
+          <>
+            <p mr={1} size='sm' key={tag} variant='solid' colorScheme='teal'>
+              {tag?.toLowerCase() + '_  '}
+            </p>
+            <br />
+          </>
         </Tooltip>
       ))}
     </Flex>

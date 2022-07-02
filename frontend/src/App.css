@@ -40,11 +40,11 @@ a:hover {
 }
 
 .bg-custom {
-  background: #065666;
-  color: rgb(226, 225, 225);
+  background: black;
+  color: black;
 }
 .navbar-dark .navbar-nav .nav-link:hover {
-  color: rgba(255, 255, 255, 1) !important;
+  color: black !important;
 }
 
 .nav-item-custom:hover,

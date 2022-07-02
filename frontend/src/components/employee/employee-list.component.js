@@ -83,7 +83,7 @@ export default function Employee() {
           <Tr>
             <Th>Name</Th>
             <Th>{business.nameForTags}</Th>
-            <Th>Days working</Th>
+            {/* <Th>Days working</Th> */}
             <Th></Th>
           </Tr>
         </Thead>
@@ -98,7 +98,7 @@ export default function Employee() {
             </Tr>
           ) : (
             // new employee row
-            <Tr background='green.100' borderWidth='2px' borderColor='green.200'>
+            <Tr background='gray.100' borderWidth='2px' borderColor='green.200'>
               <Td>
                 <Editable onSubmit={(name) => setFirstName(name)} defaultValue='Add new hire' value>
                   <EditablePreview />
@@ -113,9 +113,9 @@ export default function Employee() {
                   submitMethod={(value) => setEmployeeTags(value)}
                 />
               </Td>
-              <Td>
+              {/* <Td>
                 <DayDropdown submitMethod={(value) => setEmployeeDays(value)} item={newEmployee} />
-              </Td>
+              </Td> */}
               <Td>
                 <IconButton
                   isRound
@@ -148,13 +148,13 @@ export default function Employee() {
                     tags={tags}
                   />
                 </Td>
-                <Td>
+                {/* <Td>
                   <DayDropdown
                     updateMethod={(id, data) => dispatch(updateEmployee(id, { days: data }))}
                     item={employee}
                     days={employee.days}
                   />
-                </Td>
+                </Td> */}
                 <Td>
                   <IconButton
                     isRound
