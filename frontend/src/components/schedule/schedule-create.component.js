@@ -56,7 +56,7 @@ export default function ScheduleCreate() {
   return (
     <>
       <Container maxW={'95vw'}>
-        <Stack as={Box} spacing={{ base: 4, md: 4 }} py={{ base: 20, md: 10 }}>
+        <Stack as={Box} >
           <Center>
             <Heading fontWeight={10} fontSize={{ base: '2xl', sm: '4xl', md: '2xl' }}>
               <Text color={'teal.400'}>Select date range</Text>
