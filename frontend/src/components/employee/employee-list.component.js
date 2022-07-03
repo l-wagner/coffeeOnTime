@@ -18,7 +18,7 @@ import TagDropdown from '../shared/tag-dropdown.component.js';
 export default function Employee() {
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const [firstName, setFirstName] = React.useState('Test');
+  const [firstName, setFirstName] = React.useState(false);
   const [employeeTags, setEmployeeTags] = React.useState(false);
   const [employeeDays, setEmployeeDays] = React.useState([]);
   const [error, setError] = React.useState(null);

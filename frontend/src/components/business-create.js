@@ -35,7 +35,7 @@ export default function Business() {
 
   return (
     <>
-      <nav className='navbar navbar-expand navbar-dark bg-dark'>
+                <nav className='navbar navbar-expand navbar-dark bg-custom'>
         <div className='navbar-brand'>
           <FontAwesomeIcon icon={faMugHot} /> Coffee On Time{' '}
         </div>

@@ -107,7 +107,7 @@ export default function Shift() {
             <Th>Start time</Th>
             <Th>End time</Th>
             <Th>{business.nameForTags}</Th>
-            <Th>Any or all {business.nameForTags}?</Th>
+            {/* <Th>Any or all {business.nameForTags}?</Th> */}
             <Th>Days active</Th>
             <Th></Th>
           </Tr>
@@ -160,9 +160,9 @@ export default function Shift() {
               <Td>
                 <TagDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftTags(value)} />
               </Td>
-              <Td>
+              {/* <Td>
                 <ConfigDropdown item={emptyShift} tags={tags} submitMethod={(value) => setShiftConfig(value)} />
-              </Td>
+              </Td> */}
               <Td>
                 <DayDropdown item={emptyShift} submitMethod={(value) => setShiftDays(value)} />
               </Td>
@@ -218,9 +218,9 @@ export default function Shift() {
                 <Td>
                   <TagDropdown updateMethod={(id, data) => dispatch(updateShiftTags(id, { tags: data }))} item={shift} tags={tags} />
                 </Td>
-                <Td>
+                {/* <Td>
                   <ConfigDropdown submitMethod={(data) => dispatch(updateShift(shift.id, { config: data }))} item={shift} />
-                </Td>
+                </Td> */}
                 <Td>
                   <DayDropdown updateMethod={(id, data) => dispatch(updateShift(id, { days: data }))} item={shift} days={shift.days} />
                 </Td>

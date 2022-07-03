@@ -58,11 +58,11 @@ export default function App() {
               </li>
 
               {/* {auth?.firstName && ( */}
-              <li className='nav-item'>
+              {/* <li className='nav-item'>
                 <Link to={'/rto'} className='nav-link'>
                   RTO
                 </Link>
-              </li>
+              </li> */}
 
               <li className='nav-item'>
                 <Link to={'/employees'} className='nav-link'>
@@ -72,7 +72,7 @@ export default function App() {
 
               <li className='nav-item'>
                 <Link to={'/tags'} className='nav-link'>
-                  {business.nameForTags.charAt(0).toUpperCase() + business.nameForTags.slice(1)}
+                 Tags
                 </Link>
               </li>
 
